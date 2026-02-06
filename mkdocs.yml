@@ -1,0 +1,166 @@
+site_name: LibreStock Inventory Documentation
+site_description: Yacht provisioning inventory management system
+site_url: https://maximilianpw.github.io/librestock-inventory/
+repo_url: https://github.com/maximilianpw/librestock-inventory
+repo_name: maximilianpw/librestock-inventory
+copyright: Copyright &copy; 2025 LibreStock Inventory
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang:
+        - en
+        - fr
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+          site_name: "LibreStock Inventory Documentation"
+          site_description: "Yacht provisioning inventory management system"
+        - locale: fr
+          name: Français
+          build: true
+          site_name: "Documentation LibreStock Inventory"
+          site_description: "Système de gestion d'inventaire pour yachts"
+          nav_translations:
+            Home: Accueil
+            Getting Started: Démarrage
+            Installation: Installation
+            Quick Start: Démarrage rapide
+            Configuration: Configuration
+            User Guide: Guide Utilisateur
+            Overview: Aperçu
+            Products: Produits
+            Categories: Catégories
+            Locations: Emplacements
+            Areas: Zones
+            Inventory: Inventaire
+            Orders: Commandes
+            Audit Logs: Journaux d'audit
+            Development: Développement
+            Architecture: Architecture
+            Setup: Configuration
+            Code Style: Style de code
+            Testing: Tests
+            API Development: Développement API
+            Frontend Development: Développement Frontend
+            CI/CD: CI/CD
+            Contributing: Contribuer
+            Guidelines: Directives
+            Pull Requests: Pull Requests
+            Roadmap: Feuille de route
+            Reference: Référence
+            Environment Variables: Variables d'environnement
+            CLI Commands: Commandes CLI
+            Troubleshooting: Dépannage
+          admonition_translations:
+            note: Note
+            abstract: Résumé
+            info: Info
+            tip: Conseil
+            success: Succès
+            question: Question
+            warning: Avertissement
+            failure: Échec
+            danger: Danger
+            bug: Bug
+            example: Exemple
+            quote: Citation
+  - git-revision-date-localized:
+      enable_creation_date: true
+      enable_git_follow: false
+      type: date
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/maximilianpw/librestock-inventory
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quick-start.md
+      - Configuration: getting-started/configuration.md
+  - User Guide:
+      - user-guide/index.md
+      - Products: user-guide/products.md
+      - Categories: user-guide/categories.md
+      - Locations: user-guide/locations.md
+      - Areas: user-guide/areas.md
+      - Inventory: user-guide/inventory.md
+      - Orders: user-guide/orders.md
+      - Audit Logs: user-guide/audit-logs.md
+  - Development:
+      - development/index.md
+      - Architecture: development/architecture.md
+      - Setup: development/setup.md
+      - Code Style: development/code-style.md
+      - Testing: development/testing.md
+      - API Development: development/api-development.md
+      - Frontend Development: development/frontend-development.md
+      - CI/CD: development/ci-cd.md
+  - Contributing:
+      - contributing/index.md
+      - Guidelines: contributing/guidelines.md
+      - Pull Requests: contributing/pull-requests.md
+  - Roadmap: roadmap.md
+  - Reference:
+      - reference/index.md
+      - Environment Variables: reference/environment-variables.md
+      - CLI Commands: reference/cli-commands.md
+      - Troubleshooting: reference/troubleshooting.md
