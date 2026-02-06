@@ -1,8 +1,8 @@
 site_name: LibreStock Inventory Documentation
 site_description: Yacht provisioning inventory management system
-site_url: https://maximilianpw.github.io/librestock-inventory/
-repo_url: https://github.com/maximilianpw/librestock-inventory
-repo_name: maximilianpw/librestock-inventory
+site_url: https://librestock.github.io/docs/
+repo_url: https://github.com/librestock/docs
+repo_name: librestock/docs
 copyright: Copyright &copy; 2025 LibreStock Inventory
 
 theme:
@@ -127,7 +127,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/maximilianpw/librestock-inventory
+      link: https://github.com/librestock/docs
 
 nav:
   - Home: index.md
