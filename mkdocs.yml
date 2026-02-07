@@ -4,7 +4,6 @@ site_url: https://librestock.github.io/documentation/
 repo_url: https://github.com/librestock/documentation
 repo_name: librestock/documentation
 copyright: Copyright &copy; 2025 LibreStock Inventory
-docs_dir: .
 
 theme:
   name: material
