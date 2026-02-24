@@ -2,6 +2,9 @@
 
 Le journal d'audit suit toutes les modifications apportées au système, fournissant un historique complet pour la responsabilité et le dépannage.
 
+!!! warning "Permission Administrateur Requise"
+    La consultation des journaux d'audit nécessite la permission administrateur. Seuls les utilisateurs ayant le rôle administrateur peuvent accéder à la section des journaux d'audit.
+
 ## Consultation des Journaux d'Audit
 
 Accédez aux **Journaux d'Audit** pour voir l'historique complet des modifications.
@@ -60,13 +63,16 @@ Pour les actions de modification, le journal affiche :
 |--------|-------------|
 | PRODUCT | Produits d'inventaire |
 | CATEGORY | Catégories de produits |
-| SUPPLIER | Enregistrements fournisseurs |
+| SUPPLIER | Fiches fournisseurs |
 | ORDER | Commandes clients |
 | ORDER_ITEM | Articles de commande |
 | INVENTORY | Quantités en stock |
 | LOCATION | Emplacements de stockage |
-| STOCK_MOVEMENT | Transactions d'inventaire |
+| STOCK_MOVEMENT | Mouvements de stock entre emplacements |
 | PHOTO | Images de produits |
+| AREA | Zones au sein des emplacements |
+| CLIENT | Fiches clients |
+| ROLE | Rôles utilisateurs |
 
 ## Informations de Contexte
 

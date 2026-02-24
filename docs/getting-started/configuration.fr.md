@@ -6,57 +6,80 @@ Ce guide couvre toutes les options de configuration pour LibreStock Inventory.
 
 ### Backend API
 
-Situé dans `modules/api/.env` :
+Situé dans `backend/.env` :
 
 | Variable | Requis | Description |
 |----------|--------|-------------|
 | `DATABASE_URL` | Oui | Chaîne de connexion PostgreSQL |
-| `CLERK_SECRET_KEY` | Oui | Clé secrète Clerk pour l'authentification |
-| `PORT` | Non | Port API (défaut: 8080) |
-| `NODE_ENV` | Non | Mode d'environnement (development/production) |
+| `NODE_ENV` | Non | Mode d'environnement (défaut : `development`) |
+| `PORT` | Non | Port API (défaut : `8080`) |
+| `CORS_ORIGIN` | Non | Origine CORS autorisée (défaut : `http://localhost:3000`) |
+| `BETTER_AUTH_SECRET` | Oui | Chaîne aléatoire de 32+ octets pour la signature de session Better Auth |
+| `BETTER_AUTH_URL` | Oui | URL du serveur Better Auth (ex : `http://localhost:8080`) |
+| `FRONTEND_URL` | Non | URL du frontend pour les redirections (défaut : `http://localhost:3000`) |
+
+Les variables de base de données individuelles sont également supportées : `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`.
 
 **Exemple :**
 
 ```bash
-DATABASE_URL=postgresql://user@localhost:5432/librestock_inventory
-CLERK_SECRET_KEY=sk_test_...
-PORT=8080
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/librestock_inventory
 NODE_ENV=development
+PORT=8080
+CORS_ORIGIN=http://localhost:3000
+BETTER_AUTH_SECRET=<chaîne aléatoire de 32+ octets>
+BETTER_AUTH_URL=http://localhost:8080
+FRONTEND_URL=http://localhost:3000
 ```
 
 ### Frontend Web
 
-Situé dans `modules/web/.env.local` :
+Situé dans `frontend/.env` :
 
 | Variable | Requis | Description |
 |----------|--------|-------------|
 | `VITE_API_BASE_URL` | Oui | URL de l'API backend |
-| `VITE_CLERK_PUBLISHABLE_KEY` | Oui | Clé publique Clerk |
-| `CLERK_SECRET_KEY` | Oui | Clé secrète Clerk |
+| `VITE_SENTRY_DSN` | Non | DSN Sentry pour le suivi des erreurs |
+| `SENTRY_AUTH_TOKEN` | Non | Token d'authentification Sentry pour les source maps |
 
 **Exemple :**
 
 ```bash
 VITE_API_BASE_URL=http://localhost:8080/api/v1
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
+VITE_SENTRY_DSN=<dsn sentry>
+SENTRY_AUTH_TOKEN=<token auth sentry>
 ```
 
-## Authentification Clerk
+## Authentification Better Auth
 
-1. Créez une application Clerk sur https://clerk.com
-2. Copiez vos clés API depuis le tableau de bord Clerk
-3. Ajoutez-les à vos fichiers d'environnement
+Better Auth est configuré uniquement dans le backend. Le `BETTER_AUTH_SECRET` doit être une chaîne aléatoire d'au moins 32 octets. Vous pouvez en générer un avec :
+
+```bash
+openssl rand -base64 32
+```
+
+`BETTER_AUTH_URL` doit pointer vers l'URL du serveur backend où les endpoints Better Auth sont servis.
+
+!!!note
+    `BETTER_AUTH_SECRET` ne se trouve que dans le `.env` du backend -- il n'est jamais défini dans le frontend.
 
 ## Configuration de la Base de Données
 
-### Utilisation de devenv (Recommandé)
+### Utilisation de Docker Compose (Recommandé)
 
-La base de données est automatiquement configurée avec devenv :
+PostgreSQL est fourni par Docker Compose :
 
-- Nom de la base: `librestock_inventory`
-- Hôte: `127.0.0.1`
-- Port: `5432`
+```bash
+docker compose -f meta/docker-compose.yml up -d
+```
+
+Configuration par défaut :
+
+- Nom de la base : `librestock_inventory`
+- Hôte : `localhost`
+- Port : `5432`
+- Utilisateur : `postgres`
+- Mot de passe : `postgres`
 
 ### Configuration Manuelle
 

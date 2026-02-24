@@ -52,14 +52,13 @@ The category tree is displayed in the sidebar when viewing products. Click on a 
 
 ## Deleting Categories
 
-When you delete a category:
+Category deletion is subject to the following constraints:
 
-- Products in that category are **not** deleted
-- Products are moved to the parent category (or become uncategorized)
-- Subcategories become children of the parent
+- **If products exist in the category**, the deletion will **fail**. You must reassign or remove all products from the category before deleting it.
+- **Subcategories** will have their parent reference set to null (they become top-level categories).
 
 !!! danger "Category Deletion"
-    Deleting a category cannot be undone. Consider moving products first if needed.
+    You cannot delete a category that still contains products. The API will return an error. Move or delete all products in the category first, then delete the category.
 
 ## Best Practices
 

@@ -11,30 +11,75 @@ This guide covers TanStack Start development patterns for the LibreStock Invento
 - Tailwind CSS 4
 - Radix UI / shadcn components
 - Better Auth
-- i18next (translations)
+- i18next (en, de, fr)
 
 ## Project Structure
 
 ```
-modules/web/src/
-├── app/                     # File-based routes (TanStack Router)
-│   ├── __root.tsx           # Root layout + providers
-│   ├── index.tsx            # Home
-│   ├── products.tsx         # Products page
-│   └── locations.$id.tsx    # Route params
+frontend/src/
+├── routes/                      # File-based routes (TanStack Router)
+│   ├── __root.tsx               # Root layout + providers
+│   ├── index.tsx                # Home (/)
+│   ├── products.tsx             # Products (/products)
+│   ├── products.$id.tsx         # Product detail (/products/:id)
+│   ├── locations.tsx            # Locations (/locations)
+│   ├── locations.$id.tsx        # Location detail (/locations/:id)
+│   ├── inventory.tsx            # Inventory (/inventory)
+│   ├── stock.tsx                # Stock (/stock)
+│   ├── stock-movements.tsx      # Stock Movements (/stock-movements)
+│   ├── orders.tsx               # Orders (/orders)
+│   ├── clients.tsx              # Clients (/clients)
+│   ├── suppliers.tsx            # Suppliers (/suppliers)
+│   ├── audit-logs.tsx           # Audit logs (/audit-logs)
+│   ├── users.tsx                # Users (/users)
+│   ├── roles.tsx                # Roles (/roles)
+│   ├── settings.tsx             # Settings (/settings)
+│   ├── login.tsx                # Login
+│   └── signup.tsx               # Signup
 ├── components/
-│   ├── ui/                  # Base components (Radix/shadcn)
-│   ├── inventory/           # Inventory features
-│   └── common/              # Header, dialogs, etc.
-├── hooks/providers/         # React context
+│   ├── ui/                      # Base components (Radix/shadcn)
+│   ├── areas/                   # Area features
+│   ├── audit-logs/              # Audit log features
+│   ├── category/                # Category features
+│   ├── clients/                 # Client features
+│   ├── common/                  # Header, dialogs, etc.
+│   ├── inventory/               # Inventory features
+│   ├── items/                   # Item features
+│   ├── locations/               # Location features
+│   ├── orders/                  # Order features
+│   ├── products/                # Product features
+│   ├── roles/                   # Role features
+│   ├── settings/                # Settings features
+│   ├── stock-movements/         # Stock movement features
+│   ├── suppliers/               # Supplier features
+│   ├── users/                   # User features
+│   ├── DefaultCatchBoundary.tsx # Error boundary
+│   └── NotFound.tsx             # 404 component
+├── hooks/providers/             # React context
 ├── lib/
 │   ├── data/
-│   │   ├── axios-client.ts  # API client
-│   │   └── products.ts      # Handwritten hooks by feature
-│   └── utils.ts             # Utilities
-├── locales/                 # i18n (en, de, fr)
-├── router.tsx               # Router setup
-└── routeTree.gen.ts         # Generated routes
+│   │   ├── areas.ts             # Area API hooks
+│   │   ├── audit-logs.ts        # Audit log API hooks
+│   │   ├── auth.ts              # Auth API hooks
+│   │   ├── axios-client.ts      # API client
+│   │   ├── branding.ts          # Branding API hooks
+│   │   ├── categories.ts        # Category API hooks
+│   │   ├── clients.ts           # Client API hooks
+│   │   ├── inventory.ts         # Inventory API hooks
+│   │   ├── locations.ts         # Location API hooks
+│   │   ├── make-crud-hooks.ts   # CRUD hook factory
+│   │   ├── orders.ts            # Order API hooks
+│   │   ├── photos.ts            # Photo API hooks
+│   │   ├── products.ts          # Product API hooks
+│   │   ├── query-cache.ts       # Query cache utilities
+│   │   ├── roles.ts             # Role API hooks
+│   │   ├── stock-movements.ts   # Stock movement API hooks
+│   │   ├── suppliers.ts         # Supplier API hooks
+│   │   └── users.ts             # User API hooks
+│   └── utils.ts                 # Utilities
+├── locales/                     # i18n (en, de, fr)
+├── router.tsx                   # Router setup
+└── routeTree.gen.ts             # Generated routes
 ```
 
 ## API Integration
@@ -42,12 +87,12 @@ modules/web/src/
 ### Handwritten Client + Shared Types
 
 API hooks live in `src/lib/data/*.ts` and use DTO interfaces/enums from
-`@librestock/types`.
+`@librestock/types`. The `make-crud-hooks.ts` factory generates standard CRUD hooks for resources.
 
 ### Using Queries
 
 ```typescript
-import { useListProducts } from '@/lib/data/products';
+import { useListProducts } from '~/lib/data/products';
 
 function ProductList() {
   const { data, isLoading, error } = useListProducts({
@@ -73,7 +118,7 @@ function ProductList() {
 ### Using Mutations
 
 ```typescript
-import { useCreateProduct, getListProductsQueryKey } from '@/lib/data/products';
+import { useCreateProduct, getListProductsQueryKey } from '~/lib/data/products';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -144,12 +189,12 @@ function ProductForm() {
 
 ## Routing
 
-Routes are defined with `createFileRoute` in `src/app`:
+Routes are defined with `createFileRoute` in `src/routes/`:
 
 ```typescript
 import { createFileRoute } from '@tanstack/react-router';
-import { ProductFilters } from '@/components/products/ProductFilters';
-import { ProductGrid } from '@/components/products/ProductGrid';
+import { ProductFilters } from '~/components/products/ProductFilters';
+import { ProductGrid } from '~/components/products/ProductGrid';
 
 export const Route = createFileRoute('/products')({
   component: ProductsPage,
@@ -166,6 +211,29 @@ function ProductsPage() {
 }
 ```
 
+### Route List
+
+| File | Route |
+|------|-------|
+| `__root.tsx` | Root layout |
+| `index.tsx` | `/` (Home) |
+| `products.tsx` | `/products` |
+| `products.$id.tsx` | `/products/:id` |
+| `locations.tsx` | `/locations` |
+| `locations.$id.tsx` | `/locations/:id` |
+| `inventory.tsx` | `/inventory` |
+| `stock.tsx` | `/stock` |
+| `stock-movements.tsx` | `/stock-movements` |
+| `orders.tsx` | `/orders` |
+| `clients.tsx` | `/clients` |
+| `suppliers.tsx` | `/suppliers` |
+| `audit-logs.tsx` | `/audit-logs` |
+| `users.tsx` | `/users` |
+| `roles.tsx` | `/roles` |
+| `settings.tsx` | `/settings` |
+| `login.tsx` | `/login` |
+| `signup.tsx` | `/signup` |
+
 ## SSR Safety
 
 TanStack Start renders on the server for the initial HTML. Avoid browser-only
@@ -178,8 +246,8 @@ APIs at module scope; use `useEffect` or guard with
 
 ```typescript
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
-import { type ProductResponseDto } from '@/lib/data/products';
+import { cn } from '~/lib/utils';
+import { type ProductResponseDto } from '~/lib/data/products';
 
 interface ProductCardProps {
   product: ProductResponseDto;
@@ -205,7 +273,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 Use the `cn()` utility for conditional classes:
 
 ```typescript
-import { cn } from '@/lib/utils';
+import { cn } from '~/lib/utils';
 
 <div className={cn('p-4', isActive && 'bg-primary', className)} />
 ```
@@ -263,6 +331,18 @@ function Header() {
     </nav>
   );
 }
+```
+
+## Path Alias
+
+The frontend uses `~/*` as a path alias mapping to `src/*`:
+
+```typescript
+// Instead of relative paths:
+import { Button } from '../../../components/ui/button';
+
+// Use the alias:
+import { Button } from '~/components/ui/button';
 ```
 
 ## Common Patterns

@@ -2,6 +2,8 @@
 
 Welcome to the LibreStock Inventory documentation. This system helps manage yacht provisioning inventory with features for product management, order tracking, and audit logging.
 
+Built with NestJS (backend), TanStack Start with React 19 (frontend), PostgreSQL, Better Auth, and TypeORM.
+
 ## Quick Links
 
 <div class="grid cards" markdown>
@@ -39,7 +41,20 @@ Welcome to the LibreStock Inventory documentation. This system helps manage yach
 - **Location Tracking** - Manage warehouses, suppliers, clients, and in-transit locations
 - **Area Management** - Define zones, shelves, and bins within locations
 - **Inventory Control** - Track stock quantities across locations with batch and expiry tracking
-- **Order Processing** - Track yacht provisioning orders through complete lifecycle
+- **Stock Movements** - Track and record stock movements between locations
+- **Order Processing** - Track yacht provisioning orders through complete lifecycle (DRAFT, CONFIRMED, SOURCING, PICKING, PACKED, SHIPPED, DELIVERED, CANCELLED, ON_HOLD)
+- **Clients Module** - Manage client information and relationships
+- **Suppliers Module** - Manage supplier information and relationships
 - **Audit Trail** - Complete change history with user tracking
-- **Multi-language** - English and French support
+- **Authentication** - Better Auth authentication system
+- **Roles & Permissions** - Role-based access control with PermissionGuard and @RequirePermission
+- **Users Management** - Admin user management
+- **Photos Management** - Product and inventory photo management
+- **Branding/Customization** - Customizable branding options
+- **Multi-language** - English, French, and German support
+- **HATEOAS REST API** - Hypermedia-driven API design
+- **E2E Testing** - End-to-end testing with Playwright
+- **Docker Support** - Docker Compose for containerized deployment
+- **CI/CD** - Per-repo GitHub Actions pipelines
+- **Documentation** - MkDocs site with GitHub Pages
 - **QR Scanning** - Barcode scanning for quick product lookup

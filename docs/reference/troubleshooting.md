@@ -4,9 +4,9 @@ Solutions to common issues when working with LibreStock Inventory.
 
 ## Development Environment
 
-### Devenv won't start
+### Nix shell won't start
 
-**Symptom:** `devenv up` fails or hangs
+**Symptom:** `nix develop` fails or hangs
 
 **Solutions:**
 
@@ -15,15 +15,36 @@ Solutions to common issues when working with LibreStock Inventory.
    nix --version
    ```
 
-2. Update devenv:
-   ```bash
-   nix-env -iA devenv -f https://github.com/NixOS/nixpkgs/tarball/nixos-unstable
+2. Ensure flakes are enabled in your Nix config (`~/.config/nix/nix.conf`):
+   ```
+   experimental-features = nix-command flakes
    ```
 
-3. Clear devenv cache:
+3. Try entering the shell from the specific repo directory:
    ```bash
-   rm -rf .devenv
-   devenv up
+   cd backend && nix develop
+   ```
+
+### Docker services won't start
+
+**Symptom:** `docker compose -f meta/docker-compose.yml up -d` fails
+
+**Solutions:**
+
+1. Check Docker is running:
+   ```bash
+   docker info
+   ```
+
+2. Check for port conflicts:
+   ```bash
+   lsof -i :5432
+   ```
+
+3. Reset Docker containers:
+   ```bash
+   docker compose -f meta/docker-compose.yml down -v
+   docker compose -f meta/docker-compose.yml up -d
    ```
 
 ### Port already in use
@@ -55,7 +76,7 @@ kill -9 <PID>
 
 2. Check Node.js version:
    ```bash
-   node --version  # Should be 22+
+   node --version  # Should be 20+
    ```
 
 ## Database Issues
@@ -71,12 +92,12 @@ kill -9 <PID>
    pg_isready -h localhost -p 5432
    ```
 
-2. With devenv, ensure it's started:
+2. Start PostgreSQL via Docker Compose:
    ```bash
-   devenv up
+   docker compose -f meta/docker-compose.yml up -d
    ```
 
-3. Check environment variables in `.env`
+3. Check environment variables in `backend/.env`
 
 ### Migration errors
 
@@ -95,21 +116,31 @@ kill -9 <PID>
    psql -h localhost -U postgres -c '\l'
    ```
 
+3. Run pending migrations:
+   ```bash
+   pnpm --filter @librestock/api migration:run
+   ```
+
 ## API Issues
 
-### Clerk authentication errors
+### Better Auth authentication errors
 
 **Symptom:** 401 Unauthorized errors
 
 **Solutions:**
 
-1. Verify `CLERK_SECRET_KEY` in `modules/api/.env`
-2. Check token is being sent:
+1. Verify `BETTER_AUTH_SECRET` is set in `backend/.env` (must be 32+ random bytes)
+2. Verify `BETTER_AUTH_URL` is set correctly (e.g., `http://localhost:8080`)
+3. Check token is being sent:
    ```bash
    # Request should include:
    # Authorization: Bearer <token>
    ```
-3. Verify Clerk dashboard configuration
+4. Try regenerating the secret:
+   ```bash
+   openssl rand -base64 32
+   ```
+   Update `BETTER_AUTH_SECRET` in `backend/.env` and restart the server.
 
 ### Shared types build fails
 
@@ -124,7 +155,7 @@ kill -9 <PID>
 
 2. Check for TypeScript errors:
    ```bash
-   pnpm --filter @librestock/api build
+   pnpm --filter @librestock/api type-check
    ```
 
 ## Frontend Issues
@@ -137,6 +168,7 @@ kill -9 <PID>
 
 1. Rebuild shared types after API changes:
    ```bash
+   pnpm --filter @librestock/types barrels
    pnpm --filter @librestock/types build
    ```
 
@@ -156,7 +188,7 @@ kill -9 <PID>
 
 **Solutions:**
 
-1. Check locale files exist in `modules/web/src/locales/`
+1. Check locale files exist in `frontend/src/locales/`
 2. Verify i18n configuration
 3. Check language prefix in URL
 
@@ -170,9 +202,8 @@ kill -9 <PID>
 
 ```bash
 # Check specific module
-pnpm --filter @librestock/api build
-pnpm --filter @librestock/web build
-
+pnpm --filter @librestock/api type-check
+pnpm --filter @librestock/web type-check
 ```
 
 ### ESLint errors
@@ -208,7 +239,7 @@ pnpm --filter @librestock/web lint:fix
 
 If you're still stuck:
 
-1. Check [existing issues](https://github.com/your-org/librestock/issues)
+1. Check [existing issues](https://github.com/librestock/documentation/issues)
 2. Search error messages online
 3. Open a new issue with:
     - Error message

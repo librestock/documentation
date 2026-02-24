@@ -52,14 +52,13 @@ L'arborescence des catégories est affichée dans la barre latérale lors de la 
 
 ## Suppression des Catégories
 
-Lorsque vous supprimez une catégorie :
+La suppression d'une catégorie est soumise aux contraintes suivantes :
 
-- Les produits de cette catégorie ne sont **pas** supprimés
-- Les produits sont déplacés vers la catégorie parente (ou deviennent non catégorisés)
-- Les sous-catégories deviennent enfants du parent
+- **Si des produits existent dans la catégorie**, la suppression **échouera**. Vous devez réassigner ou supprimer tous les produits de la catégorie avant de la supprimer.
+- **Les sous-catégories** verront leur référence parente mise à null (elles deviennent des catégories de premier niveau).
 
 !!! danger "Suppression de Catégorie"
-    La suppression d'une catégorie ne peut pas être annulée. Envisagez de déplacer les produits d'abord si nécessaire.
+    Vous ne pouvez pas supprimer une catégorie qui contient encore des produits. L'API renverra une erreur. Déplacez ou supprimez d'abord tous les produits de la catégorie, puis supprimez la catégorie.
 
 ## Bonnes Pratiques
 

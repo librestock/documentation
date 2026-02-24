@@ -26,7 +26,7 @@ pnpm --filter @librestock/api build  # Inclut la vérification des types
 
 ## Configuration ESLint
 
-La configuration est partagée via `packages/eslint-config/`.
+Les deux repos utilisent ESLint. La configuration est partagée via `packages/eslint-config/`.
 
 ### Règles clés
 
@@ -46,7 +46,7 @@ import { CreateProductDto } from './dto';
 
 ```typescript
 // Utiliser les imports de type inline
-import { type ProductResponseDto } from '@/lib/data/products';
+import { type ProductResponseDto } from '~/lib/data/products';
 ```
 
 **Variables inutilisées** :
@@ -58,15 +58,22 @@ const { data, error: _error } = useQuery();
 
 ## Configuration Prettier
 
+### Backend
+
+Le backend utilise un `.prettierrc` avec les paramètres suivants :
+
 ```json
 {
-  "semi": true,
   "singleQuote": true,
-  "trailingComma": "all",
-  "printWidth": 120,
-  "tabWidth": 2
+  "trailingComma": "all"
 }
 ```
+
+Toutes les autres valeurs utilisent les défauts de Prettier (printWidth: 80, semi: true, tabWidth: 2).
+
+### Frontend
+
+Le frontend utilise `prettier-plugin-tailwindcss` pour le tri automatique des classes Tailwind mais **n'a pas de `.prettierrc` personnalisé** -- il utilise les défauts de Prettier (guillemets doubles, printWidth: 80, semi: true, trailingComma: "all").
 
 ## TypeScript
 
@@ -88,8 +95,8 @@ Tous les modules utilisent TypeScript strict :
 
 | Module | Alias | Correspond à |
 |--------|-------|--------------|
-| Web | `@/*` | `./src/*` |
-| API | `src/*` | `./src/*` |
+| Frontend | `~/*` | `./src/*` |
+| Backend | `src/*` | `./src/*` |
 
 ## Conventions de nommage
 
@@ -97,11 +104,11 @@ Tous les modules utilisent TypeScript strict :
 
 | Type | Convention | Exemple |
 |------|------------|---------|
-| Module API | kebab-case | `products.module.ts` |
-| Entité API | singulier | `product.entity.ts` |
-| DTO API | kebab-case | `create-product.dto.ts` |
-| Composant Web | PascalCase | `ProductForm.tsx` |
-| UI Web | kebab-case | `button.tsx` |
+| Module Backend | kebab-case | `products.module.ts` |
+| Entité Backend | singulier | `product.entity.ts` |
+| DTO Backend | kebab-case | `create-product.dto.ts` |
+| Composant Frontend | PascalCase | `ProductForm.tsx` |
+| UI Frontend | kebab-case | `button.tsx` |
 
 ### Code
 
@@ -112,6 +119,37 @@ Tous les modules utilisent TypeScript strict :
 | Fonction | camelCase | `findAllProducts` |
 | Constante | UPPER_SNAKE | `MAX_PAGE_SIZE` |
 | Membre Enum | UPPER_SNAKE | `AuditAction.CREATE` |
+
+### Structure d'un module Backend
+
+```
+routes/<feature>/
+├── <feature>.module.ts      # ProductsModule
+├── <feature>.controller.ts  # ProductsController
+├── <feature>.service.ts     # ProductsService
+├── <entity>.repository.ts   # ProductRepository (singulier)
+├── entities/
+│   └── <entity>.entity.ts   # Product (singulier)
+└── dto/
+    ├── create-<entity>.dto.ts
+    ├── update-<entity>.dto.ts
+    ├── <entity>-response.dto.ts
+    └── index.ts             # Export barrel
+```
+
+### Structure des composants Frontend
+
+```
+components/
+├── ui/                     # Composants de base (kebab-case)
+│   ├── button.tsx
+│   └── input.tsx
+├── products/               # Composants par feature (PascalCase)
+│   ├── ProductForm.tsx
+│   └── ProductList.tsx
+└── common/                 # Composants partagés
+    └── Header.tsx
+```
 
 ## Bonnes pratiques
 
@@ -133,6 +171,39 @@ interface ProductFormProps {
 
 // Utiliser type pour les unions/intersections
 type ButtonVariant = 'primary' | 'secondary' | 'danger';
+```
+
+### React
+
+```typescript
+// Composants fonction nommés
+export function ProductCard({ product }: ProductCardProps) {
+  return <div>...</div>;
+}
+
+// Déstructurer les props
+function Button({ variant = 'primary', children, ...props }: ButtonProps) {
+  return <button {...props}>{children}</button>;
+}
+```
+
+### NestJS
+
+```typescript
+// Utiliser l'injection de dépendances
+@Injectable()
+export class ProductsService {
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly categoryRepository: CategoryRepository,
+  ) {}
+}
+
+// Utiliser les décorateurs pour la validation
+@Post()
+async create(@Body() createDto: CreateProductDto) {
+  return this.productsService.create(createDto);
+}
 ```
 
 ## Commentaires

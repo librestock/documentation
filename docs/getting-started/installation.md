@@ -2,9 +2,9 @@
 
 This guide covers setting up the LibreStock Inventory development environment.
 
-## Using devenv (Recommended)
+## Using Nix Flakes + Docker (Recommended)
 
-The project uses [devenv.sh](https://devenv.sh) for reproducible development environments.
+The project uses per-repo [Nix flakes](https://nixos.wiki/wiki/Flakes) for reproducible development environments and Docker Compose for services like PostgreSQL.
 
 ### 1. Install Nix
 
@@ -12,37 +12,56 @@ The project uses [devenv.sh](https://devenv.sh) for reproducible development env
 sh <(curl -L https://nixos.org/nix/install) --daemon
 ```
 
-### 2. Install devenv
+Ensure flakes are enabled in your Nix configuration.
+
+### 2. Clone the Workspace
 
 ```bash
-nix profile install nixpkgs#devenv
+git clone https://github.com/librestock/meta.git
+cd meta && ./scripts/bootstrap && cd ..
 ```
 
-### 3. Clone and Enter Environment
+### 3. Bootstrap the Workspace
 
 ```bash
-git clone https://github.com/maximilianpw/librestock-inventory.git
-cd librestock-inventory
-devenv shell
+./meta/scripts/bootstrap
 ```
 
-This will:
+This will sync all repos and install dependencies.
 
-- Install Node.js 24 and pnpm 10
-- Install Python 3.12 with MkDocs
-- Set up PostgreSQL 16
-- Configure all environment variables
+### 4. Enter a Nix Shell (per-repo)
 
-### 4. Install Dependencies
+Each repo (backend, frontend, etc.) has its own `flake.nix`. Enter the shell for the repo you need:
 
 ```bash
-pnpm install
+cd backend && nix develop
+# or
+cd frontend && nix develop
 ```
+
+This will provide:
+
+- Node.js 20+ and pnpm 10
+- All repo-specific tooling
 
 ### 5. Start Development Services
 
+Start PostgreSQL and other services via Docker Compose:
+
 ```bash
-devenv up
+docker compose -f meta/docker-compose.yml up -d
+```
+
+Or use the meta dev script to start everything (backend + frontend dev servers):
+
+```bash
+./meta/scripts/dev
+```
+
+To also start Docker services automatically:
+
+```bash
+./meta/scripts/dev --with-docker
 ```
 
 This starts:
@@ -52,16 +71,49 @@ This starts:
 | PostgreSQL | localhost:5432 | Database |
 | NestJS API | http://localhost:8080 | Backend + Swagger |
 | TanStack Start Web | http://localhost:3000 | Frontend |
-| MkDocs | http://localhost:8000 | Documentation |
+
+### 6. Configure Environment Variables
+
+**Backend:**
+
+```bash
+cp backend/.env.template backend/.env
+```
+
+Edit `backend/.env` with your configuration:
+
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/librestock_inventory
+NODE_ENV=development
+PORT=8080
+CORS_ORIGIN=http://localhost:3000
+BETTER_AUTH_SECRET=<random 32+ byte string>
+BETTER_AUTH_URL=http://localhost:8080
+FRONTEND_URL=http://localhost:3000
+```
+
+**Frontend:**
+
+```bash
+echo "VITE_API_BASE_URL=http://localhost:8080/api/v1" > frontend/.env
+```
+
+!!!tip "1Password CLI"
+    Both backend and frontend have a `justfile` with a `decrypt` task. If you use 1Password CLI, you can generate `.env` files automatically:
+    ```bash
+    cd backend && just decrypt
+    cd frontend && just decrypt
+    ```
+    This runs `op inject -i env.template -o .env` to populate secrets from 1Password.
 
 ## Manual Setup (Alternative)
 
-If you prefer not to use devenv:
+If you prefer not to use Nix:
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
-- pnpm >= 10.0.0
+- Node.js >= 20
+- pnpm >= 10
 - PostgreSQL 16
 - Python 3.12 (for docs)
 
@@ -76,25 +128,19 @@ createdb librestock_inventory
 Copy the environment template:
 
 ```bash
-cp modules/api/.env.template modules/api/.env
+cp backend/.env.template backend/.env
 ```
 
-Edit `.env` with your configuration:
-
-```bash
-DATABASE_URL=postgresql://user@localhost:5432/librestock_inventory
-CLERK_SECRET_KEY=sk_test_...
-PORT=8080
-```
+Edit `backend/.env` with your configuration (see table above).
 
 ### Start Services
 
 ```bash
 # Terminal 1: API
-cd modules/api && pnpm start:dev
+cd backend && pnpm start:dev
 
 # Terminal 2: Web
-cd modules/web && pnpm dev
+cd frontend && pnpm dev
 ```
 
 ## Verify Installation

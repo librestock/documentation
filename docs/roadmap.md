@@ -1,97 +1,112 @@
 # Roadmap
 
-This roadmap outlines planned features and improvements for LibreStock Inventory. Items are tracked as [GitHub Issues](https://github.com/maximilianpw/librestock-inventory/issues).
+This roadmap outlines planned features and improvements for LibreStock Inventory. Items are tracked as [GitHub Issues](https://github.com/librestock/meta/issues).
 
 !!! info "Contributing"
     Interested in contributing? Check our [contribution guidelines](contributing/guidelines.md) and pick an issue to work on!
 
 ## In Progress
 
-### Core Inventory Features
+### Search & Analytics
 
-| Issue | Description | Priority |
-|-------|-------------|----------|
-| [#39](https://github.com/maximilianpw/librestock-inventory/issues/39) | Create Inventory Items CRUD API endpoints | High |
-| [#43](https://github.com/maximilianpw/librestock-inventory/issues/43) | Build Inventory Items frontend UI | High |
-| [#41](https://github.com/maximilianpw/librestock-inventory/issues/41) | Create Locations/Storage Areas API | High |
-| [#42](https://github.com/maximilianpw/librestock-inventory/issues/42) | Implement Suppliers management API | Medium |
+| Description | Priority |
+|-------------|----------|
+| Implement advanced search and filtering API | High |
+| Build advanced search UI with filters | High |
+| Create dashboard with inventory analytics | Medium |
+| Implement inventory reporting and export features | Medium |
 
 ### Advanced Inventory
 
-| Issue | Description | Priority |
-|-------|-------------|----------|
-| [#47](https://github.com/maximilianpw/librestock-inventory/issues/47) | Implement inventory transactions/history tracking | High |
-| [#48](https://github.com/maximilianpw/librestock-inventory/issues/48) | Add low stock alerts and notifications | High |
-| [#54](https://github.com/maximilianpw/librestock-inventory/issues/54) | Add bulk operations for inventory management | Medium |
-| [#65](https://github.com/maximilianpw/librestock-inventory/issues/65) | Add expiration date tracking for perishables | Medium |
-| [#64](https://github.com/maximilianpw/librestock-inventory/issues/64) | Implement inventory ordering/requisition system | Medium |
-
-### Search & Analytics
-
-| Issue | Description | Priority |
-|-------|-------------|----------|
-| [#49](https://github.com/maximilianpw/librestock-inventory/issues/49) | Implement advanced search and filtering API | High |
-| [#50](https://github.com/maximilianpw/librestock-inventory/issues/50) | Build advanced search UI with filters | High |
-| [#52](https://github.com/maximilianpw/librestock-inventory/issues/52) | Create dashboard with inventory analytics | Medium |
-| [#53](https://github.com/maximilianpw/librestock-inventory/issues/53) | Implement inventory reporting and export features | Medium |
+| Description | Priority |
+|-------------|----------|
+| Add low stock alerts and notifications | High |
+| Add bulk operations for inventory management | Medium |
 
 ### User Experience
 
-| Issue | Description | Priority |
-|-------|-------------|----------|
-| [#51](https://github.com/maximilianpw/librestock-inventory/issues/51) | Add barcode/QR code scanning support | Medium |
-| [#66](https://github.com/maximilianpw/librestock-inventory/issues/66) | Create getting started guide and seed data | Medium |
-| [#44](https://github.com/maximilianpw/librestock-inventory/issues/44) | Implement user role-based access control (RBAC) | High |
+| Description | Priority |
+|-------------|----------|
+| Add barcode/QR code scanning support | Medium |
+| Create getting started guide and seed data | Medium |
 
 ### Infrastructure & Operations
 
-| Issue | Description | Priority |
-|-------|-------------|----------|
-| [#59](https://github.com/maximilianpw/librestock-inventory/issues/59) | Configure production deployment (Docker + hosting) | High |
-| [#60](https://github.com/maximilianpw/librestock-inventory/issues/60) | Add logging and monitoring infrastructure | High |
-| [#61](https://github.com/maximilianpw/librestock-inventory/issues/61) | Set up database backup and recovery strategy | High |
-
-### Quality & Testing
-
-| Issue | Description | Priority |
-|-------|-------------|----------|
-| [#55](https://github.com/maximilianpw/librestock-inventory/issues/55) | Add unit and integration tests for API | High |
-| [#56](https://github.com/maximilianpw/librestock-inventory/issues/56) | Add E2E tests for frontend with Playwright | Medium |
-| [#62](https://github.com/maximilianpw/librestock-inventory/issues/62) | Create comprehensive documentation | Medium |
+| Description | Priority |
+|-------------|----------|
+| Add logging and monitoring infrastructure | High |
+| Set up database backup and recovery strategy | High |
 
 ## Completed
 
 These features have been implemented:
 
-| Issue | Description | Status |
-|-------|-------------|--------|
-| [#40](https://github.com/maximilianpw/librestock-inventory/issues/40) | Create Categories management API | :white_check_mark: Done |
-| [#45](https://github.com/maximilianpw/librestock-inventory/issues/45) | Build user authentication UI with Clerk | :white_check_mark: Done |
-| [#46](https://github.com/maximilianpw/librestock-inventory/issues/46) | Create Categories and Locations management UI | :white_check_mark: Done |
-| [#57](https://github.com/maximilianpw/librestock-inventory/issues/57) | Set up code quality tools and linting | :white_check_mark: Done |
-| [#58](https://github.com/maximilianpw/librestock-inventory/issues/58) | Set up CI/CD pipeline with GitHub Actions | :white_check_mark: Done |
-| [#63](https://github.com/maximilianpw/librestock-inventory/issues/63) | Add mobile-responsive PWA features | :white_check_mark: Done |
+### Core Modules
+
+| Description | Status |
+|-------------|--------|
+| Products CRUD | :white_check_mark: Done |
+| Categories CRUD | :white_check_mark: Done |
+| Locations CRUD | :white_check_mark: Done |
+| Areas CRUD | :white_check_mark: Done |
+| Inventory management | :white_check_mark: Done |
+| Stock Movements | :white_check_mark: Done |
+| Orders management (DRAFT, CONFIRMED, SOURCING, PICKING, PACKED, SHIPPED, DELIVERED, CANCELLED, ON_HOLD) | :white_check_mark: Done |
+| Clients module | :white_check_mark: Done |
+| Suppliers module | :white_check_mark: Done |
+| Audit logging | :white_check_mark: Done |
+| Photos management | :white_check_mark: Done |
+
+### Authentication & Authorization
+
+| Description | Status |
+|-------------|--------|
+| Better Auth authentication | :white_check_mark: Done |
+| Roles/Permissions system (PermissionGuard + @RequirePermission) | :white_check_mark: Done |
+| Users management (admin) | :white_check_mark: Done |
+
+### Frontend & API
+
+| Description | Status |
+|-------------|--------|
+| HATEOAS REST API | :white_check_mark: Done |
+| TanStack Start frontend (React 19) | :white_check_mark: Done |
+| Branding/customization | :white_check_mark: Done |
+| i18n (English, French, German) | :white_check_mark: Done |
+
+### Infrastructure & Quality
+
+| Description | Status |
+|-------------|--------|
+| Docker support (docker-compose) | :white_check_mark: Done |
+| CI/CD (per-repo GitHub Actions) | :white_check_mark: Done |
+| E2E testing (Playwright) | :white_check_mark: Done |
+| Documentation site (MkDocs, GitHub Pages) | :white_check_mark: Done |
+| Code quality tools and linting | :white_check_mark: Done |
 
 ## Future Considerations
 
 Features under consideration for future releases:
 
+- **PWA** - Progressive Web App with offline support
 - **Multi-yacht support** - Manage inventory across multiple vessels
 - **Supplier integration** - Direct ordering from suppliers
 - **AI-powered predictions** - Automatic reorder suggestions
 - **Mobile native apps** - iOS and Android applications
 - **Offline-first sync** - Full offline capability with sync
 
-## Release Planning
+## Repositories
 
-| Version | Focus | Target |
-|---------|-------|--------|
-| 0.1.0 | Core CRUD, Auth, Categories | Q1 2025 |
-| 0.2.0 | Inventory Items, Locations, Suppliers | Q1 2025 |
-| 0.3.0 | Search, Filters, Dashboard | Q2 2025 |
-| 0.4.0 | Transactions, Alerts, Reports | Q2 2025 |
-| 1.0.0 | Production ready, Full documentation | Q3 2025 |
+| Repository | Description | Link |
+|------------|-------------|------|
+| meta | Workspace orchestration and scripts | [GitHub](https://github.com/librestock/meta) |
+| backend | NestJS API server | [GitHub](https://github.com/librestock/backend) |
+| frontend | TanStack Start web application | [GitHub](https://github.com/librestock/frontend) |
+| packages | Shared types and utilities | [GitHub](https://github.com/librestock/packages) |
+| documentation | MkDocs documentation site | [GitHub](https://github.com/librestock/documentation) |
+| remote-desktop | Remote desktop tooling | [GitHub](https://github.com/librestock/remote-desktop) |
+| landing | Landing page | [GitHub](https://github.com/librestock/landing) |
 
 ---
 
-*Last updated: December 2024*
+*Last updated: February 2026*

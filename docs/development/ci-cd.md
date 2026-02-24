@@ -4,23 +4,42 @@ This guide covers the GitHub Actions workflows and deployment processes for Libr
 
 ## Workflows
 
-### CI Pipeline
+CI workflows are **per-repo**, not at the workspace root level.
 
-**File:** `.github/workflows/ci.yml`
+### Backend CI Pipeline
+
+**File:** `backend/.github/workflows/ci.yml`
 
 Runs on every pull request and push to main:
 
-- Lint all packages
+- Lint
 - Type check
-- Run tests
-- Build all packages
-- Build shared types
+- Run unit tests
+- Run E2E tests
+- Build
+
+### Frontend CI Pipeline
+
+**File:** `frontend/.github/workflows/ci.yml`
+
+Runs on every pull request and push to main:
+
+- Lint
+- Type check
+- Build
+
+### Docker Publish
+
+Each repo has its own Docker publish workflow:
+
+- **Backend:** `backend/.github/workflows/docker-publish.yml`
+- **Frontend:** `frontend/.github/workflows/docker-publish.yml`
 
 ### Documentation Deployment
 
-**File:** `.github/workflows/deploy-docs.yml`
+**File:** `documentation/.github/workflows/deploy-docs.yml`
 
-Deploys documentation to AWS S3 + CloudFront on push to main.
+Deploys documentation via GitHub Pages on push to main.
 
 ## GitHub Actions Secrets
 
@@ -28,16 +47,16 @@ Deploys documentation to AWS S3 + CloudFront on push to main.
 
 | Secret | Description |
 |--------|-------------|
-| `CLERK_SECRET_KEY` | Clerk authentication |
-| `AWS_DOCS_ROLE_ARN` | IAM role for docs deployment |
-| `DOCS_S3_BUCKET` | S3 bucket name |
-| `DOCS_CLOUDFRONT_DISTRIBUTION_ID` | CloudFront distribution |
+| `BETTER_AUTH_SECRET` | Better Auth secret (backend CI only) |
+
+!!! note "Auth secrets"
+    `BETTER_AUTH_SECRET` is only needed in the backend CI. The frontend does not require any auth secrets.
 
 ## Pull Request Workflow
 
 1. **Create branch** from `main`
 2. **Make changes** and commit
-3. **Open PR** - CI runs automatically
+3. **Open PR** - CI runs automatically (per-repo)
 4. **Review** - Wait for approval
 5. **Merge** - Squash and merge to main
 
@@ -54,27 +73,25 @@ PRs should include:
 Run the same checks locally before pushing:
 
 ```bash
-# Install dependencies
+# Backend
+cd backend
 pnpm install
-
-# Lint
 pnpm lint
-
-# Type check
 pnpm build
-
-# Test
 pnpm test
 
-# Build docs
-pnpm docs:build
+# Frontend
+cd frontend
+pnpm install
+pnpm lint
+pnpm build
 ```
 
 ## Deployment
 
 ### Documentation
 
-Documentation is automatically deployed when changes are pushed to main.
+Documentation is automatically deployed via GitHub Pages when changes are pushed to main.
 
 Trigger paths:
 
@@ -84,7 +101,7 @@ Trigger paths:
 
 ### Application
 
-Application deployment is not yet automated. See [Roadmap](../roadmap.md) for planned features.
+Docker images are published via `docker-publish.yml` workflows in each repo.
 
 ## Troubleshooting
 
@@ -99,14 +116,17 @@ pnpm lint --fix
 **Type errors:**
 
 ```bash
-pnpm --filter @librestock/api build
-pnpm --filter @librestock/web build
+# Backend
+cd backend && pnpm build
+
+# Frontend
+cd frontend && pnpm build
 ```
 
 **Test failures:**
 
 ```bash
-pnpm test -- --verbose
+cd backend && pnpm test -- --verbose
 ```
 
 ### Cache Issues

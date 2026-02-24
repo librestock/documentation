@@ -26,7 +26,6 @@ La liste des produits affiche :
    - **SKU** - Identifiant unique (peut être scanné via code QR)
    - **Nom** - Nom du produit
    - **Catégorie** - Sélectionnez dans l'arborescence des catégories
-   - **Point de Réapprovisionnement** - Niveau de stock minimum pour les alertes
 
 <!-- ![Formulaire Produit](../assets/screenshots/products/product-form.png) -->
 
@@ -34,15 +33,24 @@ La liste des produits affiche :
 
 | Champ | Requis | Description |
 |-------|--------|-------------|
-| SKU | Oui | Unité de gestion de stock unique |
-| Nom | Oui | Nom d'affichage du produit |
+| SKU | Oui | Unité de gestion de stock unique (max 50 car.) |
+| Nom | Oui | Nom d'affichage du produit (max 200 car.) |
 | Catégorie | Oui | Catégorie du produit |
 | Description | Non | Description détaillée |
+| Volume (ml) | Non | Volume en millilitres |
+| Poids (kg) | Non | Poids en kilogrammes |
+| Dimensions (cm) | Non | Dimensions, ex. : "10x10x5" |
 | Coût Standard | Non | Coût d'achat |
 | Prix Standard | Non | Prix de vente |
-| Point de Réapprovisionnement | Oui | Seuil de stock bas |
-| Est Actif | Oui | Disponibilité du produit |
-| Est Périssable | Oui | Suivi de l'expiration |
+| Pourcentage de Marge | Non | Pourcentage de majoration |
+| Point de Réapprovisionnement | Non | Seuil de stock bas (par défaut 0) |
+| Fournisseur Principal | Non | Lien vers une fiche fournisseur |
+| SKU Fournisseur | Non | SKU utilisé par le fournisseur |
+| Code-barres | Non | Valeur du code-barres, ex. : "0641628607549" |
+| Unité | Non | Unité de mesure, ex. : "unités" |
+| Est Actif | Non | Disponibilité du produit (par défaut vrai) |
+| Est Périssable | Non | Suivi de l'expiration (par défaut faux) |
+| Notes | Non | Notes supplémentaires |
 
 ### Utilisation du Scanner QR
 
@@ -77,6 +85,21 @@ Sélectionnez plusieurs produits à l'aide des cases à cocher pour effectuer de
 2. Cliquez sur le bouton d'action dans la barre d'outils
 3. Confirmez l'action
 4. Consultez le résumé des résultats
+
+### Import CSV en Masse
+
+Vous pouvez importer plusieurs produits à la fois en utilisant un fichier CSV :
+
+1. Cliquez sur le bouton **Importer** dans la barre d'outils
+2. Téléchargez le modèle CSV pour voir le format attendu
+3. Remplissez les données produit dans le fichier CSV
+4. Téléversez le fichier CSV complété
+5. Vérifiez l'aperçu de l'import et confirmez
+
+!!! tip "Conseils pour l'Import CSV"
+    - Assurez-vous que les SKUs sont uniques et n'existent pas déjà dans le système
+    - Les noms de catégories doivent correspondre exactement aux catégories existantes
+    - Laissez les champs optionnels vides si non applicables
 
 ## Suppression et Restauration
 

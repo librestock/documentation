@@ -54,7 +54,7 @@ The area list displays:
 | Parent Area | No | Parent area for hierarchy |
 | Code | No | Short identifier code |
 | Description | No | Additional details |
-| Is Active | Yes | Area availability |
+| Is Active | No | Area availability (defaults to true) |
 
 ## Creating Nested Areas
 

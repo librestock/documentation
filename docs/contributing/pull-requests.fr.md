@@ -10,17 +10,20 @@ Avant de créer une PR :
 
 1. **Les tests passent localement**
    ```bash
-   pnpm test
+   pnpm --filter @librestock/api test
+   pnpm --filter @librestock/web test:e2e
    ```
 
 2. **Le linting passe**
    ```bash
-   pnpm lint
+   pnpm --filter @librestock/api lint
+   pnpm --filter @librestock/web lint
    ```
 
 3. **Le build réussit**
    ```bash
-   pnpm build
+   pnpm --filter @librestock/api build
+   pnpm --filter @librestock/web build
    ```
 
 4. **La branche est à jour**

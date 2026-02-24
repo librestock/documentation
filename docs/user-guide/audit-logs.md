@@ -2,6 +2,9 @@
 
 The audit log tracks all changes made to the system, providing a complete history for accountability and troubleshooting.
 
+!!! warning "Admin Permission Required"
+    Viewing audit logs requires admin permission. Only users with the admin role can access the audit logs section.
+
 ## Viewing Audit Logs
 
 Navigate to **Audit Logs** to see the complete change history.
@@ -61,12 +64,15 @@ For update actions, the log shows:
 | PRODUCT | Inventory products |
 | CATEGORY | Product categories |
 | SUPPLIER | Supplier records |
-| ORDER | Customer orders |
+| ORDER | Client orders |
 | ORDER_ITEM | Order line items |
 | INVENTORY | Stock quantities |
 | LOCATION | Storage locations |
-| STOCK_MOVEMENT | Inventory transactions |
+| STOCK_MOVEMENT | Stock movements between locations |
 | PHOTO | Product images |
+| AREA | Zones within locations |
+| CLIENT | Client records |
+| ROLE | User roles |
 
 ## Context Information
 

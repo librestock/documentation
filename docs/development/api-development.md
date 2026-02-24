@@ -142,15 +142,19 @@ export class ProductsService {
 
 ### 5. Controller
 
+Controllers use `@Controller()` with an empty string. Routing is done via `RouterModule` in `app.routes.ts`.
+
 ```typescript
 // products.controller.ts
-@Controller('products')
-@UseGuards(ClerkAuthGuard)
+@Controller()
 @ApiTags('Products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @Auditable()
+  @RequirePermission('products', 'create')
+  @StandardThrottle()
   @UseInterceptors(HateoasInterceptor)
   @ProductHateoas()
   @ApiOperation({ summary: 'Create product' })
@@ -164,7 +168,21 @@ export class ProductsController {
 }
 ```
 
+!!! note "Controller routing"
+    Controllers use `@Controller()` with an empty string. The actual route paths (e.g., `/products`) are configured via `RouterModule` in `app.routes.ts`. The global prefix `/api/v1` is applied automatically.
+
+### Key Decorators
+
+| Decorator | Purpose | Example |
+|-----------|---------|---------|
+| `@Auditable()` | Records action in audit log | `@Auditable()` |
+| `@RequirePermission(resource, permission)` | Enforces permission check | `@RequirePermission('products', 'create')` |
+| `@StandardThrottle()` | Rate limiting (100 req/min) | `@StandardThrottle()` |
+| `@Transactional()` | Wraps method in DB transaction | `@Transactional()` |
+
 ### 6. HATEOAS Links
+
+HATEOAS links use relative paths. The `HateoasInterceptor` auto-prepends the global prefix (`/api/v1`).
 
 ```typescript
 // products.hateoas.ts
@@ -188,20 +206,15 @@ export const ProductHateoas = () => HateoasLinks(...PRODUCT_HATEOAS_LINKS);
   exports: [ProductsService],
 })
 export class ProductsModule {}
-
-// Register in app.module.ts
-@Module({
-  imports: [
-    // ...
-    ProductsModule,
-  ],
-})
-export class AppModule {}
 ```
+
+!!! tip "Export only the Service"
+    Modules export only their Service, never the Repository. Cross-module access goes through the Service layer.
 
 ### 8. Update Shared Types
 
 ```bash
+pnpm --filter @librestock/types barrels
 pnpm --filter @librestock/types build
 ```
 
@@ -209,10 +222,17 @@ pnpm --filter @librestock/types build
 
 ### Using Guards
 
+Authentication is handled by Better Auth via `AuthGuard`:
+
 ```typescript
-@Controller('products')
-@UseGuards(ClerkAuthGuard)
-export class ProductsController {}
+// AuthGuard is applied globally -- no need to add it per controller
+// Use @RequirePermission for authorization
+@Controller()
+export class ProductsController {
+  @RequirePermission('products', 'read')
+  @Get()
+  async findAll() { ... }
+}
 ```
 
 ### Accessing User
@@ -223,10 +243,34 @@ export class ProductsController {}
 
 // Get full auth object
 @CurrentUser() auth: { userId: string; sessionId: string }
-
-// Get JWT claims
-@ClerkClaims() claims: JwtPayload
 ```
+
+## Authorization
+
+Use `@RequirePermission` to enforce permission-based access control:
+
+```typescript
+@Controller()
+export class ProductsController {
+  @RequirePermission('products', 'read')
+  @Get()
+  async findAll() { ... }
+
+  @RequirePermission('products', 'create')
+  @Post()
+  async create() { ... }
+
+  @RequirePermission('products', 'update')
+  @Put(':id')
+  async update() { ... }
+
+  @RequirePermission('products', 'delete')
+  @Delete(':id')
+  async remove() { ... }
+}
+```
+
+The `PermissionGuard` checks the user's role permissions against the required permission declared by `@RequirePermission`.
 
 ## Error Handling
 
@@ -274,7 +318,7 @@ async softDelete(id: string, userId: string): Promise<void> {
   "id": "uuid",
   "name": "Product Name",
   "_links": {
-    "self": { "href": "/products/uuid", "method": "GET" }
+    "self": { "href": "/api/v1/products/uuid", "method": "GET" }
   }
 }
 ```
@@ -320,7 +364,7 @@ Apply to controllers or individual endpoints:
 import { StandardThrottle, BulkThrottle, AuthThrottle } from 'src/common/decorators/throttle.decorator';
 
 @StandardThrottle() // 100 req/min
-@Controller('products')
+@Controller()
 export class ProductsController {
 
   @BulkThrottle() // Override with 20 req/min
@@ -329,7 +373,7 @@ export class ProductsController {
 }
 
 @AuthThrottle() // 10 req/min for auth endpoints
-@Controller('auth')
+@Controller()
 export class AuthController { ... }
 ```
 
@@ -449,62 +493,20 @@ async update(id: string, dto: UpdateCategoryDto) {
 - **Nesting**: Transactions can be nested (uses savepoints)
 - **Performance**: ~5-10ms overhead per transaction
 
-## Enhanced Error Handling
+## Audit Logging
 
-Authentication errors include detailed type information.
-
-### Clerk Error Classification
-
-The `ClerkAuthGuard` classifies errors for better UX:
+Use the `@Auditable()` decorator to automatically record entity changes:
 
 ```typescript
-{
-  "message": "Your session has expired. Please sign in again.",
-  "error_type": "token_expired",
-  "retryable": false
+@Post()
+@Auditable()
+@RequirePermission('products', 'create')
+async create(@Body() dto: CreateProductDto) {
+  return this.productsService.create(dto);
 }
 ```
 
-### Error Types
-
-| Type | Description | Retryable | User Action |
-|------|-------------|-----------|-------------|
-| `token_expired` | Session has expired | No | Re-authenticate |
-| `token_invalid` | Malformed/invalid token | No | Re-authenticate |
-| `token_missing` | No auth header provided | No | Provide token |
-| `network_error` | Clerk service unavailable | Yes | Retry request |
-| `configuration_error` | Server misconfigured | No | Contact support |
-| `unknown_error` | Other errors | Yes | Retry or contact support |
-
-### Frontend Integration
-
-```typescript
-try {
-  await api.getProducts();
-} catch (error) {
-  if (error.error_type === 'token_expired') {
-    // Redirect to login
-    router.push('/login');
-  } else if (error.retryable) {
-    // Implement retry logic with exponential backoff
-    await retryWithBackoff(() => api.getProducts());
-  } else {
-    // Show error message
-    toast.error(error.message);
-  }
-}
-```
-
-### Error Logging
-
-Full error details are logged server-side for debugging:
-
-```
-[WARN] Authentication failed: token_expired - TokenExpiredError: jwt expired
-  path: /api/v1/products
-  method: GET
-  errorType: token_expired
-```
+The audit log captures the action, user, entity, and timestamp.
 
 ## Health Checks
 
@@ -516,17 +518,16 @@ The API provides three health check endpoints using `@nestjs/terminus`.
 
 `GET /health-check`
 
-Checks database connectivity and Clerk configuration:
+Checks database connectivity and auth configuration:
 
 ```json
 {
   "status": "ok",
   "info": {
     "database": { "status": "up" },
-    "clerk": {
+    "auth": {
       "status": "up",
-      "message": "Clerk is properly configured",
-      "environment": "test"
+      "message": "Better Auth is properly configured"
     }
   }
 }
@@ -562,32 +563,6 @@ Kubernetes readiness probe - checks database only:
 ```
 
 Returns `503` if database is unreachable.
-
-### Custom Health Indicators
-
-The Clerk health indicator validates configuration:
-
-```typescript
-// routes/health/indicators/clerk-health.indicator.ts
-@Injectable()
-export class ClerkHealthIndicator extends HealthIndicator {
-  async isHealthy(key: string): Promise<HealthIndicatorResult> {
-    const secretKey = this.configService.get<string>('CLERK_SECRET_KEY');
-
-    if (!secretKey) {
-      throw new HealthCheckError('Clerk not configured', ...);
-    }
-
-    const isValid = secretKey.startsWith('sk_test_') ||
-                    secretKey.startsWith('sk_live_');
-
-    return this.getStatus(key, isValid, {
-      message: 'Clerk is properly configured',
-      environment: secretKey.startsWith('sk_test_') ? 'test' : 'live'
-    });
-  }
-}
-```
 
 ### Kubernetes Configuration
 

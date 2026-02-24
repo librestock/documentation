@@ -4,10 +4,12 @@ This section covers everything you need to contribute to the LibreStock Inventor
 
 ## Overview
 
-LibreStock Inventory is a pnpm monorepo containing:
+LibreStock Inventory is a multi-repo workspace containing:
 
-- **@librestock/api** - NestJS backend
-- **@librestock/web** - TanStack Start frontend
+- **backend/** - NestJS backend
+- **frontend/** - TanStack Start frontend
+- **packages/** - Shared types, configs
+- **meta/** - Orchestration scripts, Docker Compose
 
 ## Quick Links
 
@@ -24,7 +26,12 @@ LibreStock Inventory is a pnpm monorepo containing:
 1. **Start the environment**
 
     ```bash
-    devenv up
+    # Start services (PostgreSQL, etc.)
+    cd meta && docker compose up -d
+
+    # Enter dev shell (per-repo Nix flakes)
+    cd backend && nix develop
+    cd frontend && nix develop
     ```
 
 2. **Make changes** to the codebase

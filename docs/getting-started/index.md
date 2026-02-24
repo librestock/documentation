@@ -6,10 +6,10 @@ This section will help you get LibreStock Inventory up and running.
 
 Before you begin, ensure you have:
 
-- Node.js >= 20.0.0
-- pnpm >= 10.0.0
-- Nix with flakes enabled (for devenv)
-- PostgreSQL 16 (provided by devenv)
+- Node.js >= 20
+- pnpm >= 10
+- Nix with flakes enabled (each repo has its own `flake.nix`)
+- Docker & Docker Compose (for PostgreSQL and other services)
 
 ## Next Steps
 

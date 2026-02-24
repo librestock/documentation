@@ -4,22 +4,27 @@ Ce guide vous accompagnera dans la création de vos premiers produits dans Libre
 
 ## 1. Connexion
 
-Accédez à http://localhost:3000 et connectez-vous avec votre compte Clerk.
+Accédez à http://localhost:3000 et connectez-vous avec votre compte Better Auth.
 
 ## 2. Données d'Exemple (Optionnel)
 
 Pour remplir la base de données avec des données d'exemple pour les tests :
 
 ```bash
-cd modules/api
-pnpm seed
+pnpm --filter @librestock/api seed
 ```
 
 Ceci crée :
 
-- 10 catégories racines avec 3 sous-catégories chacune
-- 20 fournisseurs d'exemple
-- 100 produits d'exemple
+- Des catégories
+- Des fournisseurs
+- Des produits
+- Des emplacements
+- Des clients
+- Des enregistrements d'inventaire
+- Des commandes
+- Des mouvements de stock
+- Des journaux d'audit
 
 ## 3. Créer une Catégorie
 

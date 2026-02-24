@@ -4,9 +4,9 @@ Solutions aux problèmes courants lors du travail avec LibreStock Inventory.
 
 ## Environnement de développement
 
-### Devenv ne démarre pas
+### Le shell Nix ne démarre pas
 
-**Symptôme :** `devenv up` échoue ou se bloque
+**Symptôme :** `nix develop` échoue ou se bloque
 
 **Solutions :**
 
@@ -15,15 +15,36 @@ Solutions aux problèmes courants lors du travail avec LibreStock Inventory.
    nix --version
    ```
 
-2. Mettre à jour devenv :
-   ```bash
-   nix-env -iA devenv -f https://github.com/NixOS/nixpkgs/tarball/nixos-unstable
+2. S'assurer que les flakes sont activés dans votre configuration Nix (`~/.config/nix/nix.conf`) :
+   ```
+   experimental-features = nix-command flakes
    ```
 
-3. Vider le cache devenv :
+3. Essayer d'entrer dans le shell depuis le répertoire du dépôt spécifique :
    ```bash
-   rm -rf .devenv
-   devenv up
+   cd backend && nix develop
+   ```
+
+### Les services Docker ne démarrent pas
+
+**Symptôme :** `docker compose -f meta/docker-compose.yml up -d` échoue
+
+**Solutions :**
+
+1. Vérifier que Docker est en cours d'exécution :
+   ```bash
+   docker info
+   ```
+
+2. Vérifier les conflits de ports :
+   ```bash
+   lsof -i :5432
+   ```
+
+3. Réinitialiser les conteneurs Docker :
+   ```bash
+   docker compose -f meta/docker-compose.yml down -v
+   docker compose -f meta/docker-compose.yml up -d
    ```
 
 ### Port déjà utilisé
@@ -55,7 +76,7 @@ kill -9 <PID>
 
 2. Vérifier la version de Node.js :
    ```bash
-   node --version  # Doit être 22+
+   node --version  # Doit être 20+
    ```
 
 ## Problèmes de base de données
@@ -71,12 +92,12 @@ kill -9 <PID>
    pg_isready -h localhost -p 5432
    ```
 
-2. Avec devenv, s'assurer qu'il est démarré :
+2. Démarrer PostgreSQL via Docker Compose :
    ```bash
-   devenv up
+   docker compose -f meta/docker-compose.yml up -d
    ```
 
-3. Vérifier les variables d'environnement dans `.env`
+3. Vérifier les variables d'environnement dans `backend/.env`
 
 ### Erreurs de migration
 
@@ -95,21 +116,31 @@ kill -9 <PID>
    psql -h localhost -U postgres -c '\l'
    ```
 
+3. Exécuter les migrations en attente :
+   ```bash
+   pnpm --filter @librestock/api migration:run
+   ```
+
 ## Problèmes API
 
-### Erreurs d'authentification Clerk
+### Erreurs d'authentification Better Auth
 
 **Symptôme :** Erreurs 401 Unauthorized
 
 **Solutions :**
 
-1. Vérifier `CLERK_SECRET_KEY` dans `modules/api/.env`
-2. Vérifier que le token est envoyé :
+1. Vérifier que `BETTER_AUTH_SECRET` est défini dans `backend/.env` (doit être 32+ octets aléatoires)
+2. Vérifier que `BETTER_AUTH_URL` est correctement défini (ex : `http://localhost:8080`)
+3. Vérifier que le token est envoyé :
    ```bash
    # La requête doit inclure :
    # Authorization: Bearer <token>
    ```
-3. Vérifier la configuration du dashboard Clerk
+4. Essayer de régénérer le secret :
+   ```bash
+   openssl rand -base64 32
+   ```
+   Mettre à jour `BETTER_AUTH_SECRET` dans `backend/.env` et redémarrer le serveur.
 
 ### Échec du build des types partagés
 
@@ -124,7 +155,7 @@ kill -9 <PID>
 
 2. Vérifier les erreurs TypeScript :
    ```bash
-   pnpm --filter @librestock/api build
+   pnpm --filter @librestock/api type-check
    ```
 
 ## Problèmes Frontend
@@ -137,6 +168,7 @@ kill -9 <PID>
 
 1. Rebuild des types partagés après les changements API :
    ```bash
+   pnpm --filter @librestock/types barrels
    pnpm --filter @librestock/types build
    ```
 
@@ -156,7 +188,7 @@ kill -9 <PID>
 
 **Solutions :**
 
-1. Vérifier que les fichiers de locale existent dans `modules/web/src/locales/`
+1. Vérifier que les fichiers de locale existent dans `frontend/src/locales/`
 2. Vérifier la configuration i18n
 3. Vérifier le préfixe de langue dans l'URL
 
@@ -170,9 +202,8 @@ kill -9 <PID>
 
 ```bash
 # Vérifier un module spécifique
-pnpm --filter @librestock/api build
-pnpm --filter @librestock/web build
-
+pnpm --filter @librestock/api type-check
+pnpm --filter @librestock/web type-check
 ```
 
 ### Erreurs ESLint
@@ -208,7 +239,7 @@ pnpm --filter @librestock/web lint:fix
 
 Si vous êtes toujours bloqué :
 
-1. Consultez les [issues existantes](https://github.com/your-org/librestock/issues)
+1. Consultez les [issues existantes](https://github.com/librestock/documentation/issues)
 2. Recherchez les messages d'erreur en ligne
 3. Ouvrez une nouvelle issue avec :
     - Message d'erreur

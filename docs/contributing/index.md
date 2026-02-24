@@ -4,7 +4,7 @@ Thank you for your interest in contributing to LibreStock Inventory! This sectio
 
 ## Ways to Contribute
 
-- **Report bugs** - Found an issue? [Open an issue](https://github.com/your-org/librestock/issues)
+- **Report bugs** - Found an issue? [Open an issue](https://github.com/librestock/meta/issues)
 - **Suggest features** - Have an idea? Share it with us
 - **Submit code** - Fix bugs or add features
 - **Improve documentation** - Help others understand the project
@@ -24,6 +24,6 @@ We are committed to providing a welcoming and inclusive environment. Please be r
 
 If you have questions about contributing:
 
-- Check existing [issues](https://github.com/your-org/librestock/issues)
+- Check existing [issues](https://github.com/librestock/meta/issues)
 - Review the [documentation](../index.md)
 - Ask in discussions

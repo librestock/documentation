@@ -8,11 +8,18 @@ Ce document décrit les directives pour contribuer à LibreStock Inventory.
 
 ```bash
 # Fork le repository sur GitHub, puis :
-git clone https://github.com/VOTRE-NOM/librestock.git
-cd librestock
+git clone https://github.com/VOTRE-NOM/meta.git
+cd meta
 ```
 
-### 2. Créer une branche
+### 2. Initialiser le workspace
+
+```bash
+# Installer les dépendances et configurer tous les dépôts
+./meta/scripts/bootstrap
+```
+
+### 3. Créer une branche
 
 ```bash
 git checkout -b feature/nom-de-votre-fonctionnalite
@@ -20,26 +27,35 @@ git checkout -b feature/nom-de-votre-fonctionnalite
 git checkout -b fix/description-du-probleme
 ```
 
-### 3. Faire des modifications
+### 4. Faire des modifications
 
 - Suivez le [guide de style de code](../development/code-style.md)
 - Écrivez des tests pour les nouvelles fonctionnalités
 - Mettez à jour la documentation si nécessaire
 
-### 4. Tester vos modifications
+### 5. Tester vos modifications
 
 ```bash
-# Exécuter le linting
-pnpm lint
+# Exécuter le linting backend
+pnpm --filter @librestock/api lint
 
-# Exécuter les tests
-pnpm test
+# Exécuter le linting frontend
+pnpm --filter @librestock/web lint
 
-# Build pour vérifier les erreurs de type
-pnpm build
+# Exécuter les tests backend
+pnpm --filter @librestock/api test
+
+# Exécuter les tests E2E frontend
+pnpm --filter @librestock/web test:e2e
+
+# Build backend pour vérifier les erreurs de type
+pnpm --filter @librestock/api build
+
+# Build frontend pour vérifier les erreurs de type
+pnpm --filter @librestock/web build
 ```
 
-### 5. Committer vos modifications
+### 6. Committer vos modifications
 
 Utilisez des messages de commit clairs et descriptifs :
 
@@ -59,7 +75,7 @@ Suivez le format [Conventional Commits](https://www.conventionalcommits.org/) :
 - `test:` - Ajout ou mise à jour de tests
 - `chore:` - Tâches de maintenance
 
-### 6. Push et créer une PR
+### 7. Push et créer une PR
 
 ```bash
 git push origin feature/nom-de-votre-fonctionnalite

@@ -26,7 +26,6 @@ The product list displays:
    - **SKU** - Unique identifier (can be scanned via QR code)
    - **Name** - Product name
    - **Category** - Select from the category tree
-   - **Reorder Point** - Minimum stock level for alerts
 
 <!-- ![Product Form](../assets/screenshots/products/product-form.png) -->
 
@@ -34,15 +33,24 @@ The product list displays:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| SKU | Yes | Unique stock keeping unit |
-| Name | Yes | Product display name |
+| SKU | Yes | Unique stock keeping unit (max 50 chars) |
+| Name | Yes | Product display name (max 200 chars) |
 | Category | Yes | Product category |
 | Description | No | Detailed description |
+| Volume (ml) | No | Volume in milliliters |
+| Weight (kg) | No | Weight in kilograms |
+| Dimensions (cm) | No | Dimensions, e.g., "10x10x5" |
 | Standard Cost | No | Purchase cost |
 | Standard Price | No | Selling price |
-| Reorder Point | Yes | Low stock threshold |
-| Is Active | Yes | Product availability |
-| Is Perishable | Yes | Expiration tracking |
+| Markup Percentage | No | Markup percentage |
+| Reorder Point | No | Low stock threshold (defaults to 0) |
+| Primary Supplier | No | Link to a supplier record |
+| Supplier SKU | No | SKU used by the supplier |
+| Barcode | No | Barcode value, e.g., "0641628607549" |
+| Unit | No | Unit of measure, e.g., "units" |
+| Is Active | No | Product availability (defaults to true) |
+| Is Perishable | No | Expiration tracking (defaults to false) |
+| Notes | No | Additional notes |
 
 ### Using the QR Scanner
 
@@ -77,6 +85,21 @@ Select multiple products using the checkboxes to perform bulk actions:
 2. Click the action button in the toolbar
 3. Confirm the action
 4. View results summary
+
+### Bulk CSV Import
+
+You can import multiple products at once using a CSV file:
+
+1. Click the **Import** button in the toolbar
+2. Download the CSV template to see the expected format
+3. Fill in the product data in the CSV file
+4. Upload the completed CSV file
+5. Review the import preview and confirm
+
+!!! tip "CSV Import Tips"
+    - Ensure SKUs are unique and not already in the system
+    - Category names must match existing categories exactly
+    - Leave optional fields empty if not applicable
 
 ## Soft Delete and Restore
 

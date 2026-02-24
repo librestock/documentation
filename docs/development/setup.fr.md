@@ -4,14 +4,16 @@ Ce guide vous accompagne dans la configuration de votre environnement de dévelo
 
 ## Prérequis
 
-- **Node.js** 22+ (géré par devenv)
-- **pnpm** 10+ (géré par devenv)
-- **PostgreSQL** 16+ (géré par devenv)
+- **Node.js** >= 20 (géré par Nix)
+- **pnpm** >= 10 (géré par Nix)
+- **PostgreSQL** 16 (via Docker Compose)
 - **Nix** avec flakes activés
+- **1Password CLI** (pour la configuration des variables d'environnement)
+- **just** command runner (pour la configuration des variables d'environnement)
 
-## Configuration rapide avec devenv
+## Configuration rapide avec Nix Flakes
 
-La méthode recommandée utilise [devenv.sh](https://devenv.sh/) pour une configuration reproductible.
+Chaque repo possède son propre Nix flake pour un environnement de développement reproductible.
 
 ### 1. Installer Nix
 
@@ -20,21 +22,31 @@ La méthode recommandée utilise [devenv.sh](https://devenv.sh/) pour une config
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-### 2. Installer devenv
+### 2. Cloner et configurer
 
 ```bash
-nix-env -iA devenv -f https://github.com/NixOS/nixpkgs/tarball/nixos-unstable
+git clone https://github.com/librestock/meta.git
+cd meta && ./scripts/bootstrap && cd ..
 ```
 
-### 3. Cloner et configurer
+### 3. Démarrer les services
 
 ```bash
-git clone <repo-url>
-cd librestock
-devenv up
+# Démarrer PostgreSQL et autres services via Docker Compose
+cd meta && docker compose up -d
 ```
 
-Cela démarre automatiquement :
+### 4. Entrer dans le shell de développement
+
+```bash
+# Shell de développement backend
+cd backend && nix develop
+
+# Shell de développement frontend
+cd frontend && nix develop
+```
+
+Cela fournit :
 
 - PostgreSQL sur le port 5432
 - API NestJS sur le port 8080
@@ -63,31 +75,35 @@ createdb librestock_inventory
 
 ### 3. Configurer les variables d'environnement
 
-Créez les fichiers `.env` dans chaque module :
+Créez les fichiers `.env` dans chaque repo :
 
-**API (`modules/api/.env`) :**
+**Backend (`backend/.env`) :**
 
 ```bash
 DATABASE_URL=postgresql://localhost:5432/librestock_inventory
-CLERK_SECRET_KEY=sk_test_xxx
+BETTER_AUTH_SECRET=votre-secret-ici
 PORT=8080
 ```
 
-**Web (`modules/web/.env.local`) :**
+**Frontend (`frontend/.env.local`) :**
 
 ```bash
-VITE_API_BASE_URL=http://localhost:8080
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_xxx
+VITE_API_BASE_URL=http://localhost:8080/api/v1
 ```
+
+!!! note "Secret Better Auth"
+    `BETTER_AUTH_SECRET` ne doit se trouver que dans le `.env` du backend -- jamais dans le frontend.
 
 ### 4. Démarrer les services
 
 ```bash
-# Terminal 1 - API
-pnpm --filter @librestock/api start:dev
+# Terminal 1 - Backend
+cd backend
+pnpm start:dev
 
-# Terminal 2 - Web
-pnpm --filter @librestock/web dev
+# Terminal 2 - Frontend
+cd frontend
+pnpm dev
 ```
 
 ## Vérification
@@ -126,5 +142,7 @@ Nettoyez et réinstallez :
 
 ```bash
 rm -rf node_modules
+rm -rf backend/node_modules
+rm -rf frontend/node_modules
 pnpm install
 ```

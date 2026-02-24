@@ -2,9 +2,6 @@
 
 Track yacht provisioning orders through their complete lifecycle.
 
-!!! note "Coming Soon"
-    The order management module is currently under development. See the [Roadmap](../roadmap.md) for planned features.
-
 ## Order Workflow
 
 Orders follow this lifecycle:
@@ -17,8 +14,20 @@ graph LR
     D --> E[Packed]
     E --> F[Shipped]
     F --> G[Delivered]
-    B --> H[Cancelled]
+    A --> H[Cancelled]
+    B --> H
+    C --> H
+    D --> H
+    E --> H
     B --> I[On Hold]
+    C --> I
+    D --> I
+    E --> I
+    I --> H
+    I --> B
+    I --> C
+    I --> D
+    I --> E
 ```
 
 ### Order Statuses
@@ -32,18 +41,38 @@ graph LR
 | Packed | Items are packed and ready for shipping |
 | Shipped | Order is in transit |
 | Delivered | Order has been delivered |
-| Cancelled | Order was cancelled |
-| On Hold | Order is temporarily paused |
+| Cancelled | Order was cancelled (reachable from Draft, Confirmed, Sourcing, Picking, Packed, On Hold) |
+| On Hold | Order is temporarily paused (reachable from Confirmed, Sourcing, Picking, Packed; can return to those statuses or be Cancelled) |
+
+### Order Fields
+
+| Field | Description |
+|-------|-------------|
+| Order Number | Unique order identifier |
+| Client | Linked client record |
+| Status | Current order status |
+| Delivery Deadline | Required delivery date |
+| Delivery Address | Shipping destination |
+| Yacht Name | Target yacht for provisioning |
+| Special Instructions | Additional delivery notes |
+| Total Amount | Computed order total |
+| Assigned To | User responsible for the order |
+| Created By | User who created the order |
+| Confirmed At | Timestamp when order was confirmed |
+| Shipped At | Timestamp when order was shipped |
+| Delivered At | Timestamp when order was delivered |
+| Kanban Task ID | Link to kanban board task |
 
 ## Creating an Order
 
 1. Navigate to **Orders**
 2. Click **Create Order**
 3. Fill in order details:
-   - Client information
-   - Delivery address
-   - Yacht name
-   - Delivery deadline
+   - **Client** - Select a client from the client list
+   - **Delivery Address** - Shipping destination
+   - **Yacht Name** - Target yacht
+   - **Delivery Deadline** - Required delivery date
+   - **Special Instructions** - Any additional notes
 4. Add line items
 5. Save as draft or confirm
 
@@ -65,11 +94,3 @@ All order changes are tracked in the audit log:
 - Item additions/removals
 - Quantity changes
 - Assignment changes
-
-## Planned Features
-
-- [ ] Purchase order creation
-- [ ] Supplier integration
-- [ ] Automatic inventory updates
-- [ ] Email notifications
-- [ ] Order templates

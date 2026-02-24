@@ -79,15 +79,17 @@ Use the **Adjust** feature to add or remove inventory:
 !!! tip "Adjustment vs Update"
     Use **Adjust** for incremental changes (received shipment, sold items). Use **Update** to set an absolute quantity (stock count corrections).
 
-## Moving Inventory
+## Moving Inventory (Stock Movements)
 
-To move inventory between locations:
+The Stock Movements module allows you to track and record inventory transfers between locations:
 
-1. **Reduce** quantity at the source location
-2. **Add** or increase quantity at the destination location
+1. Navigate to **Stock Movements**
+2. Click **Create Movement**
+3. Select the source location and destination location
+4. Select the product and quantity to transfer
+5. Confirm the movement
 
-!!! info "Future Feature"
-    Direct inventory transfers between locations are planned for a future release.
+Stock movements provide a full audit trail of inventory transfers, making it easy to trace where stock has been moved and by whom.
 
 ## Low Stock Alerts
 

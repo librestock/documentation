@@ -2,19 +2,19 @@
 
 Complete reference of all environment variables used in LibreStock Inventory.
 
-## API Module
+## Backend API
 
-Location: `modules/api/.env`
+Location: `backend/.env`
 
 ### Database
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `DATABASE_URL` | Yes* | Full PostgreSQL connection string | `postgresql://user:pass@localhost:5432/librestock` |
+| `DATABASE_URL` | Yes* | Full PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/librestock_inventory` |
 | `PGHOST` | Yes* | PostgreSQL host | `localhost` |
 | `PGPORT` | Yes* | PostgreSQL port | `5432` |
 | `PGUSER` | Yes* | PostgreSQL user | `postgres` |
-| `PGPASSWORD` | Yes* | PostgreSQL password | `secret` |
+| `PGPASSWORD` | Yes* | PostgreSQL password | `postgres` |
 | `PGDATABASE` | Yes* | PostgreSQL database name | `librestock_inventory` |
 
 *Either `DATABASE_URL` or individual `PG*` variables are required.
@@ -23,7 +23,8 @@ Location: `modules/api/.env`
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `CLERK_SECRET_KEY` | Yes | Clerk backend API key | `sk_test_xxx...` |
+| `BETTER_AUTH_SECRET` | Yes | Random 32+ byte string for session signing | `<output of openssl rand -base64 32>` |
+| `BETTER_AUTH_URL` | Yes | Backend server URL for Better Auth | `http://localhost:8080` |
 
 ### Server
 
@@ -31,6 +32,8 @@ Location: `modules/api/.env`
 |----------|----------|---------|-------------|
 | `PORT` | No | `8080` | API server port |
 | `NODE_ENV` | No | `development` | Environment mode |
+| `CORS_ORIGIN` | No | `http://localhost:3000` | Allowed CORS origin |
+| `FRONTEND_URL` | No | `http://localhost:3000` | Frontend URL for redirects |
 
 ### Example `.env`
 
@@ -39,38 +42,65 @@ Location: `modules/api/.env`
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/librestock_inventory
 
 # Authentication
-CLERK_SECRET_KEY=sk_test_xxxxxxxxxxxx
+BETTER_AUTH_SECRET=<random 32+ byte string>
+BETTER_AUTH_URL=http://localhost:8080
 
 # Server
 PORT=8080
 NODE_ENV=development
+CORS_ORIGIN=http://localhost:3000
+FRONTEND_URL=http://localhost:3000
 ```
 
-## Web Module
+## Frontend Web
 
-Location: `modules/web/.env.local`
+Location: `frontend/.env`
 
 ### API
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `VITE_API_BASE_URL` | Yes | Backend API URL | `http://localhost:8080` |
+| `VITE_API_BASE_URL` | Yes | Backend API URL | `http://localhost:8080/api/v1` |
 
-### Authentication
+### Monitoring
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `VITE_CLERK_PUBLISHABLE_KEY` | Yes | Clerk frontend API key | `pk_test_xxx...` |
+| `VITE_SENTRY_DSN` | No | Sentry DSN for error tracking | `https://xxx@sentry.io/xxx` |
+| `SENTRY_AUTH_TOKEN` | No | Sentry auth token for source maps | `sntrys_xxx...` |
 
-### Example `.env.local`
+### Example `.env`
 
 ```bash
 # API
-VITE_API_BASE_URL=http://localhost:8080
+VITE_API_BASE_URL=http://localhost:8080/api/v1
 
-# Authentication
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxx
+# Monitoring (optional)
+VITE_SENTRY_DSN=<sentry dsn>
+SENTRY_AUTH_TOKEN=<sentry auth token>
 ```
+
+## Setting Up Environment Files
+
+**Backend:**
+
+```bash
+cp backend/.env.template backend/.env
+```
+
+**Frontend:**
+
+```bash
+echo "VITE_API_BASE_URL=http://localhost:8080/api/v1" > frontend/.env
+```
+
+!!!tip "1Password CLI"
+    Both repos have a `justfile` with a `decrypt` task that uses 1Password CLI:
+    ```bash
+    cd backend && just decrypt
+    cd frontend && just decrypt
+    ```
+    This runs `op inject -i env.template -o .env` to populate secrets from 1Password.
 
 ## CI/CD Secrets
 
@@ -78,10 +108,14 @@ GitHub Actions secrets required for CI/CD:
 
 | Secret | Description |
 |--------|-------------|
-| `CLERK_SECRET_KEY` | Clerk API key for CI tests |
-| `AWS_DOCS_ROLE_ARN` | IAM role for docs deployment |
-| `DOCS_S3_BUCKET` | S3 bucket for documentation |
-| `DOCS_CLOUDFRONT_DISTRIBUTION_ID` | CloudFront distribution ID |
+| `BETTER_AUTH_SECRET` | Better Auth secret for CI tests |
+
+## Documentation Deployment
+
+Documentation is deployed via GitHub Pages:
+
+- **Site URL:** https://librestock.github.io/documentation/
+- **Repo:** https://github.com/librestock/documentation
 
 ## Production Considerations
 
@@ -91,10 +125,10 @@ GitHub Actions secrets required for CI/CD:
 - Use secrets management in production
 - Rotate keys regularly
 
-### Clerk
+### Better Auth
 
-- Use production keys in production environment
-- Configure allowed origins in Clerk dashboard
+- Use a strong, unique `BETTER_AUTH_SECRET` in production (32+ random bytes)
+- Set `BETTER_AUTH_URL` to your production backend URL
 
 ### Database
 

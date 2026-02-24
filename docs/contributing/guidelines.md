@@ -8,11 +8,18 @@ This document outlines the guidelines for contributing to LibreStock Inventory.
 
 ```bash
 # Fork the repository on GitHub, then:
-git clone https://github.com/YOUR-USERNAME/librestock.git
-cd librestock
+git clone https://github.com/YOUR-USERNAME/meta.git
+cd meta
 ```
 
-### 2. Create a Branch
+### 2. Bootstrap the Workspace
+
+```bash
+# Install dependencies and set up all repos
+./meta/scripts/bootstrap
+```
+
+### 3. Create a Branch
 
 ```bash
 git checkout -b feature/your-feature-name
@@ -20,26 +27,35 @@ git checkout -b feature/your-feature-name
 git checkout -b fix/issue-description
 ```
 
-### 3. Make Changes
+### 4. Make Changes
 
 - Follow the [code style guide](../development/code-style.md)
 - Write tests for new functionality
 - Update documentation as needed
 
-### 4. Test Your Changes
+### 5. Test Your Changes
 
 ```bash
-# Run linting
-pnpm lint
+# Run backend linting
+pnpm --filter @librestock/api lint
 
-# Run tests
-pnpm test
+# Run frontend linting
+pnpm --filter @librestock/web lint
 
-# Build to check for type errors
-pnpm build
+# Run backend tests
+pnpm --filter @librestock/api test
+
+# Run frontend E2E tests
+pnpm --filter @librestock/web test:e2e
+
+# Build backend to check for type errors
+pnpm --filter @librestock/api build
+
+# Build frontend to check for type errors
+pnpm --filter @librestock/web build
 ```
 
-### 5. Commit Your Changes
+### 6. Commit Your Changes
 
 Use clear, descriptive commit messages:
 
@@ -59,7 +75,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) format:
 - `test:` - Adding or updating tests
 - `chore:` - Maintenance tasks
 
-### 6. Push and Create PR
+### 7. Push and Create PR
 
 ```bash
 git push origin feature/your-feature-name

@@ -26,7 +26,7 @@ pnpm --filter @librestock/api build  # Includes type check
 
 ## ESLint Configuration
 
-Configuration is shared via `packages/eslint-config/`.
+Both repos use ESLint. Configuration is shared via `packages/eslint-config/`.
 
 ### Key Rules
 
@@ -46,7 +46,7 @@ import { CreateProductDto } from './dto';
 
 ```typescript
 // Use inline type imports
-import { type ProductResponseDto } from '@/lib/data/products';
+import { type ProductResponseDto } from '~/lib/data/products';
 ```
 
 **Unused Variables**:
@@ -58,15 +58,22 @@ const { data, error: _error } = useQuery();
 
 ## Prettier Configuration
 
+### Backend
+
+The backend uses a `.prettierrc` with the following settings:
+
 ```json
 {
-  "semi": true,
   "singleQuote": true,
-  "trailingComma": "all",
-  "printWidth": 120,
-  "tabWidth": 2
+  "trailingComma": "all"
 }
 ```
+
+All other values use Prettier defaults (printWidth: 80, semi: true, tabWidth: 2).
+
+### Frontend
+
+The frontend uses `prettier-plugin-tailwindcss` for automatic Tailwind class sorting but has **no custom `.prettierrc`** -- it uses Prettier defaults (double quotes, printWidth: 80, semi: true, trailingComma: "all").
 
 ## TypeScript
 
@@ -88,8 +95,8 @@ All modules use strict TypeScript:
 
 | Module | Alias | Maps to |
 |--------|-------|---------|
-| Web | `@/*` | `./src/*` |
-| API | `src/*` | `./src/*` |
+| Frontend | `~/*` | `./src/*` |
+| Backend | `src/*` | `./src/*` |
 
 ## Naming Conventions
 
@@ -97,11 +104,11 @@ All modules use strict TypeScript:
 
 | Type | Convention | Example |
 |------|------------|---------|
-| API Module | kebab-case | `products.module.ts` |
-| API Entity | singular | `product.entity.ts` |
-| API DTO | kebab-case | `create-product.dto.ts` |
-| Web Component | PascalCase | `ProductForm.tsx` |
-| Web UI | kebab-case | `button.tsx` |
+| Backend Module | kebab-case | `products.module.ts` |
+| Backend Entity | singular | `product.entity.ts` |
+| Backend DTO | kebab-case | `create-product.dto.ts` |
+| Frontend Component | PascalCase | `ProductForm.tsx` |
+| Frontend UI | kebab-case | `button.tsx` |
 
 ### Code
 
@@ -113,7 +120,7 @@ All modules use strict TypeScript:
 | Constant | UPPER_SNAKE | `MAX_PAGE_SIZE` |
 | Enum Member | UPPER_SNAKE | `AuditAction.CREATE` |
 
-### API Module Structure
+### Backend Module Structure
 
 ```
 routes/<feature>/
@@ -130,7 +137,7 @@ routes/<feature>/
     └── index.ts             # Barrel export
 ```
 
-### Web Module Structure
+### Frontend Component Structure
 
 ```
 components/

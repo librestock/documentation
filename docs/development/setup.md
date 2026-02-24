@@ -6,26 +6,33 @@ This guide covers setting up the development environment for contributing to Lib
 
 - Node.js >= 20.0.0
 - pnpm >= 10.0.0
-- Nix with flakes (for devenv)
+- PostgreSQL 16
+- Nix with flakes enabled (recommended)
 - Git
+- 1Password CLI (for env setup)
+- just command runner (for env setup)
 
-## Using devenv (Recommended)
+## Using Nix Flakes (Recommended)
 
-The project uses [devenv.sh](https://devenv.sh) for reproducible development environments.
+Each repo has its own Nix flake for reproducible development shells.
 
 ### Enter Development Shell
 
 ```bash
-git clone https://github.com/maximilianpw/librestock-inventory.git
-cd librestock-inventory
-devenv shell
+git clone https://github.com/librestock/meta.git
+cd meta && ./scripts/bootstrap && cd ..
+
+# Backend dev shell
+cd backend && nix develop
+
+# Frontend dev shell
+cd frontend && nix develop
 ```
 
 This provides:
 
-- Node.js 24 and pnpm 10
+- Node.js 20+ and pnpm 10
 - Python 3.12 with MkDocs
-- PostgreSQL 16
 - All environment variables configured
 
 ### Install Dependencies
@@ -36,8 +43,22 @@ pnpm install
 
 ### Start Services
 
+Use Docker Compose in `meta/` for services:
+
 ```bash
-devenv up
+cd meta && docker compose up -d
+```
+
+Then start the application servers:
+
+```bash
+# Terminal 1 - Backend
+cd backend
+pnpm start:dev
+
+# Terminal 2 - Frontend
+cd frontend
+pnpm dev
 ```
 
 Services started:
@@ -51,40 +72,46 @@ Services started:
 
 ## Common Commands
 
-### Root Level
+### Meta Level
 
 ```bash
-pnpm install          # Install all dependencies
-pnpm build            # Build all packages
-pnpm lint             # Lint all packages
-pnpm test             # Test all packages
-pnpm docs:dev         # Start documentation server
-pnpm docs:build       # Build documentation
+cd meta
+pnpm sync              # Sync all repos
+pnpm bootstrap         # Bootstrap all repos
+pnpm dev               # Start all services for development
 ```
 
-### API Module
+### Backend
 
 ```bash
-pnpm --filter @librestock/api start:dev      # Development server
-pnpm --filter @librestock/api build          # Build
-pnpm --filter @librestock/api test           # Run tests
-pnpm --filter @librestock/api test:e2e       # E2E tests
-pnpm --filter @librestock/types build        # Build shared types
+cd backend
+pnpm start:dev         # Development server
+pnpm build             # Build
+pnpm test              # Run tests
+pnpm test:e2e          # E2E tests
 ```
 
-### Web Module
+### Frontend
 
 ```bash
-pnpm --filter @librestock/web dev           # Development server
-pnpm --filter @librestock/web build         # Production build
-pnpm --filter @librestock/web lint          # Lint
+cd frontend
+pnpm dev               # Development server
+pnpm build             # Production build
+pnpm lint              # Lint
+```
+
+### Shared Types
+
+```bash
+pnpm --filter @librestock/types barrels   # Generate barrel exports
+pnpm --filter @librestock/types build     # Build shared types
 ```
 
 ## Database Setup
 
-### With devenv
+### With Docker Compose
 
-The database is automatically created and configured.
+The database is automatically created and configured via Docker Compose in `meta/`.
 
 ### Manual Setup
 
@@ -97,27 +124,36 @@ createdb librestock_inventory
 Populate with sample data:
 
 ```bash
-cd modules/api
+cd backend
 pnpm seed
 ```
 
 ## Environment Variables
 
-### API (.env)
+### Backend (.env)
 
 ```bash
 DATABASE_URL=postgresql://user@localhost:5432/librestock_inventory
-CLERK_SECRET_KEY=sk_test_...
+BETTER_AUTH_SECRET=your-secret-here
 PORT=8080
 NODE_ENV=development
 ```
 
-### Web (.env.local)
+### Frontend (.env.local)
 
 ```bash
 VITE_API_BASE_URL=http://localhost:8080/api/v1
-VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
+```
+
+!!! note "Better Auth secret"
+    `BETTER_AUTH_SECRET` lives only in the backend `.env` -- never in the frontend.
+
+### Environment Setup with 1Password
+
+Use the `just` command runner and 1Password CLI for managing env variables:
+
+```bash
+just env-setup
 ```
 
 ## IDE Setup
@@ -163,6 +199,7 @@ Clean install:
 
 ```bash
 rm -rf node_modules
-rm -rf modules/*/node_modules
+rm -rf backend/node_modules
+rm -rf frontend/node_modules
 pnpm install
 ```

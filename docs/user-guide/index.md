@@ -20,6 +20,14 @@ Organize products in a hierarchical category structure with unlimited nesting.
 
 [:octicons-arrow-right-24: Categories](categories.md)
 
+### Suppliers
+
+Manage supplier records, contact information, and link suppliers to products.
+
+### Clients
+
+Track client information for yacht provisioning orders.
+
 ### Locations
 
 Manage warehouses, supplier facilities, client yachts, and items in transit.
@@ -38,11 +46,19 @@ Track stock quantities across locations with batch numbers and expiry dates.
 
 [:octicons-arrow-right-24: Inventory](inventory.md)
 
+### Stock Movements
+
+Track stock movements between locations for full inventory traceability.
+
 ### Orders
 
 Track yacht provisioning orders through their complete lifecycle from draft to delivery.
 
 [:octicons-arrow-right-24: Orders](orders.md)
+
+### Roles & Users
+
+Manage user accounts and role-based access control.
 
 ### Audit Logs
 
@@ -54,7 +70,7 @@ View complete change history with before/after diffs and user tracking.
 
 !!! tip "Keyboard Shortcuts"
     - `Ctrl/Cmd + K` - Open search
-    - `Ctrl/Cmd + /` - Toggle sidebar
+    - `Ctrl/Cmd + B` - Toggle sidebar
 
 !!! tip "QR Scanning"
     Use the QR code button next to SKU fields to scan barcodes with your camera.

@@ -4,23 +4,42 @@ Ce guide couvre les workflows GitHub Actions et les processus de déploiement po
 
 ## Workflows
 
-### Pipeline CI
+Les workflows CI sont **par repo**, pas au niveau racine du workspace.
 
-**Fichier :** `.github/workflows/ci.yml`
+### Pipeline CI Backend
+
+**Fichier :** `backend/.github/workflows/ci.yml`
 
 S'exécute à chaque pull request et push sur main :
 
-- Lint de tous les packages
+- Lint
 - Vérification des types
-- Exécution des tests
-- Build de tous les packages
-- Build des types partagés
+- Exécution des tests unitaires
+- Exécution des tests E2E
+- Build
+
+### Pipeline CI Frontend
+
+**Fichier :** `frontend/.github/workflows/ci.yml`
+
+S'exécute à chaque pull request et push sur main :
+
+- Lint
+- Vérification des types
+- Build
+
+### Publication Docker
+
+Chaque repo possède son propre workflow de publication Docker :
+
+- **Backend :** `backend/.github/workflows/docker-publish.yml`
+- **Frontend :** `frontend/.github/workflows/docker-publish.yml`
 
 ### Déploiement de la documentation
 
-**Fichier :** `.github/workflows/deploy-docs.yml`
+**Fichier :** `documentation/.github/workflows/deploy-docs.yml`
 
-Déploie la documentation sur AWS S3 + CloudFront lors d'un push sur main.
+Déploie la documentation via GitHub Pages lors d'un push sur main.
 
 ## Secrets GitHub Actions
 
@@ -28,16 +47,16 @@ Déploie la documentation sur AWS S3 + CloudFront lors d'un push sur main.
 
 | Secret | Description |
 |--------|-------------|
-| `CLERK_SECRET_KEY` | Authentification Clerk |
-| `AWS_DOCS_ROLE_ARN` | Rôle IAM pour le déploiement docs |
-| `DOCS_S3_BUCKET` | Nom du bucket S3 |
-| `DOCS_CLOUDFRONT_DISTRIBUTION_ID` | Distribution CloudFront |
+| `BETTER_AUTH_SECRET` | Secret Better Auth (CI backend uniquement) |
+
+!!! note "Secrets d'authentification"
+    `BETTER_AUTH_SECRET` n'est nécessaire que dans le CI du backend. Le frontend ne nécessite aucun secret d'authentification.
 
 ## Workflow Pull Request
 
 1. **Créer une branche** depuis `main`
 2. **Faire des modifications** et committer
-3. **Ouvrir une PR** - CI s'exécute automatiquement
+3. **Ouvrir une PR** - CI s'exécute automatiquement (par repo)
 4. **Review** - Attendre l'approbation
 5. **Merger** - Squash and merge vers main
 
@@ -54,27 +73,25 @@ Les PRs doivent inclure :
 Exécuter les mêmes vérifications localement avant de pusher :
 
 ```bash
-# Installer les dépendances
+# Backend
+cd backend
 pnpm install
-
-# Lint
 pnpm lint
-
-# Vérification des types
 pnpm build
-
-# Test
 pnpm test
 
-# Build docs
-pnpm docs:build
+# Frontend
+cd frontend
+pnpm install
+pnpm lint
+pnpm build
 ```
 
 ## Déploiement
 
 ### Documentation
 
-La documentation est automatiquement déployée quand des changements sont pushés sur main.
+La documentation est automatiquement déployée via GitHub Pages quand des changements sont pushés sur main.
 
 Chemins déclencheurs :
 
@@ -84,7 +101,7 @@ Chemins déclencheurs :
 
 ### Application
 
-Le déploiement de l'application n'est pas encore automatisé. Voir [Feuille de route](../roadmap.md) pour les fonctionnalités planifiées.
+Les images Docker sont publiées via les workflows `docker-publish.yml` dans chaque repo.
 
 ## Dépannage
 
@@ -99,14 +116,17 @@ pnpm lint --fix
 **Erreurs de type :**
 
 ```bash
-pnpm --filter @librestock/api build
-pnpm --filter @librestock/web build
+# Backend
+cd backend && pnpm build
+
+# Frontend
+cd frontend && pnpm build
 ```
 
 **Échecs de tests :**
 
 ```bash
-pnpm test -- --verbose
+cd backend && pnpm test -- --verbose
 ```
 
 ### Problèmes de cache

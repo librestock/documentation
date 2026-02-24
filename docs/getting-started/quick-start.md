@@ -4,22 +4,27 @@ This guide will walk you through creating your first products in LibreStock Inve
 
 ## 1. Sign In
 
-Navigate to http://localhost:3000 and sign in with your Clerk account.
+Navigate to http://localhost:3000 and sign in with your Better Auth account.
 
 ## 2. Seed Sample Data (Optional)
 
 To populate the database with sample data for testing:
 
 ```bash
-cd modules/api
-pnpm seed
+pnpm --filter @librestock/api seed
 ```
 
 This creates:
 
-- 10 root categories with 3 subcategories each
-- 20 sample suppliers
-- 100 sample products
+- Categories
+- Suppliers
+- Products
+- Locations
+- Clients
+- Inventory records
+- Orders
+- Stock movements
+- Audit logs
 
 ## 3. Create a Category
 

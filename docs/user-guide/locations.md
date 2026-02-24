@@ -45,7 +45,7 @@ The location list displays:
 | Address | No | Physical address |
 | Contact Person | No | Primary contact name |
 | Phone | No | Contact phone number |
-| Is Active | Yes | Location availability |
+| Is Active | No | Location availability (defaults to true) |
 
 ## Editing Locations
 
@@ -54,7 +54,7 @@ The location list displays:
 3. Click **Save** to apply changes
 
 !!! warning "Deleting Locations"
-    Deleting a location will also delete all areas within it (cascade delete). Inventory records will have their location reference cleared.
+    Deleting a location will **fail** if other entities reference it (inventory records, areas, etc.). You must remove or reassign all associated inventory records and areas before deleting a location.
 
 ## Location Hierarchy
 
