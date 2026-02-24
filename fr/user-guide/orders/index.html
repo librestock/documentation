@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -950,6 +950,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#champs-de-la-commande" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Champs de la Commande
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -982,17 +993,6 @@
     <span class="md-ellipsis">
       
         Historique des Commandes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fonctionnalites-prevues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fonctionnalités Prévues
       
     </span>
   </a>
@@ -1701,6 +1701,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#champs-de-la-commande" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Champs de la Commande
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1739,17 +1750,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#fonctionnalites-prevues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fonctionnalités Prévues
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1772,10 +1772,6 @@
 
 <h1 id="traitement-des-commandes">Traitement des Commandes<a class="headerlink" href="#traitement-des-commandes" title="Permanent link">&para;</a></h1>
 <p>Suivez les commandes d'approvisionnement des yachts tout au long de leur cycle de vie complet.</p>
-<div class="admonition note">
-<p class="admonition-title">Bientôt Disponible</p>
-<p>Le module de gestion des commandes est actuellement en cours de développement. Consultez la <a href="../../roadmap/">Feuille de Route</a> pour les fonctionnalités prévues.</p>
-</div>
 <h2 id="flux-de-travail-des-commandes">Flux de Travail des Commandes<a class="headerlink" href="#flux-de-travail-des-commandes" title="Permanent link">&para;</a></h2>
 <p>Les commandes suivent ce cycle de vie :</p>
 <pre class="mermaid"><code>graph LR
@@ -1785,8 +1781,20 @@
     D --&gt; E[Emballée]
     E --&gt; F[Expédiée]
     F --&gt; G[Livrée]
-    B --&gt; H[Annulée]
-    B --&gt; I[En Attente]</code></pre>
+    A --&gt; H[Annulée]
+    B --&gt; H
+    C --&gt; H
+    D --&gt; H
+    E --&gt; H
+    B --&gt; I[En Attente]
+    C --&gt; I
+    D --&gt; I
+    E --&gt; I
+    I --&gt; H
+    I --&gt; B
+    I --&gt; C
+    I --&gt; D
+    I --&gt; E</code></pre>
 <h3 id="statuts-des-commandes">Statuts des Commandes<a class="headerlink" href="#statuts-des-commandes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1826,11 +1834,78 @@
 </tr>
 <tr>
 <td>Annulée</td>
-<td>La commande a été annulée</td>
+<td>La commande a été annulée (accessible depuis Brouillon, Confirmée, Approvisionnement, Préparation, Emballée, En Attente)</td>
 </tr>
 <tr>
 <td>En Attente</td>
-<td>La commande est temporairement suspendue</td>
+<td>La commande est temporairement suspendue (accessible depuis Confirmée, Approvisionnement, Préparation, Emballée ; peut revenir à ces statuts ou être Annulée)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="champs-de-la-commande">Champs de la Commande<a class="headerlink" href="#champs-de-la-commande" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Numéro de Commande</td>
+<td>Identifiant unique de la commande</td>
+</tr>
+<tr>
+<td>Client</td>
+<td>Fiche client associée</td>
+</tr>
+<tr>
+<td>Statut</td>
+<td>Statut actuel de la commande</td>
+</tr>
+<tr>
+<td>Date Limite de Livraison</td>
+<td>Date de livraison requise</td>
+</tr>
+<tr>
+<td>Adresse de Livraison</td>
+<td>Destination d'expédition</td>
+</tr>
+<tr>
+<td>Nom du Yacht</td>
+<td>Yacht cible pour l'approvisionnement</td>
+</tr>
+<tr>
+<td>Instructions Spéciales</td>
+<td>Notes de livraison supplémentaires</td>
+</tr>
+<tr>
+<td>Montant Total</td>
+<td>Total calculé de la commande</td>
+</tr>
+<tr>
+<td>Assignée À</td>
+<td>Utilisateur responsable de la commande</td>
+</tr>
+<tr>
+<td>Créée Par</td>
+<td>Utilisateur ayant créé la commande</td>
+</tr>
+<tr>
+<td>Confirmée Le</td>
+<td>Horodatage de la confirmation</td>
+</tr>
+<tr>
+<td>Expédiée Le</td>
+<td>Horodatage de l'expédition</td>
+</tr>
+<tr>
+<td>Livrée Le</td>
+<td>Horodatage de la livraison</td>
+</tr>
+<tr>
+<td>ID Tâche Kanban</td>
+<td>Lien vers la tâche du tableau kanban</td>
 </tr>
 </tbody>
 </table>
@@ -1839,10 +1914,11 @@
 <li>Accédez aux <strong>Commandes</strong></li>
 <li>Cliquez sur <strong>Créer une Commande</strong></li>
 <li>Remplissez les détails de la commande :</li>
-<li>Informations client</li>
-<li>Adresse de livraison</li>
-<li>Nom du yacht</li>
-<li>Date limite de livraison</li>
+<li><strong>Client</strong> - Sélectionnez un client dans la liste des clients</li>
+<li><strong>Adresse de Livraison</strong> - Destination d'expédition</li>
+<li><strong>Nom du Yacht</strong> - Yacht cible</li>
+<li><strong>Date Limite de Livraison</strong> - Date de livraison requise</li>
+<li><strong>Instructions Spéciales</strong> - Notes supplémentaires éventuelles</li>
 <li>Ajoutez les articles</li>
 <li>Enregistrez comme brouillon ou confirmez</li>
 </ol>
@@ -1862,14 +1938,6 @@
 <li>Ajouts/suppressions d'articles</li>
 <li>Modifications de quantité</li>
 <li>Changements d'affectation</li>
-</ul>
-<h2 id="fonctionnalites-prevues">Fonctionnalités Prévues<a class="headerlink" href="#fonctionnalites-prevues" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Création de bons de commande</li>
-<li>[ ] Intégration fournisseurs</li>
-<li>[ ] Mises à jour automatiques de l'inventaire</li>
-<li>[ ] Notifications par email</li>
-<li>[ ] Modèles de commande</li>
 </ul>
 
 
@@ -1893,7 +1961,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7 février 2026 11:05:02 UTC">7 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
   </span>
 
     

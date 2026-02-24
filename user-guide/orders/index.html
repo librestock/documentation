@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -950,6 +950,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#order-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Order Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -982,17 +993,6 @@
     <span class="md-ellipsis">
       
         Order History
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#planned-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Features
       
     </span>
   </a>
@@ -1701,6 +1701,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#order-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Order Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1739,17 +1750,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#planned-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Features
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1772,10 +1772,6 @@
 
 <h1 id="order-processing">Order Processing<a class="headerlink" href="#order-processing" title="Permanent link">&para;</a></h1>
 <p>Track yacht provisioning orders through their complete lifecycle.</p>
-<div class="admonition note">
-<p class="admonition-title">Coming Soon</p>
-<p>The order management module is currently under development. See the <a href="../../roadmap/">Roadmap</a> for planned features.</p>
-</div>
 <h2 id="order-workflow">Order Workflow<a class="headerlink" href="#order-workflow" title="Permanent link">&para;</a></h2>
 <p>Orders follow this lifecycle:</p>
 <pre class="mermaid"><code>graph LR
@@ -1785,8 +1781,20 @@
     D --&gt; E[Packed]
     E --&gt; F[Shipped]
     F --&gt; G[Delivered]
-    B --&gt; H[Cancelled]
-    B --&gt; I[On Hold]</code></pre>
+    A --&gt; H[Cancelled]
+    B --&gt; H
+    C --&gt; H
+    D --&gt; H
+    E --&gt; H
+    B --&gt; I[On Hold]
+    C --&gt; I
+    D --&gt; I
+    E --&gt; I
+    I --&gt; H
+    I --&gt; B
+    I --&gt; C
+    I --&gt; D
+    I --&gt; E</code></pre>
 <h3 id="order-statuses">Order Statuses<a class="headerlink" href="#order-statuses" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1826,11 +1834,78 @@
 </tr>
 <tr>
 <td>Cancelled</td>
-<td>Order was cancelled</td>
+<td>Order was cancelled (reachable from Draft, Confirmed, Sourcing, Picking, Packed, On Hold)</td>
 </tr>
 <tr>
 <td>On Hold</td>
-<td>Order is temporarily paused</td>
+<td>Order is temporarily paused (reachable from Confirmed, Sourcing, Picking, Packed; can return to those statuses or be Cancelled)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="order-fields">Order Fields<a class="headerlink" href="#order-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Order Number</td>
+<td>Unique order identifier</td>
+</tr>
+<tr>
+<td>Client</td>
+<td>Linked client record</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Current order status</td>
+</tr>
+<tr>
+<td>Delivery Deadline</td>
+<td>Required delivery date</td>
+</tr>
+<tr>
+<td>Delivery Address</td>
+<td>Shipping destination</td>
+</tr>
+<tr>
+<td>Yacht Name</td>
+<td>Target yacht for provisioning</td>
+</tr>
+<tr>
+<td>Special Instructions</td>
+<td>Additional delivery notes</td>
+</tr>
+<tr>
+<td>Total Amount</td>
+<td>Computed order total</td>
+</tr>
+<tr>
+<td>Assigned To</td>
+<td>User responsible for the order</td>
+</tr>
+<tr>
+<td>Created By</td>
+<td>User who created the order</td>
+</tr>
+<tr>
+<td>Confirmed At</td>
+<td>Timestamp when order was confirmed</td>
+</tr>
+<tr>
+<td>Shipped At</td>
+<td>Timestamp when order was shipped</td>
+</tr>
+<tr>
+<td>Delivered At</td>
+<td>Timestamp when order was delivered</td>
+</tr>
+<tr>
+<td>Kanban Task ID</td>
+<td>Link to kanban board task</td>
 </tr>
 </tbody>
 </table>
@@ -1839,10 +1914,11 @@
 <li>Navigate to <strong>Orders</strong></li>
 <li>Click <strong>Create Order</strong></li>
 <li>Fill in order details:</li>
-<li>Client information</li>
-<li>Delivery address</li>
-<li>Yacht name</li>
-<li>Delivery deadline</li>
+<li><strong>Client</strong> - Select a client from the client list</li>
+<li><strong>Delivery Address</strong> - Shipping destination</li>
+<li><strong>Yacht Name</strong> - Target yacht</li>
+<li><strong>Delivery Deadline</strong> - Required delivery date</li>
+<li><strong>Special Instructions</strong> - Any additional notes</li>
 <li>Add line items</li>
 <li>Save as draft or confirm</li>
 </ol>
@@ -1862,14 +1938,6 @@
 <li>Item additions/removals</li>
 <li>Quantity changes</li>
 <li>Assignment changes</li>
-</ul>
-<h2 id="planned-features">Planned Features<a class="headerlink" href="#planned-features" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Purchase order creation</li>
-<li>[ ] Supplier integration</li>
-<li>[ ] Automatic inventory updates</li>
-<li>[ ] Email notifications</li>
-<li>[ ] Order templates</li>
 </ul>
 
 
@@ -1893,7 +1961,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2026 11:05:02 UTC">February 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 24, 2026 18:26:45 UTC">February 24, 2026</span>
   </span>
 
     

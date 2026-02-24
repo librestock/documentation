@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1761,17 +1761,22 @@
 <h1 id="demarrage-rapide">Démarrage Rapide<a class="headerlink" href="#demarrage-rapide" title="Permanent link">&para;</a></h1>
 <p>Ce guide vous accompagnera dans la création de vos premiers produits dans LibreStock Inventory.</p>
 <h2 id="1-connexion">1. Connexion<a class="headerlink" href="#1-connexion" title="Permanent link">&para;</a></h2>
-<p>Accédez à http://localhost:3000 et connectez-vous avec votre compte Clerk.</p>
+<p>Accédez à http://localhost:3000 et connectez-vous avec votre compte Better Auth.</p>
 <h2 id="2-donnees-dexemple-optionnel">2. Données d'Exemple (Optionnel)<a class="headerlink" href="#2-donnees-dexemple-optionnel" title="Permanent link">&para;</a></h2>
 <p>Pour remplir la base de données avec des données d'exemple pour les tests :</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>modules/api
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pnpm<span class="w"> </span>seed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>seed
 </code></pre></div>
 <p>Ceci crée :</p>
 <ul>
-<li>10 catégories racines avec 3 sous-catégories chacune</li>
-<li>20 fournisseurs d'exemple</li>
-<li>100 produits d'exemple</li>
+<li>Des catégories</li>
+<li>Des fournisseurs</li>
+<li>Des produits</li>
+<li>Des emplacements</li>
+<li>Des clients</li>
+<li>Des enregistrements d'inventaire</li>
+<li>Des commandes</li>
+<li>Des mouvements de stock</li>
+<li>Des journaux d'audit</li>
 </ul>
 <h2 id="3-creer-une-categorie">3. Créer une Catégorie<a class="headerlink" href="#3-creer-une-categorie" title="Permanent link">&para;</a></h2>
 <ol>
@@ -1828,7 +1833,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7 février 2026 11:05:02 UTC">7 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
   </span>
 
     

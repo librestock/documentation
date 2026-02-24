@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1186,6 +1186,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Prettier Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1262,10 +1290,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#api-module-structure" class="md-nav__link">
+  <a href="#backend-module-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Module Structure
+        Backend Module Structure
       
     </span>
   </a>
@@ -1273,10 +1301,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#web-module-structure" class="md-nav__link">
+  <a href="#frontend-component-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Web Module Structure
+        Frontend Component Structure
       
     </span>
   </a>
@@ -1898,6 +1926,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Prettier Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1974,10 +2030,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#api-module-structure" class="md-nav__link">
+  <a href="#backend-module-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Module Structure
+        Backend Module Structure
       
     </span>
   </a>
@@ -1985,10 +2041,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#web-module-structure" class="md-nav__link">
+  <a href="#frontend-component-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Web Module Structure
+        Frontend Component Structure
       
     </span>
   </a>
@@ -2129,7 +2185,7 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build<span class="w">  </span><span class="c1"># Includes type check</span>
 </code></pre></div>
 <h2 id="eslint-configuration">ESLint Configuration<a class="headerlink" href="#eslint-configuration" title="Permanent link">&para;</a></h2>
-<p>Configuration is shared via <code>packages/eslint-config/</code>.</p>
+<p>Both repos use ESLint. Configuration is shared via <code>packages/eslint-config/</code>.</p>
 <h3 id="key-rules">Key Rules<a class="headerlink" href="#key-rules" title="Permanent link">&para;</a></h3>
 <p><strong>Import Order</strong> (enforced):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// 1. External dependencies</span>
@@ -2142,21 +2198,23 @@
 </code></pre></div>
 <p><strong>Type Imports</strong>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Use inline type imports</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ProductResponseDto</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@/lib/data/products&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">ProductResponseDto</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;~/lib/data/products&#39;</span><span class="p">;</span>
 </code></pre></div>
 <p><strong>Unused Variables</strong>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Prefix with underscore to ignore</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">_error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useQuery</span><span class="p">();</span>
 </code></pre></div>
 <h2 id="prettier-configuration">Prettier Configuration<a class="headerlink" href="#prettier-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h3>
+<p>The backend uses a <code>.prettierrc</code> with the following settings:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;semi&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;singleQuote&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;trailingComma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">&quot;printWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">&quot;tabWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;singleQuote&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;trailingComma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;all&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </code></pre></div>
+<p>All other values use Prettier defaults (printWidth: 80, semi: true, tabWidth: 2).</p>
+<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
+<p>The frontend uses <code>prettier-plugin-tailwindcss</code> for automatic Tailwind class sorting but has <strong>no custom <code>.prettierrc</code></strong> -- it uses Prettier defaults (double quotes, printWidth: 80, semi: true, trailingComma: "all").</p>
 <h2 id="typescript">TypeScript<a class="headerlink" href="#typescript" title="Permanent link">&para;</a></h2>
 <h3 id="strict-mode">Strict Mode<a class="headerlink" href="#strict-mode" title="Permanent link">&para;</a></h3>
 <p>All modules use strict TypeScript:</p>
@@ -2179,12 +2237,12 @@
 </thead>
 <tbody>
 <tr>
-<td>Web</td>
-<td><code>@/*</code></td>
+<td>Frontend</td>
+<td><code>~/*</code></td>
 <td><code>./src/*</code></td>
 </tr>
 <tr>
-<td>API</td>
+<td>Backend</td>
 <td><code>src/*</code></td>
 <td><code>./src/*</code></td>
 </tr>
@@ -2202,27 +2260,27 @@
 </thead>
 <tbody>
 <tr>
-<td>API Module</td>
+<td>Backend Module</td>
 <td>kebab-case</td>
 <td><code>products.module.ts</code></td>
 </tr>
 <tr>
-<td>API Entity</td>
+<td>Backend Entity</td>
 <td>singular</td>
 <td><code>product.entity.ts</code></td>
 </tr>
 <tr>
-<td>API DTO</td>
+<td>Backend DTO</td>
 <td>kebab-case</td>
 <td><code>create-product.dto.ts</code></td>
 </tr>
 <tr>
-<td>Web Component</td>
+<td>Frontend Component</td>
 <td>PascalCase</td>
 <td><code>ProductForm.tsx</code></td>
 </tr>
 <tr>
-<td>Web UI</td>
+<td>Frontend UI</td>
 <td>kebab-case</td>
 <td><code>button.tsx</code></td>
 </tr>
@@ -2265,7 +2323,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="api-module-structure">API Module Structure<a class="headerlink" href="#api-module-structure" title="Permanent link">&para;</a></h3>
+<h3 id="backend-module-structure">Backend Module Structure<a class="headerlink" href="#backend-module-structure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>routes/&lt;feature&gt;/
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── &lt;feature&gt;.module.ts      # ProductsModule
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├── &lt;feature&gt;.controller.ts  # ProductsController
@@ -2279,7 +2337,7 @@
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    ├── &lt;entity&gt;-response.dto.ts
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    └── index.ts             # Barrel export
 </code></pre></div>
-<h3 id="web-module-structure">Web Module Structure<a class="headerlink" href="#web-module-structure" title="Permanent link">&para;</a></h3>
+<h3 id="frontend-component-structure">Frontend Component Structure<a class="headerlink" href="#frontend-component-structure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>components/
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── ui/                     # Base components (kebab-case)
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│   ├── button.tsx
@@ -2371,7 +2429,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2026 11:05:02 UTC">February 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 24, 2026 18:26:45 UTC">February 24, 2026</span>
   </span>
 
     

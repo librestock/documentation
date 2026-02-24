@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -616,15 +616,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#using-devenv-recommended" class="md-nav__link">
+  <a href="#using-nix-flakes-docker-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using devenv (Recommended)
+        Using Nix Flakes + Docker (Recommended)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using devenv (Recommended)">
+    <nav class="md-nav" aria-label="Using Nix Flakes + Docker (Recommended)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -639,10 +639,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-install-devenv" class="md-nav__link">
+  <a href="#2-clone-the-workspace" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Install devenv
+        2. Clone the Workspace
       
     </span>
   </a>
@@ -650,10 +650,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-clone-and-enter-environment" class="md-nav__link">
+  <a href="#3-bootstrap-the-workspace" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Clone and Enter Environment
+        3. Bootstrap the Workspace
       
     </span>
   </a>
@@ -661,10 +661,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-install-dependencies" class="md-nav__link">
+  <a href="#4-enter-a-nix-shell-per-repo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Install Dependencies
+        4. Enter a Nix Shell (per-repo)
       
     </span>
   </a>
@@ -676,6 +676,17 @@
     <span class="md-ellipsis">
       
         5. Start Development Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-configure-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Configure Environment Variables
       
     </span>
   </a>
@@ -1762,15 +1773,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#using-devenv-recommended" class="md-nav__link">
+  <a href="#using-nix-flakes-docker-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using devenv (Recommended)
+        Using Nix Flakes + Docker (Recommended)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using devenv (Recommended)">
+    <nav class="md-nav" aria-label="Using Nix Flakes + Docker (Recommended)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1785,10 +1796,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-install-devenv" class="md-nav__link">
+  <a href="#2-clone-the-workspace" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Install devenv
+        2. Clone the Workspace
       
     </span>
   </a>
@@ -1796,10 +1807,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-clone-and-enter-environment" class="md-nav__link">
+  <a href="#3-bootstrap-the-workspace" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Clone and Enter Environment
+        3. Bootstrap the Workspace
       
     </span>
   </a>
@@ -1807,10 +1818,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-install-dependencies" class="md-nav__link">
+  <a href="#4-enter-a-nix-shell-per-repo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Install Dependencies
+        4. Enter a Nix Shell (per-repo)
       
     </span>
   </a>
@@ -1822,6 +1833,17 @@
     <span class="md-ellipsis">
       
         5. Start Development Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-configure-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Configure Environment Variables
       
     </span>
   </a>
@@ -1938,31 +1960,40 @@
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
 <p>This guide covers setting up the LibreStock Inventory development environment.</p>
-<h2 id="using-devenv-recommended">Using devenv (Recommended)<a class="headerlink" href="#using-devenv-recommended" title="Permanent link">&para;</a></h2>
-<p>The project uses <a href="https://devenv.sh">devenv.sh</a> for reproducible development environments.</p>
+<h2 id="using-nix-flakes-docker-recommended">Using Nix Flakes + Docker (Recommended)<a class="headerlink" href="#using-nix-flakes-docker-recommended" title="Permanent link">&para;</a></h2>
+<p>The project uses per-repo <a href="https://nixos.wiki/wiki/Flakes">Nix flakes</a> for reproducible development environments and Docker Compose for services like PostgreSQL.</p>
 <h3 id="1-install-nix">1. Install Nix<a class="headerlink" href="#1-install-nix" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sh<span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-L<span class="w"> </span>https://nixos.org/nix/install<span class="o">)</span><span class="w"> </span>--daemon
 </code></pre></div>
-<h3 id="2-install-devenv">2. Install devenv<a class="headerlink" href="#2-install-devenv" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nix<span class="w"> </span>profile<span class="w"> </span>install<span class="w"> </span>nixpkgs#devenv
+<p>Ensure flakes are enabled in your Nix configuration.</p>
+<h3 id="2-clone-the-workspace">2. Clone the Workspace<a class="headerlink" href="#2-clone-the-workspace" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/librestock/meta.git
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>meta<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./scripts/bootstrap<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
 </code></pre></div>
-<h3 id="3-clone-and-enter-environment">3. Clone and Enter Environment<a class="headerlink" href="#3-clone-and-enter-environment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/maximilianpw/librestock-inventory.git
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>librestock-inventory
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>devenv<span class="w"> </span>shell
+<h3 id="3-bootstrap-the-workspace">3. Bootstrap the Workspace<a class="headerlink" href="#3-bootstrap-the-workspace" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./meta/scripts/bootstrap
 </code></pre></div>
-<p>This will:</p>
+<p>This will sync all repos and install dependencies.</p>
+<h3 id="4-enter-a-nix-shell-per-repo">4. Enter a Nix Shell (per-repo)<a class="headerlink" href="#4-enter-a-nix-shell-per-repo" title="Permanent link">&para;</a></h3>
+<p>Each repo (backend, frontend, etc.) has its own <code>flake.nix</code>. Enter the shell for the repo you need:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># or</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+</code></pre></div>
+<p>This will provide:</p>
 <ul>
-<li>Install Node.js 24 and pnpm 10</li>
-<li>Install Python 3.12 with MkDocs</li>
-<li>Set up PostgreSQL 16</li>
-<li>Configure all environment variables</li>
+<li>Node.js 20+ and pnpm 10</li>
+<li>All repo-specific tooling</li>
 </ul>
-<h3 id="4-install-dependencies">4. Install Dependencies<a class="headerlink" href="#4-install-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>install
-</code></pre></div>
 <h3 id="5-start-development-services">5. Start Development Services<a class="headerlink" href="#5-start-development-services" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>devenv<span class="w"> </span>up
+<p>Start PostgreSQL and other services via Docker Compose:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>meta/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Or use the meta dev script to start everything (backend + frontend dev servers):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>./meta/scripts/dev
+</code></pre></div>
+<p>To also start Docker services automatically:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>./meta/scripts/dev<span class="w"> </span>--with-docker
 </code></pre></div>
 <p>This starts:</p>
 <table>
@@ -1989,40 +2020,55 @@
 <td>http://localhost:3000</td>
 <td>Frontend</td>
 </tr>
-<tr>
-<td>MkDocs</td>
-<td>http://localhost:8000</td>
-<td>Documentation</td>
-</tr>
 </tbody>
 </table>
+<h3 id="6-configure-environment-variables">6. Configure Environment Variables<a class="headerlink" href="#6-configure-environment-variables" title="Permanent link">&para;</a></h3>
+<p><strong>Backend:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cp<span class="w"> </span>backend/.env.template<span class="w"> </span>backend/.env
+</code></pre></div>
+<p>Edit <code>backend/.env</code> with your configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://postgres:postgres@localhost:5432/librestock_inventory
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">NODE_ENV</span><span class="o">=</span>development
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">CORS_ORIGIN</span><span class="o">=</span>http://localhost:3000
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">BETTER_AUTH_SECRET</span><span class="o">=</span>&lt;random<span class="w"> </span><span class="m">32</span>+<span class="w"> </span>byte<span class="w"> </span>string&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">BETTER_AUTH_URL</span><span class="o">=</span>http://localhost:8080
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">FRONTEND_URL</span><span class="o">=</span>http://localhost:3000
+</code></pre></div>
+<p><strong>Frontend:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;VITE_API_BASE_URL=http://localhost:8080/api/v1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>frontend/.env
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">1Password CLI</p>
+<p>Both backend and frontend have a <code>justfile</code> with a <code>decrypt</code> task. If you use 1Password CLI, you can generate <code>.env</code> files automatically:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>just<span class="w"> </span>decrypt
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>just<span class="w"> </span>decrypt
+</code></pre></div>
+This runs <code>op inject -i env.template -o .env</code> to populate secrets from 1Password.</p>
+</div>
 <h2 id="manual-setup-alternative">Manual Setup (Alternative)<a class="headerlink" href="#manual-setup-alternative" title="Permanent link">&para;</a></h2>
-<p>If you prefer not to use devenv:</p>
+<p>If you prefer not to use Nix:</p>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Node.js &gt;= 20.0.0</li>
-<li>pnpm &gt;= 10.0.0</li>
+<li>Node.js &gt;= 20</li>
+<li>pnpm &gt;= 10</li>
 <li>PostgreSQL 16</li>
 <li>Python 3.12 (for docs)</li>
 </ul>
 <h3 id="database-setup">Database Setup<a class="headerlink" href="#database-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>createdb<span class="w"> </span>librestock_inventory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>createdb<span class="w"> </span>librestock_inventory
 </code></pre></div>
 <h3 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
 <p>Copy the environment template:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cp<span class="w"> </span>modules/api/.env.template<span class="w"> </span>modules/api/.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cp<span class="w"> </span>backend/.env.template<span class="w"> </span>backend/.env
 </code></pre></div>
-<p>Edit <code>.env</code> with your configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user@localhost:5432/librestock_inventory
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">CLERK_SECRET_KEY</span><span class="o">=</span>sk_test_...
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span>
-</code></pre></div>
+<p>Edit <code>backend/.env</code> with your configuration (see table above).</p>
 <h3 id="start-services">Start Services<a class="headerlink" href="#start-services" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Terminal 1: API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>modules/api<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>start:dev
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Terminal 2: Web</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">cd</span><span class="w"> </span>modules/web<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>dev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Terminal 1: API</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>start:dev
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Terminal 2: Web</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>dev
 </code></pre></div>
 <h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
 <ol>
@@ -2056,7 +2102,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2026 11:05:02 UTC">February 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 24, 2026 18:26:45 UTC">February 24, 2026</span>
   </span>
 
     

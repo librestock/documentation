@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1575,10 +1575,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#devenv-wont-start" class="md-nav__link">
+  <a href="#nix-shell-wont-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Devenv won't start
+        Nix shell won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-services-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker services won't start
       
     </span>
   </a>
@@ -1664,10 +1675,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clerk-authentication-errors" class="md-nav__link">
+  <a href="#better-auth-authentication-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clerk authentication errors
+        Better Auth authentication errors
       
     </span>
   </a>
@@ -1873,10 +1884,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#devenv-wont-start" class="md-nav__link">
+  <a href="#nix-shell-wont-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Devenv won't start
+        Nix shell won't start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-services-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker services won't start
       
     </span>
   </a>
@@ -1962,10 +1984,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clerk-authentication-errors" class="md-nav__link">
+  <a href="#better-auth-authentication-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clerk authentication errors
+        Better Auth authentication errors
       
     </span>
   </a>
@@ -2139,8 +2161,8 @@
 <h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
 <p>Solutions to common issues when working with LibreStock Inventory.</p>
 <h2 id="development-environment">Development Environment<a class="headerlink" href="#development-environment" title="Permanent link">&para;</a></h2>
-<h3 id="devenv-wont-start">Devenv won't start<a class="headerlink" href="#devenv-wont-start" title="Permanent link">&para;</a></h3>
-<p><strong>Symptom:</strong> <code>devenv up</code> fails or hangs</p>
+<h3 id="nix-shell-wont-start">Nix shell won't start<a class="headerlink" href="#nix-shell-wont-start" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>nix develop</code> fails or hangs</p>
 <p><strong>Solutions:</strong></p>
 <ol>
 <li>
@@ -2149,25 +2171,45 @@
 </code></pre></div></p>
 </li>
 <li>
-<p>Update devenv:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nix-env<span class="w"> </span>-iA<span class="w"> </span>devenv<span class="w"> </span>-f<span class="w"> </span>https://github.com/NixOS/nixpkgs/tarball/nixos-unstable
+<p>Ensure flakes are enabled in your Nix config (<code>~/.config/nix/nix.conf</code>):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>experimental-features = nix-command flakes
 </code></pre></div></p>
 </li>
 <li>
-<p>Clear devenv cache:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>.devenv
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>devenv<span class="w"> </span>up
+<p>Try entering the shell from the specific repo directory:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="docker-services-wont-start">Docker services won't start<a class="headerlink" href="#docker-services-wont-start" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>docker compose -f meta/docker-compose.yml up -d</code> fails</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p>Check Docker is running:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>info
+</code></pre></div></p>
+</li>
+<li>
+<p>Check for port conflicts:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:5432
+</code></pre></div></p>
+</li>
+<li>
+<p>Reset Docker containers:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>meta/docker-compose.yml<span class="w"> </span>down<span class="w"> </span>-v
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>meta/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div></p>
 </li>
 </ol>
 <h3 id="port-already-in-use">Port already in use<a class="headerlink" href="#port-already-in-use" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> "Address already in use" error</p>
 <p><strong>Solutions:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Find process using the port</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:8080<span class="w">  </span><span class="c1"># or :3000, :5432</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Kill the process</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find process using the port</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:8080<span class="w">  </span><span class="c1"># or :3000, :5432</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Kill the process</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
 </code></pre></div>
 <h3 id="dependencies-wont-install">Dependencies won't install<a class="headerlink" href="#dependencies-wont-install" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> <code>pnpm install</code> fails</p>
@@ -2175,14 +2217,14 @@
 <ol>
 <li>
 <p>Clear pnpm cache:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>store<span class="w"> </span>prune
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>node_modules
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pnpm<span class="w"> </span>install
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pnpm<span class="w"> </span>store<span class="w"> </span>prune
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>node_modules
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pnpm<span class="w"> </span>install
 </code></pre></div></p>
 </li>
 <li>
 <p>Check Node.js version:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>node<span class="w"> </span>--version<span class="w">  </span><span class="c1"># Should be 22+</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>node<span class="w"> </span>--version<span class="w">  </span><span class="c1"># Should be 20+</span>
 </code></pre></div></p>
 </li>
 </ol>
@@ -2193,16 +2235,16 @@
 <ol>
 <li>
 <p>Check if PostgreSQL is running:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5432</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5432</span>
 </code></pre></div></p>
 </li>
 <li>
-<p>With devenv, ensure it's started:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>devenv<span class="w"> </span>up
+<p>Start PostgreSQL via Docker Compose:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>meta/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div></p>
 </li>
 <li>
-<p>Check environment variables in <code>.env</code></p>
+<p>Check environment variables in <code>backend/.env</code></p>
 </li>
 </ol>
 <h3 id="migration-errors">Migration errors<a class="headerlink" href="#migration-errors" title="Permanent link">&para;</a></h3>
@@ -2211,27 +2253,36 @@
 <ol>
 <li>
 <p>Sync schema (development only):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># TypeORM synchronize is enabled in dev</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Restart the API server</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># TypeORM synchronize is enabled in dev</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Restart the API server</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Check database exists:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;\l&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;\l&#39;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Run pending migrations:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>migration:run
 </code></pre></div></p>
 </li>
 </ol>
 <h2 id="api-issues">API Issues<a class="headerlink" href="#api-issues" title="Permanent link">&para;</a></h2>
-<h3 id="clerk-authentication-errors">Clerk authentication errors<a class="headerlink" href="#clerk-authentication-errors" title="Permanent link">&para;</a></h3>
+<h3 id="better-auth-authentication-errors">Better Auth authentication errors<a class="headerlink" href="#better-auth-authentication-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> 401 Unauthorized errors</p>
 <p><strong>Solutions:</strong></p>
 <ol>
-<li>Verify <code>CLERK_SECRET_KEY</code> in <code>modules/api/.env</code></li>
+<li>Verify <code>BETTER_AUTH_SECRET</code> is set in <code>backend/.env</code> (must be 32+ random bytes)</li>
+<li>Verify <code>BETTER_AUTH_URL</code> is set correctly (e.g., <code>http://localhost:8080</code>)</li>
 <li>Check token is being sent:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Request should include:</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Authorization: Bearer &lt;token&gt;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Request should include:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Authorization: Bearer &lt;token&gt;</span>
 </code></pre></div></li>
-<li>Verify Clerk dashboard configuration</li>
+<li>Try regenerating the secret:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span>
+</code></pre></div>
+   Update <code>BETTER_AUTH_SECRET</code> in <code>backend/.env</code> and restart the server.</li>
 </ol>
 <h3 id="shared-types-build-fails">Shared types build fails<a class="headerlink" href="#shared-types-build-fails" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> <code>@librestock/types</code> build fails</p>
@@ -2239,12 +2290,12 @@
 <ol>
 <li>
 <p>Build the API first:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
 </code></pre></div></p>
 </li>
 <li>
 <p>Check for TypeScript errors:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check
 </code></pre></div></p>
 </li>
 </ol>
@@ -2254,7 +2305,8 @@
 <p><strong>Solutions:</strong></p>
 <ol>
 <li>Rebuild shared types after API changes:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>barrels
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build
 </code></pre></div></li>
 </ol>
 <h3 id="hydration-errors">Hydration errors<a class="headerlink" href="#hydration-errors" title="Permanent link">&para;</a></h3>
@@ -2269,7 +2321,7 @@
 <p><strong>Symptom:</strong> Translation keys shown instead of text</p>
 <p><strong>Solutions:</strong></p>
 <ol>
-<li>Check locale files exist in <code>modules/web/src/locales/</code></li>
+<li>Check locale files exist in <code>frontend/src/locales/</code></li>
 <li>Verify i18n configuration</li>
 <li>Check language prefix in URL</li>
 </ol>
@@ -2277,16 +2329,16 @@
 <h3 id="typescript-errors">TypeScript errors<a class="headerlink" href="#typescript-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> Build fails with type errors</p>
 <p><strong>Solutions:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check specific module</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check specific module</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>type-check
 </code></pre></div>
 <h3 id="eslint-errors">ESLint errors<a class="headerlink" href="#eslint-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> Lint command fails</p>
 <p><strong>Solutions:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Auto-fix what&#39;s possible</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>lint<span class="w"> </span>--fix
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>lint:fix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Auto-fix what&#39;s possible</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>lint<span class="w"> </span>--fix
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>lint:fix
 </code></pre></div>
 <h2 id="cicd-issues">CI/CD Issues<a class="headerlink" href="#cicd-issues" title="Permanent link">&para;</a></h2>
 <h3 id="github-actions-failing">GitHub Actions failing<a class="headerlink" href="#github-actions-failing" title="Permanent link">&para;</a></h3>
@@ -2295,7 +2347,7 @@
 <ol>
 <li>
 <p>Run checks locally first:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pnpm<span class="w"> </span>lint<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pnpm<span class="w"> </span>lint<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>build
 </code></pre></div></p>
 </li>
 <li>
@@ -2308,7 +2360,7 @@
 <h2 id="getting-more-help">Getting More Help<a class="headerlink" href="#getting-more-help" title="Permanent link">&para;</a></h2>
 <p>If you're still stuck:</p>
 <ol>
-<li>Check <a href="https://github.com/your-org/librestock/issues">existing issues</a></li>
+<li>Check <a href="https://github.com/librestock/documentation/issues">existing issues</a></li>
 <li>Search error messages online</li>
 <li>Open a new issue with:<ul>
 <li>Error message</li>
@@ -2339,7 +2391,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2026 11:05:02 UTC">February 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 24, 2026 18:26:45 UTC">February 24, 2026</span>
   </span>
 
     

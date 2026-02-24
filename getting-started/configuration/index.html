@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -711,10 +711,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clerk-authentication" class="md-nav__link">
+  <a href="#better-auth-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clerk Authentication
+        Better Auth Authentication
       
     </span>
   </a>
@@ -734,10 +734,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-devenv-recommended" class="md-nav__link">
+  <a href="#using-docker-compose-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using devenv (Recommended)
+        Using Docker Compose (Recommended)
       
     </span>
   </a>
@@ -1757,10 +1757,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clerk-authentication" class="md-nav__link">
+  <a href="#better-auth-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clerk Authentication
+        Better Auth Authentication
       
     </span>
   </a>
@@ -1780,10 +1780,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-devenv-recommended" class="md-nav__link">
+  <a href="#using-docker-compose-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using devenv (Recommended)
+        Using Docker Compose (Recommended)
       
     </span>
   </a>
@@ -1852,7 +1852,7 @@
 <p>This guide covers all configuration options for LibreStock Inventory.</p>
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <h3 id="backend-api">Backend API<a class="headerlink" href="#backend-api" title="Permanent link">&para;</a></h3>
-<p>Located in <code>modules/api/.env</code>:</p>
+<p>Located in <code>backend/.env</code>:</p>
 <table>
 <thead>
 <tr>
@@ -1868,30 +1868,49 @@
 <td>PostgreSQL connection string</td>
 </tr>
 <tr>
-<td><code>CLERK_SECRET_KEY</code></td>
-<td>Yes</td>
-<td>Clerk secret key for authentication</td>
+<td><code>NODE_ENV</code></td>
+<td>No</td>
+<td>Environment mode (default: <code>development</code>)</td>
 </tr>
 <tr>
 <td><code>PORT</code></td>
 <td>No</td>
-<td>API port (default: 8080)</td>
+<td>API port (default: <code>8080</code>)</td>
 </tr>
 <tr>
-<td><code>NODE_ENV</code></td>
+<td><code>CORS_ORIGIN</code></td>
 <td>No</td>
-<td>Environment mode (development/production)</td>
+<td>Allowed CORS origin (default: <code>http://localhost:3000</code>)</td>
+</tr>
+<tr>
+<td><code>BETTER_AUTH_SECRET</code></td>
+<td>Yes</td>
+<td>Random 32+ byte string for Better Auth session signing</td>
+</tr>
+<tr>
+<td><code>BETTER_AUTH_URL</code></td>
+<td>Yes</td>
+<td>Better Auth server URL (e.g. <code>http://localhost:8080</code>)</td>
+</tr>
+<tr>
+<td><code>FRONTEND_URL</code></td>
+<td>No</td>
+<td>Frontend URL for redirects (default: <code>http://localhost:3000</code>)</td>
 </tr>
 </tbody>
 </table>
+<p>Individual database variables are also supported: <code>PGHOST</code>, <code>PGPORT</code>, <code>PGUSER</code>, <code>PGPASSWORD</code>, <code>PGDATABASE</code>.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user@localhost:5432/librestock_inventory
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">CLERK_SECRET_KEY</span><span class="o">=</span>sk_test_...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://postgres:postgres@localhost:5432/librestock_inventory
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">NODE_ENV</span><span class="o">=</span>development
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">NODE_ENV</span><span class="o">=</span>development
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">CORS_ORIGIN</span><span class="o">=</span>http://localhost:3000
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">BETTER_AUTH_SECRET</span><span class="o">=</span>&lt;random<span class="w"> </span><span class="m">32</span>+<span class="w"> </span>byte<span class="w"> </span>string&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">BETTER_AUTH_URL</span><span class="o">=</span>http://localhost:8080
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">FRONTEND_URL</span><span class="o">=</span>http://localhost:3000
 </code></pre></div>
 <h3 id="frontend-web">Frontend Web<a class="headerlink" href="#frontend-web" title="Permanent link">&para;</a></h3>
-<p>Located in <code>modules/web/.env.local</code>:</p>
+<p>Located in <code>frontend/.env</code>:</p>
 <table>
 <thead>
 <tr>
@@ -1907,42 +1926,50 @@
 <td>Backend API URL</td>
 </tr>
 <tr>
-<td><code>VITE_CLERK_PUBLISHABLE_KEY</code></td>
-<td>Yes</td>
-<td>Clerk publishable key</td>
+<td><code>VITE_SENTRY_DSN</code></td>
+<td>No</td>
+<td>Sentry DSN for error tracking</td>
 </tr>
 <tr>
-<td><code>CLERK_SECRET_KEY</code></td>
-<td>Yes</td>
-<td>Clerk secret key</td>
+<td><code>SENTRY_AUTH_TOKEN</code></td>
+<td>No</td>
+<td>Sentry auth token for source maps</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">VITE_API_BASE_URL</span><span class="o">=</span>http://localhost:8080/api/v1
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">VITE_CLERK_PUBLISHABLE_KEY</span><span class="o">=</span>pk_test_...
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">CLERK_SECRET_KEY</span><span class="o">=</span>sk_test_...
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">VITE_SENTRY_DSN</span><span class="o">=</span>&lt;sentry<span class="w"> </span>dsn&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">SENTRY_AUTH_TOKEN</span><span class="o">=</span>&lt;sentry<span class="w"> </span>auth<span class="w"> </span>token&gt;
 </code></pre></div>
-<h2 id="clerk-authentication">Clerk Authentication<a class="headerlink" href="#clerk-authentication" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Create a Clerk application at https://clerk.com</li>
-<li>Copy your API keys from the Clerk dashboard</li>
-<li>Add them to your environment files</li>
-</ol>
+<h2 id="better-auth-authentication">Better Auth Authentication<a class="headerlink" href="#better-auth-authentication" title="Permanent link">&para;</a></h2>
+<p>Better Auth is configured in the backend only. The <code>BETTER_AUTH_SECRET</code> must be a random string of at least 32 bytes. You can generate one with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span>
+</code></pre></div>
+<p><code>BETTER_AUTH_URL</code> should point to the backend server URL where Better Auth endpoints are served.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>BETTER_AUTH_SECRET</code> lives only in the backend <code>.env</code> -- it is never set in the frontend.</p>
+</div>
 <h2 id="database-configuration">Database Configuration<a class="headerlink" href="#database-configuration" title="Permanent link">&para;</a></h2>
-<h3 id="using-devenv-recommended">Using devenv (Recommended)<a class="headerlink" href="#using-devenv-recommended" title="Permanent link">&para;</a></h3>
-<p>The database is automatically configured when using devenv:</p>
+<h3 id="using-docker-compose-recommended">Using Docker Compose (Recommended)<a class="headerlink" href="#using-docker-compose-recommended" title="Permanent link">&para;</a></h3>
+<p>PostgreSQL is provided by Docker Compose:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>meta/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Default configuration:</p>
 <ul>
 <li>Database name: <code>librestock_inventory</code></li>
-<li>Host: <code>127.0.0.1</code></li>
+<li>Host: <code>localhost</code></li>
 <li>Port: <code>5432</code></li>
+<li>User: <code>postgres</code></li>
+<li>Password: <code>postgres</code></li>
 </ul>
 <h3 id="manual-configuration">Manual Configuration<a class="headerlink" href="#manual-configuration" title="Permanent link">&para;</a></h3>
 <p>Create the database:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>createdb<span class="w"> </span>librestock_inventory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>createdb<span class="w"> </span>librestock_inventory
 </code></pre></div>
 <p>Set the connection string:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://username:password@localhost:5432/librestock_inventory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://username:password@localhost:5432/librestock_inventory
 </code></pre></div>
 <h2 id="api-documentation">API Documentation<a class="headerlink" href="#api-documentation" title="Permanent link">&para;</a></h2>
 <p>Swagger UI is available at:</p>
@@ -1977,7 +2004,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 7, 2026 11:05:02 UTC">February 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="February 24, 2026 18:26:45 UTC">February 24, 2026</span>
   </span>
 
     

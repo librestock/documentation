@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1111,15 +1111,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-rapide-avec-devenv" class="md-nav__link">
+  <a href="#configuration-rapide-avec-nix-flakes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration rapide avec devenv
+        Configuration rapide avec Nix Flakes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration rapide avec devenv">
+    <nav class="md-nav" aria-label="Configuration rapide avec Nix Flakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1134,10 +1134,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-installer-devenv" class="md-nav__link">
+  <a href="#2-cloner-et-configurer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Installer devenv
+        2. Cloner et configurer
       
     </span>
   </a>
@@ -1145,10 +1145,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-cloner-et-configurer" class="md-nav__link">
+  <a href="#3-demarrer-les-services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Cloner et configurer
+        3. Démarrer les services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-entrer-dans-le-shell-de-developpement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Entrer dans le shell de développement
       
     </span>
   </a>
@@ -1801,15 +1812,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-rapide-avec-devenv" class="md-nav__link">
+  <a href="#configuration-rapide-avec-nix-flakes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration rapide avec devenv
+        Configuration rapide avec Nix Flakes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration rapide avec devenv">
+    <nav class="md-nav" aria-label="Configuration rapide avec Nix Flakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1824,10 +1835,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-installer-devenv" class="md-nav__link">
+  <a href="#2-cloner-et-configurer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Installer devenv
+        2. Cloner et configurer
       
     </span>
   </a>
@@ -1835,10 +1846,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-cloner-et-configurer" class="md-nav__link">
+  <a href="#3-demarrer-les-services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Cloner et configurer
+        3. Démarrer les services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-entrer-dans-le-shell-de-developpement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Entrer dans le shell de développement
       
     </span>
   </a>
@@ -1996,26 +2018,35 @@
 <p>Ce guide vous accompagne dans la configuration de votre environnement de développement local.</p>
 <h2 id="prerequis">Prérequis<a class="headerlink" href="#prerequis" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Node.js</strong> 22+ (géré par devenv)</li>
-<li><strong>pnpm</strong> 10+ (géré par devenv)</li>
-<li><strong>PostgreSQL</strong> 16+ (géré par devenv)</li>
+<li><strong>Node.js</strong> &gt;= 20 (géré par Nix)</li>
+<li><strong>pnpm</strong> &gt;= 10 (géré par Nix)</li>
+<li><strong>PostgreSQL</strong> 16 (via Docker Compose)</li>
 <li><strong>Nix</strong> avec flakes activés</li>
+<li><strong>1Password CLI</strong> (pour la configuration des variables d'environnement)</li>
+<li><strong>just</strong> command runner (pour la configuration des variables d'environnement)</li>
 </ul>
-<h2 id="configuration-rapide-avec-devenv">Configuration rapide avec devenv<a class="headerlink" href="#configuration-rapide-avec-devenv" title="Permanent link">&para;</a></h2>
-<p>La méthode recommandée utilise <a href="https://devenv.sh/">devenv.sh</a> pour une configuration reproductible.</p>
+<h2 id="configuration-rapide-avec-nix-flakes">Configuration rapide avec Nix Flakes<a class="headerlink" href="#configuration-rapide-avec-nix-flakes" title="Permanent link">&para;</a></h2>
+<p>Chaque repo possède son propre Nix flake pour un environnement de développement reproductible.</p>
 <h3 id="1-installer-nix">1. Installer Nix<a class="headerlink" href="#1-installer-nix" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># macOS/Linux</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>--proto<span class="w"> </span><span class="s1">&#39;=https&#39;</span><span class="w"> </span>--tlsv1.2<span class="w"> </span>-sSf<span class="w"> </span>-L<span class="w"> </span>https://install.determinate.systems/nix<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh<span class="w"> </span>-s<span class="w"> </span>--<span class="w"> </span>install
 </code></pre></div>
-<h3 id="2-installer-devenv">2. Installer devenv<a class="headerlink" href="#2-installer-devenv" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nix-env<span class="w"> </span>-iA<span class="w"> </span>devenv<span class="w"> </span>-f<span class="w"> </span>https://github.com/NixOS/nixpkgs/tarball/nixos-unstable
+<h3 id="2-cloner-et-configurer">2. Cloner et configurer<a class="headerlink" href="#2-cloner-et-configurer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/librestock/meta.git
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>meta<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./scripts/bootstrap<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
 </code></pre></div>
-<h3 id="3-cloner-et-configurer">3. Cloner et configurer<a class="headerlink" href="#3-cloner-et-configurer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>&lt;repo-url&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>librestock
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>devenv<span class="w"> </span>up
+<h3 id="3-demarrer-les-services">3. Démarrer les services<a class="headerlink" href="#3-demarrer-les-services" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Démarrer PostgreSQL et autres services via Docker Compose</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>meta<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>Cela démarre automatiquement :</p>
+<h3 id="4-entrer-dans-le-shell-de-developpement">4. Entrer dans le shell de développement<a class="headerlink" href="#4-entrer-dans-le-shell-de-developpement" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Shell de développement backend</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Shell de développement frontend</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+</code></pre></div>
+<p>Cela fournit :</p>
 <ul>
 <li>PostgreSQL sur le port 5432</li>
 <li>API NestJS sur le port 8080</li>
@@ -2024,33 +2055,38 @@
 <h2 id="configuration-manuelle">Configuration manuelle<a class="headerlink" href="#configuration-manuelle" title="Permanent link">&para;</a></h2>
 <p>Si vous préférez ne pas utiliser Nix :</p>
 <h3 id="1-installer-les-dependances">1. Installer les dépendances<a class="headerlink" href="#1-installer-les-dependances" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Installer pnpm</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>pnpm
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Installer les dépendances du projet</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pnpm<span class="w"> </span>install
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Installer pnpm</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>pnpm
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Installer les dépendances du projet</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pnpm<span class="w"> </span>install
 </code></pre></div>
 <h3 id="2-configurer-postgresql">2. Configurer PostgreSQL<a class="headerlink" href="#2-configurer-postgresql" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Créer la base de données</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>createdb<span class="w"> </span>librestock_inventory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Créer la base de données</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>createdb<span class="w"> </span>librestock_inventory
 </code></pre></div>
 <h3 id="3-configurer-les-variables-denvironnement">3. Configurer les variables d'environnement<a class="headerlink" href="#3-configurer-les-variables-denvironnement" title="Permanent link">&para;</a></h3>
-<p>Créez les fichiers <code>.env</code> dans chaque module :</p>
-<p><strong>API (<code>modules/api/.env</code>) :</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://localhost:5432/librestock_inventory
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">CLERK_SECRET_KEY</span><span class="o">=</span>sk_test_xxx
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span>
+<p>Créez les fichiers <code>.env</code> dans chaque repo :</p>
+<p><strong>Backend (<code>backend/.env</code>) :</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://localhost:5432/librestock_inventory
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">BETTER_AUTH_SECRET</span><span class="o">=</span>votre-secret-ici
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span>
 </code></pre></div>
-<p><strong>Web (<code>modules/web/.env.local</code>) :</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">VITE_API_BASE_URL</span><span class="o">=</span>http://localhost:8080
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">VITE_CLERK_PUBLISHABLE_KEY</span><span class="o">=</span>pk_test_xxx
+<p><strong>Frontend (<code>frontend/.env.local</code>) :</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">VITE_API_BASE_URL</span><span class="o">=</span>http://localhost:8080/api/v1
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Secret Better Auth</p>
+<p><code>BETTER_AUTH_SECRET</code> ne doit se trouver que dans le <code>.env</code> du backend -- jamais dans le frontend.</p>
+</div>
 <h3 id="4-demarrer-les-services">4. Démarrer les services<a class="headerlink" href="#4-demarrer-les-services" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Terminal 1 - API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>start:dev
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Terminal 2 - Web</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>dev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Terminal 1 - Backend</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>backend
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>pnpm<span class="w"> </span>start:dev
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Terminal 2 - Frontend</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">cd</span><span class="w"> </span>frontend
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>pnpm<span class="w"> </span>dev
 </code></pre></div>
 <h2 id="verification">Vérification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h2>
 <p>Une fois lancé, vérifiez :</p>
@@ -2082,20 +2118,22 @@
 </table>
 <h2 id="problemes-courants">Problèmes courants<a class="headerlink" href="#problemes-courants" title="Permanent link">&para;</a></h2>
 <h3 id="port-deja-utilise">Port déjà utilisé<a class="headerlink" href="#port-deja-utilise" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Trouver le processus utilisant le port</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:8080
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Tuer le processus</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Trouver le processus utilisant le port</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:8080
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Tuer le processus</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
 </code></pre></div>
 <h3 id="erreurs-de-connexion-postgresql">Erreurs de connexion PostgreSQL<a class="headerlink" href="#erreurs-de-connexion-postgresql" title="Permanent link">&para;</a></h3>
 <p>Vérifiez que PostgreSQL est en cours d'exécution :</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5432</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-p<span class="w"> </span><span class="m">5432</span>
 </code></pre></div>
 <h3 id="erreurs-de-dependances">Erreurs de dépendances<a class="headerlink" href="#erreurs-de-dependances" title="Permanent link">&para;</a></h3>
 <p>Nettoyez et réinstallez :</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>node_modules
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pnpm<span class="w"> </span>install
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>node_modules
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>backend/node_modules
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>rm<span class="w"> </span>-rf<span class="w"> </span>frontend/node_modules
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>pnpm<span class="w"> </span>install
 </code></pre></div>
 
 
@@ -2119,7 +2157,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7 février 2026 11:05:02 UTC">7 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
   </span>
 
     

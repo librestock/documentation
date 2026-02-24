@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1665,6 +1665,7 @@
 
 <h1 id="systeme-dinventaire-librestock">Système d'Inventaire LibreStock<a class="headerlink" href="#systeme-dinventaire-librestock" title="Permanent link">&para;</a></h1>
 <p>Bienvenue dans la documentation LibreStock Inventory. Ce système aide à gérer l'inventaire d'approvisionnement des yachts avec des fonctionnalités de gestion des produits, de suivi des commandes et de journalisation des audits.</p>
+<p>Construit avec NestJS (backend), TanStack Start avec React 19 (frontend), PostgreSQL, Better Auth et TypeORM.</p>
 <h2 id="liens-rapides">Liens Rapides<a class="headerlink" href="#liens-rapides" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -1694,9 +1695,25 @@
 <ul>
 <li><strong>Gestion des Produits</strong> - Créez et organisez des produits avec SKUs, prix et catégories</li>
 <li><strong>Hiérarchie des Catégories</strong> - Catégorisation multi-niveaux avec imbrication illimitée</li>
-<li><strong>Traitement des Commandes</strong> - Suivez les commandes d'approvisionnement des yachts</li>
+<li><strong>Suivi des Emplacements</strong> - Gérez les entrepôts, fournisseurs, clients et emplacements en transit</li>
+<li><strong>Gestion des Zones</strong> - Définissez des zones, étagères et bacs au sein des emplacements</li>
+<li><strong>Contrôle d'Inventaire</strong> - Suivez les quantités en stock à travers les emplacements avec suivi des lots et dates d'expiration</li>
+<li><strong>Mouvements de Stock</strong> - Suivez et enregistrez les mouvements de stock entre emplacements</li>
+<li><strong>Traitement des Commandes</strong> - Suivez les commandes d'approvisionnement des yachts tout au long du cycle complet (DRAFT, CONFIRMED, SOURCING, PICKING, PACKED, SHIPPED, DELIVERED, CANCELLED, ON_HOLD)</li>
+<li><strong>Module Clients</strong> - Gérez les informations et relations clients</li>
+<li><strong>Module Fournisseurs</strong> - Gérez les informations et relations fournisseurs</li>
 <li><strong>Piste d'Audit</strong> - Historique complet des modifications avec suivi des utilisateurs</li>
-<li><strong>Multi-langue</strong> - Support anglais, allemand et français</li>
+<li><strong>Authentification</strong> - Système d'authentification Better Auth</li>
+<li><strong>Rôles &amp; Permissions</strong> - Contrôle d'accès basé sur les rôles avec PermissionGuard et @RequirePermission</li>
+<li><strong>Gestion des Utilisateurs</strong> - Administration des utilisateurs</li>
+<li><strong>Gestion des Photos</strong> - Gestion des photos de produits et d'inventaire</li>
+<li><strong>Personnalisation/Branding</strong> - Options de personnalisation de la marque</li>
+<li><strong>Multi-langue</strong> - Support anglais, français et allemand</li>
+<li><strong>API REST HATEOAS</strong> - Conception d'API pilotée par hypermédia</li>
+<li><strong>Tests E2E</strong> - Tests de bout en bout avec Playwright</li>
+<li><strong>Support Docker</strong> - Docker Compose pour le déploiement conteneurisé</li>
+<li><strong>CI/CD</strong> - Pipelines GitHub Actions par dépôt</li>
+<li><strong>Documentation</strong> - Site MkDocs avec GitHub Pages</li>
 <li><strong>Scan QR</strong> - Numérisation de codes-barres pour une recherche rapide des produits</li>
 </ul>
 
@@ -1721,7 +1738,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7 février 2026 11:05:02 UTC">7 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
   </span>
 
     

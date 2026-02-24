@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -1252,10 +1252,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pipeline-ci" class="md-nav__link">
+  <a href="#pipeline-ci-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline CI
+        Pipeline CI Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-ci-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline CI Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publication-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publication Docker
       
     </span>
   </a>
@@ -1814,10 +1836,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pipeline-ci" class="md-nav__link">
+  <a href="#pipeline-ci-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline CI
+        Pipeline CI Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-ci-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline CI Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publication-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publication Docker
       
     </span>
   </a>
@@ -2019,19 +2063,34 @@
 <h1 id="cicd">CI/CD<a class="headerlink" href="#cicd" title="Permanent link">&para;</a></h1>
 <p>Ce guide couvre les workflows GitHub Actions et les processus de déploiement pour LibreStock Inventory.</p>
 <h2 id="workflows">Workflows<a class="headerlink" href="#workflows" title="Permanent link">&para;</a></h2>
-<h3 id="pipeline-ci">Pipeline CI<a class="headerlink" href="#pipeline-ci" title="Permanent link">&para;</a></h3>
-<p><strong>Fichier :</strong> <code>.github/workflows/ci.yml</code></p>
+<p>Les workflows CI sont <strong>par repo</strong>, pas au niveau racine du workspace.</p>
+<h3 id="pipeline-ci-backend">Pipeline CI Backend<a class="headerlink" href="#pipeline-ci-backend" title="Permanent link">&para;</a></h3>
+<p><strong>Fichier :</strong> <code>backend/.github/workflows/ci.yml</code></p>
 <p>S'exécute à chaque pull request et push sur main :</p>
 <ul>
-<li>Lint de tous les packages</li>
+<li>Lint</li>
 <li>Vérification des types</li>
-<li>Exécution des tests</li>
-<li>Build de tous les packages</li>
-<li>Build des types partagés</li>
+<li>Exécution des tests unitaires</li>
+<li>Exécution des tests E2E</li>
+<li>Build</li>
+</ul>
+<h3 id="pipeline-ci-frontend">Pipeline CI Frontend<a class="headerlink" href="#pipeline-ci-frontend" title="Permanent link">&para;</a></h3>
+<p><strong>Fichier :</strong> <code>frontend/.github/workflows/ci.yml</code></p>
+<p>S'exécute à chaque pull request et push sur main :</p>
+<ul>
+<li>Lint</li>
+<li>Vérification des types</li>
+<li>Build</li>
+</ul>
+<h3 id="publication-docker">Publication Docker<a class="headerlink" href="#publication-docker" title="Permanent link">&para;</a></h3>
+<p>Chaque repo possède son propre workflow de publication Docker :</p>
+<ul>
+<li><strong>Backend :</strong> <code>backend/.github/workflows/docker-publish.yml</code></li>
+<li><strong>Frontend :</strong> <code>frontend/.github/workflows/docker-publish.yml</code></li>
 </ul>
 <h3 id="deploiement-de-la-documentation">Déploiement de la documentation<a class="headerlink" href="#deploiement-de-la-documentation" title="Permanent link">&para;</a></h3>
-<p><strong>Fichier :</strong> <code>.github/workflows/deploy-docs.yml</code></p>
-<p>Déploie la documentation sur AWS S3 + CloudFront lors d'un push sur main.</p>
+<p><strong>Fichier :</strong> <code>documentation/.github/workflows/deploy-docs.yml</code></p>
+<p>Déploie la documentation via GitHub Pages lors d'un push sur main.</p>
 <h2 id="secrets-github-actions">Secrets GitHub Actions<a class="headerlink" href="#secrets-github-actions" title="Permanent link">&para;</a></h2>
 <h3 id="secrets-requis">Secrets requis<a class="headerlink" href="#secrets-requis" title="Permanent link">&para;</a></h3>
 <table>
@@ -2043,28 +2102,20 @@
 </thead>
 <tbody>
 <tr>
-<td><code>CLERK_SECRET_KEY</code></td>
-<td>Authentification Clerk</td>
-</tr>
-<tr>
-<td><code>AWS_DOCS_ROLE_ARN</code></td>
-<td>Rôle IAM pour le déploiement docs</td>
-</tr>
-<tr>
-<td><code>DOCS_S3_BUCKET</code></td>
-<td>Nom du bucket S3</td>
-</tr>
-<tr>
-<td><code>DOCS_CLOUDFRONT_DISTRIBUTION_ID</code></td>
-<td>Distribution CloudFront</td>
+<td><code>BETTER_AUTH_SECRET</code></td>
+<td>Secret Better Auth (CI backend uniquement)</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Secrets d'authentification</p>
+<p><code>BETTER_AUTH_SECRET</code> n'est nécessaire que dans le CI du backend. Le frontend ne nécessite aucun secret d'authentification.</p>
+</div>
 <h2 id="workflow-pull-request">Workflow Pull Request<a class="headerlink" href="#workflow-pull-request" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Créer une branche</strong> depuis <code>main</code></li>
 <li><strong>Faire des modifications</strong> et committer</li>
-<li><strong>Ouvrir une PR</strong> - CI s'exécute automatiquement</li>
+<li><strong>Ouvrir une PR</strong> - CI s'exécute automatiquement (par repo)</li>
 <li><strong>Review</strong> - Attendre l'approbation</li>
 <li><strong>Merger</strong> - Squash and merge vers main</li>
 </ol>
@@ -2077,24 +2128,22 @@
 </ul>
 <h2 id="verifications-ci-locales">Vérifications CI locales<a class="headerlink" href="#verifications-ci-locales" title="Permanent link">&para;</a></h2>
 <p>Exécuter les mêmes vérifications localement avant de pusher :</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Installer les dépendances</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pnpm<span class="w"> </span>install
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Lint</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pnpm<span class="w"> </span>lint
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Vérification des types</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pnpm<span class="w"> </span>build
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Test</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pnpm<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Build docs</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>pnpm<span class="w"> </span>docs:build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Backend</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>backend
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pnpm<span class="w"> </span>install
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pnpm<span class="w"> </span>lint
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pnpm<span class="w"> </span>build
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pnpm<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Frontend</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">cd</span><span class="w"> </span>frontend
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>pnpm<span class="w"> </span>install
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pnpm<span class="w"> </span>lint
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pnpm<span class="w"> </span>build
 </code></pre></div>
 <h2 id="deploiement">Déploiement<a class="headerlink" href="#deploiement" title="Permanent link">&para;</a></h2>
 <h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
-<p>La documentation est automatiquement déployée quand des changements sont pushés sur main.</p>
+<p>La documentation est automatiquement déployée via GitHub Pages quand des changements sont pushés sur main.</p>
 <p>Chemins déclencheurs :</p>
 <ul>
 <li><code>docs/**</code></li>
@@ -2102,18 +2151,21 @@
 <li><code>.github/workflows/deploy-docs.yml</code></li>
 </ul>
 <h3 id="application">Application<a class="headerlink" href="#application" title="Permanent link">&para;</a></h3>
-<p>Le déploiement de l'application n'est pas encore automatisé. Voir <a href="../../roadmap/">Feuille de route</a> pour les fonctionnalités planifiées.</p>
+<p>Les images Docker sont publiées via les workflows <code>docker-publish.yml</code> dans chaque repo.</p>
 <h2 id="depannage">Dépannage<a class="headerlink" href="#depannage" title="Permanent link">&para;</a></h2>
 <h3 id="echecs-ci">Échecs CI<a class="headerlink" href="#echecs-ci" title="Permanent link">&para;</a></h3>
 <p><strong>Erreurs de lint :</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pnpm<span class="w"> </span>lint<span class="w"> </span>--fix
 </code></pre></div>
 <p><strong>Erreurs de type :</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Backend</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>build
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Frontend</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>build
 </code></pre></div>
 <p><strong>Échecs de tests :</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--<span class="w"> </span>--verbose
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--<span class="w"> </span>--verbose
 </code></pre></div>
 <h3 id="problemes-de-cache">Problèmes de cache<a class="headerlink" href="#problemes-de-cache" title="Permanent link">&para;</a></h3>
 <p>Vider le cache GitHub Actions :</p>
@@ -2151,7 +2203,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7 février 2026 11:05:02 UTC">7 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
   </span>
 
     
