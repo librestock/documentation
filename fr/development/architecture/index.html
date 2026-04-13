@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -662,6 +662,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -779,6 +789,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../user-guide/suppliers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fournisseurs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/clients/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../user-guide/locations/" class="md-nav__link">
         
   
@@ -863,6 +929,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../user-guide/stock-movements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouvements de stock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../user-guide/orders/" class="md-nav__link">
         
   
@@ -871,6 +965,62 @@
     
   
     Commandes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/users-roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilisateurs & Rôles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/branding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personnalisation
   
 
     
@@ -1138,10 +1288,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#repertoires-common-du-backend" class="md-nav__link">
+  <a href="#couche-plateforme-du-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Répertoires Common du Backend
+        Couche Plateforme du Backend
       
     </span>
   </a>
@@ -1811,10 +1961,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#repertoires-common-du-backend" class="md-nav__link">
+  <a href="#couche-plateforme-du-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Répertoires Common du Backend
+        Couche Plateforme du Backend
       
     </span>
   </a>
@@ -1913,7 +2063,7 @@
     end
 
     subgraph "Backend"
-        F[NestJS 11] --&gt; G[TypeORM]
+        F[Effect.ts + Bun] --&gt; G[Drizzle ORM]
         G --&gt; H[(PostgreSQL 16)]
     end
 
@@ -1939,7 +2089,7 @@
 </tr>
 <tr>
 <td>Backend</td>
-<td>NestJS 11, TypeORM, PostgreSQL 16</td>
+<td>Effect.ts, Drizzle ORM, Bun, PostgreSQL 16</td>
 </tr>
 <tr>
 <td>Auth</td>
@@ -1947,7 +2097,7 @@
 </tr>
 <tr>
 <td>Docs API</td>
-<td>Swagger UI</td>
+<td>Effect HttpApi (OpenAPI)</td>
 </tr>
 <tr>
 <td>Outillage</td>
@@ -1961,23 +2111,25 @@
 </table>
 <h2 id="structure-des-repos">Structure des Repos<a class="headerlink" href="#structure-des-repos" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>librestock/
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── backend/                # Backend NestJS
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── backend/                # Backend Effect.ts (runtime Bun)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── src/
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   ├── routes/         # Modules fonctionnels
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   └── common/         # Utilitaires partagés
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └── flake.nix           # Environnement dev Nix
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── frontend/               # Frontend TanStack Start
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── src/
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │   ├── routes/         # Routes basées sur les fichiers
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │   ├── components/     # Composants React
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   └── lib/            # Utilitaires et hooks de données
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └── flake.nix           # Environnement dev Nix
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>├── packages/
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ├── tsconfig/           # Configs TS partagées
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── eslint-config/      # Config ESLint partagée
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └── types/              # Interfaces/enums DTO partagés
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>├── documentation/          # Documentation MkDocs
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└── meta/                   # Scripts d&#39;orchestration, Docker Compose
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   └── effect/
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │       ├── modules/    # Modules fonctionnels
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       ├── platform/   # Concerns transversaux
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       └── http/       # App HTTP &amp; middleware
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── flake.nix           # Environnement dev Nix
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── frontend/               # Frontend TanStack Start
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── src/
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   ├── routes/         # Routes basées sur les fichiers
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │   ├── components/     # Composants React
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │   └── lib/            # Utilitaires et hooks de données
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └── flake.nix           # Environnement dev Nix
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├── packages/
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── tsconfig/           # Configs TS partagées
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ├── eslint-config/      # Config ESLint partagée
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └── types/              # Interfaces/enums DTO partagés
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>├── documentation/          # Documentation MkDocs
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└── meta/                   # Scripts d&#39;orchestration, Docker Compose
 </code></pre></div>
 <h2 id="flux-de-donnees">Flux de Donnees<a class="headerlink" href="#flux-de-donnees" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────┐
@@ -1988,10 +2140,10 @@
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>└─────────────────────────────────────────┘
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                    ▼ HTTP/REST
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>┌─────────────────────────────────────────┐
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│            Backend NestJS               │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│  Controller → Service → Repository      │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  AuthGuard · PermissionGuard · TypeORM  │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  HateoasInterceptor · Swagger UI        │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│          Backend Effect.ts (Bun)        │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│  Router → Service → Repository          │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  requireSession · requirePermission     │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Drizzle ORM · HATEOAS · Audit Logging  │
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>└─────────────────────────────────────────┘
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                    ▼
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>┌─────────────────────────────────────────┐
@@ -1999,14 +2151,14 @@
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>└─────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="flux-dauthentification">Flux d'Authentification<a class="headerlink" href="#flux-dauthentification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Utilisateur → Better Auth → Token JWT
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Utilisateur → Better Auth → Cookie de session
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                              ↓
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Frontend: Authorization: Bearer {token}
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Frontend: Session basée sur les cookies
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                              ↓
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Backend: AuthGuard → vérifier → req.auth.userId
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Backend: requireSession → vérifier → userId depuis la session
 </code></pre></div>
 <h2 id="modules-de-routes-backend">Modules de Routes Backend<a class="headerlink" href="#modules-de-routes-backend" title="Permanent link">&para;</a></h2>
-<p>Le backend possède les modules de routes suivants dans <code>backend/src/routes/</code> :</p>
+<p>Le backend possède les modules suivants dans <code>backend/src/effect/modules/</code> :</p>
 <table>
 <thead>
 <tr>
@@ -2081,59 +2233,59 @@
 </tr>
 </tbody>
 </table>
-<h2 id="repertoires-common-du-backend">Répertoires Common du Backend<a class="headerlink" href="#repertoires-common-du-backend" title="Permanent link">&para;</a></h2>
-<p>Utilitaires partagés dans <code>backend/src/common/</code> :</p>
+<h2 id="couche-plateforme-du-backend">Couche Plateforme du Backend<a class="headerlink" href="#couche-plateforme-du-backend" title="Permanent link">&para;</a></h2>
+<p>Infrastructure partagée dans <code>backend/src/effect/platform/</code> :</p>
 <table>
 <thead>
 <tr>
-<th>Répertoire</th>
+<th>Répertoire / Fichier</th>
 <th>Objectif</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>auth</strong></td>
-<td>Utilitaires d'authentification</td>
+<td><strong>authorization.ts</strong></td>
+<td>Effect <code>requirePermission(resource, permission)</code></td>
 </tr>
 <tr>
-<td><strong>decorators</strong></td>
-<td><code>@Auditable</code>, <code>@RequirePermission</code>, <code>@StandardThrottle</code>, <code>@Transactional</code></td>
+<td><strong>permission-provider.ts</strong></td>
+<td>Recherche de permissions avec cache (TTL 1 min)</td>
 </tr>
 <tr>
-<td><strong>dto</strong></td>
-<td>DTOs de base/partagés</td>
+<td><strong>session.ts</strong></td>
+<td>Effects <code>requireSession</code>, <code>getOptionalSession</code></td>
 </tr>
 <tr>
-<td><strong>entities</strong></td>
-<td><code>BaseEntity</code>, <code>BaseAuditEntity</code></td>
+<td><strong>better-auth.ts</strong></td>
+<td>Intégration Better Auth (APIs admin)</td>
 </tr>
 <tr>
-<td><strong>enums</strong></td>
-<td>Énumérations partagées</td>
+<td><strong>errors.ts</strong></td>
+<td>Factories d'erreurs de domaine (<code>NotFoundError</code>, <code>BadRequestError</code>, etc.)</td>
 </tr>
 <tr>
-<td><strong>filters</strong></td>
-<td>Filtres d'exception</td>
+<td><strong>messages.ts</strong></td>
+<td>Système de messages localisés (en, fr, de)</td>
 </tr>
 <tr>
-<td><strong>guards</strong></td>
-<td><code>PermissionGuard</code></td>
+<td><strong>audit.ts</strong></td>
+<td>Écriture d'audit fire-and-forget</td>
 </tr>
 <tr>
-<td><strong>hateoas</strong></td>
-<td>Système de liens HATEOAS, <code>HateoasInterceptor</code></td>
+<td><strong>drizzle.ts</strong></td>
+<td>Couche Drizzle ORM avec pool de connexions</td>
 </tr>
 <tr>
-<td><strong>interceptors</strong></td>
-<td>Intercepteurs de réponse</td>
+<td><strong>hateoas.ts</strong></td>
+<td>Utilitaires de liens HATEOAS</td>
 </tr>
 <tr>
-<td><strong>middleware</strong></td>
-<td>Middleware HTTP</td>
+<td><strong>request-context.ts</strong></td>
+<td>ID de requête, chemin, méthode, IP, locale</td>
 </tr>
 <tr>
-<td><strong>utils</strong></td>
-<td>Utilitaires généraux</td>
+<td><strong>db/</strong></td>
+<td>Définitions de schéma, relations, migrations</td>
 </tr>
 </tbody>
 </table>
@@ -2304,7 +2456,7 @@
 <li><strong>Les zones sont optionnelles</strong> - L'inventaire peut référencer uniquement un emplacement, ou optionnellement une zone pour un suivi précis.</li>
 <li><strong>Hiérarchie des zones</strong> - Les zones supportent les relations parent-enfant (Zone A -&gt; Étagère A1 -&gt; Bac A1-1).</li>
 <li><strong>Contrainte d'unicité</strong> - Un seul enregistrement d'inventaire par combinaison (produit, emplacement, zone).</li>
-<li><strong>Auth basée sur les permissions</strong> - Les rôles contiennent des permissions granulaires ; <code>@RequirePermission</code> applique le contrôle d'accès par endpoint.</li>
+<li><strong>Auth basée sur les permissions</strong> - Les rôles contiennent des permissions granulaires ; l'Effect <code>requirePermission</code> applique le contrôle d'accès par endpoint.</li>
 </ol>
 <h2 id="patterns-cles">Patterns Clés<a class="headerlink" href="#patterns-cles" title="Permanent link">&para;</a></h2>
 <table>
@@ -2318,48 +2470,48 @@
 <tbody>
 <tr>
 <td>Repository</td>
-<td><code>backend/src/routes/*/</code></td>
-<td>Couche d'accès aux données</td>
+<td><code>backend/src/effect/modules/*/</code></td>
+<td>Accès aux données via Drizzle ORM</td>
 </tr>
 <tr>
 <td>Service</td>
-<td><code>backend/src/routes/*/</code></td>
-<td>Logique métier</td>
+<td><code>backend/src/effect/modules/*/</code></td>
+<td>Logique métier comme services Effect</td>
 </tr>
 <tr>
-<td>BaseAuditEntity</td>
-<td><code>backend/src/common/entities/</code></td>
-<td>Suppression douce + champs d'audit</td>
+<td>Router</td>
+<td><code>backend/src/effect/modules/*/</code></td>
+<td>Gestionnaires de routes HTTP</td>
 </tr>
 <tr>
-<td>AuthGuard</td>
-<td><code>backend/src/common/auth/</code></td>
-<td>Vérification JWT (Better Auth)</td>
+<td>requireSession</td>
+<td><code>backend/src/effect/platform/</code></td>
+<td>Vérification de session Effect</td>
 </tr>
 <tr>
-<td>PermissionGuard</td>
-<td><code>backend/src/common/guards/</code></td>
+<td>requirePermission</td>
+<td><code>backend/src/effect/platform/</code></td>
 <td>Autorisation basée sur les permissions</td>
 </tr>
 <tr>
-<td>@RequirePermission</td>
-<td><code>backend/src/common/decorators/</code></td>
-<td>Déclarer la permission requise sur un endpoint</td>
+<td>AuditLogWriter</td>
+<td><code>backend/src/effect/platform/</code></td>
+<td>Journalisation d'audit fire-and-forget</td>
 </tr>
 <tr>
-<td>@Auditable</td>
-<td><code>backend/src/common/decorators/</code></td>
-<td>Décorateur de journalisation d'audit</td>
-</tr>
-<tr>
-<td>@Transactional</td>
-<td><code>backend/src/common/decorators/</code></td>
-<td>Wrapper de transaction de base de données</td>
+<td>Erreurs de domaine</td>
+<td><code>backend/src/effect/platform/</code></td>
+<td>Factories d'erreurs HTTP typées</td>
 </tr>
 <tr>
 <td>HATEOAS</td>
-<td><code>backend/src/common/hateoas/</code></td>
+<td><code>backend/src/effect/platform/</code></td>
 <td>Liens hypermédia REST</td>
+</tr>
+<tr>
+<td>Composition de Layers</td>
+<td><code>backend/src/effect/main.ts</code></td>
+<td>Injection de dépendances via les layers Effect</td>
 </tr>
 <tr>
 <td>DTO partagés</td>
@@ -2390,7 +2542,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="13 avril 2026 10:18:23 UTC">13 avril 2026</span>
   </span>
 
     

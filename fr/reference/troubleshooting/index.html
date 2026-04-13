@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -660,6 +660,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -777,6 +787,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../user-guide/suppliers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fournisseurs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/clients/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../user-guide/locations/" class="md-nav__link">
         
   
@@ -861,6 +927,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../user-guide/stock-movements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouvements de stock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../user-guide/orders/" class="md-nav__link">
         
   
@@ -869,6 +963,62 @@
     
   
     Commandes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/users-roles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilisateurs & Rôles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/branding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Personnalisation
   
 
     
@@ -1647,10 +1797,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#erreurs-de-migration" class="md-nav__link">
+  <a href="#erreurs-de-migration-ou-de-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Erreurs de migration
+        Erreurs de migration ou de schéma
       
     </span>
   </a>
@@ -1956,10 +2106,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#erreurs-de-migration" class="md-nav__link">
+  <a href="#erreurs-de-migration-ou-de-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Erreurs de migration
+        Erreurs de migration ou de schéma
       
     </span>
   </a>
@@ -2247,14 +2397,13 @@
 <p>Vérifier les variables d'environnement dans <code>backend/.env</code></p>
 </li>
 </ol>
-<h3 id="erreurs-de-migration">Erreurs de migration<a class="headerlink" href="#erreurs-de-migration" title="Permanent link">&para;</a></h3>
-<p><strong>Symptôme :</strong> Erreurs TypeORM concernant le schéma</p>
+<h3 id="erreurs-de-migration-ou-de-schema">Erreurs de migration ou de schéma<a class="headerlink" href="#erreurs-de-migration-ou-de-schema" title="Permanent link">&para;</a></h3>
+<p><strong>Symptôme :</strong> Erreurs Drizzle ORM concernant des tables ou colonnes manquantes</p>
 <p><strong>Solutions :</strong></p>
 <ol>
 <li>
-<p>Synchroniser le schéma (développement uniquement) :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># TypeORM synchronize est activé en dev</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Redémarrer le serveur API</span>
+<p>Redémarrer le serveur API — les changements de schéma sont appliqués automatiquement en développement :
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>start
 </code></pre></div></p>
 </li>
 <li>
@@ -2263,9 +2412,7 @@
 </code></pre></div></p>
 </li>
 <li>
-<p>Exécuter les migrations en attente :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>migration:run
-</code></pre></div></p>
+<p>Vérifier les définitions de schéma dans <code>backend/src/effect/platform/db/schema.ts</code></p>
 </li>
 </ol>
 <h2 id="problemes-api">Problèmes API<a class="headerlink" href="#problemes-api" title="Permanent link">&para;</a></h2>
@@ -2276,11 +2423,11 @@
 <li>Vérifier que <code>BETTER_AUTH_SECRET</code> est défini dans <code>backend/.env</code> (doit être 32+ octets aléatoires)</li>
 <li>Vérifier que <code>BETTER_AUTH_URL</code> est correctement défini (ex : <code>http://localhost:8080</code>)</li>
 <li>Vérifier que le token est envoyé :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># La requête doit inclure :</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Authorization: Bearer &lt;token&gt;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># La requête doit inclure :</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Authorization: Bearer &lt;token&gt;</span>
 </code></pre></div></li>
 <li>Essayer de régénérer le secret :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span>
 </code></pre></div>
    Mettre à jour <code>BETTER_AUTH_SECRET</code> dans <code>backend/.env</code> et redémarrer le serveur.</li>
 </ol>
@@ -2290,12 +2437,12 @@
 <ol>
 <li>
 <p>Build l'API d'abord :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build
 </code></pre></div></p>
 </li>
 <li>
 <p>Vérifier les erreurs TypeScript :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check
 </code></pre></div></p>
 </li>
 </ol>
@@ -2305,8 +2452,8 @@
 <p><strong>Solutions :</strong></p>
 <ol>
 <li>Rebuild des types partagés après les changements API :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>barrels
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>barrels
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build
 </code></pre></div></li>
 </ol>
 <h3 id="erreurs-dhydratation">Erreurs d'hydratation<a class="headerlink" href="#erreurs-dhydratation" title="Permanent link">&para;</a></h3>
@@ -2329,16 +2476,16 @@
 <h3 id="erreurs-typescript">Erreurs TypeScript<a class="headerlink" href="#erreurs-typescript" title="Permanent link">&para;</a></h3>
 <p><strong>Symptôme :</strong> Le build échoue avec des erreurs de type</p>
 <p><strong>Solutions :</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Vérifier un module spécifique</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>type-check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Vérifier un module spécifique</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>type-check
 </code></pre></div>
 <h3 id="erreurs-eslint">Erreurs ESLint<a class="headerlink" href="#erreurs-eslint" title="Permanent link">&para;</a></h3>
 <p><strong>Symptôme :</strong> La commande lint échoue</p>
 <p><strong>Solutions :</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Auto-corriger ce qui est possible</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>lint<span class="w"> </span>--fix
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>lint:fix
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Auto-corriger ce qui est possible</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>lint<span class="w"> </span>--fix
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>lint:fix
 </code></pre></div>
 <h2 id="problemes-cicd">Problèmes CI/CD<a class="headerlink" href="#problemes-cicd" title="Permanent link">&para;</a></h2>
 <h3 id="github-actions-echoue">GitHub Actions échoue<a class="headerlink" href="#github-actions-echoue" title="Permanent link">&para;</a></h3>
@@ -2347,7 +2494,7 @@
 <ol>
 <li>
 <p>Exécuter les vérifications localement d'abord :
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pnpm<span class="w"> </span>lint<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>build
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>pnpm<span class="w"> </span>lint<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pnpm<span class="w"> </span>build
 </code></pre></div></p>
 </li>
 <li>
@@ -2391,7 +2538,7 @@
     <span class="md-icon" title="Dernière mise à jour">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="24 février 2026 18:26:45 UTC">24 février 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="13 avril 2026 10:18:23 UTC">13 avril 2026</span>
   </span>
 
     
