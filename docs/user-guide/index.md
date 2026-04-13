@@ -22,11 +22,15 @@ Organize products in a hierarchical category structure with unlimited nesting.
 
 ### Suppliers
 
-Manage supplier records, contact information, and link suppliers to products.
+Manage supplier records, contact information, and link suppliers to products with pricing and lead times.
+
+[:octicons-arrow-right-24: Suppliers](suppliers.md)
 
 ### Clients
 
-Track client information for yacht provisioning orders.
+Track client information, yacht details, and delivery preferences for provisioning orders.
+
+[:octicons-arrow-right-24: Clients](clients.md)
 
 ### Locations
 
@@ -48,7 +52,9 @@ Track stock quantities across locations with batch numbers and expiry dates.
 
 ### Stock Movements
 
-Track stock movements between locations for full inventory traceability.
+Track stock movements between locations for full inventory traceability — purchases, sales, transfers, waste, and corrections.
+
+[:octicons-arrow-right-24: Stock Movements](stock-movements.md)
 
 ### Orders
 
@@ -56,9 +62,17 @@ Track yacht provisioning orders through their complete lifecycle from draft to d
 
 [:octicons-arrow-right-24: Orders](orders.md)
 
-### Roles & Users
+### Users & Roles
 
-Manage user accounts and role-based access control.
+Manage user accounts, assign roles, and control access with granular permissions.
+
+[:octicons-arrow-right-24: Users & Roles](users-roles.md)
+
+### Branding
+
+Customize the application name, logo, colors, and tagline.
+
+[:octicons-arrow-right-24: Branding](branding.md)
 
 ### Audit Logs
 

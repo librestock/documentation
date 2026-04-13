@@ -2,7 +2,7 @@
 
 Bienvenue dans la documentation LibreStock Inventory. Ce système aide à gérer l'inventaire d'approvisionnement des yachts avec des fonctionnalités de gestion des produits, de suivi des commandes et de journalisation des audits.
 
-Construit avec NestJS (backend), TanStack Start avec React 19 (frontend), PostgreSQL, Better Auth et TypeORM.
+Construit avec Effect.ts sur Bun (backend), TanStack Start avec React 19 (frontend), PostgreSQL, Better Auth et Drizzle ORM.
 
 ## Liens Rapides
 

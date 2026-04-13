@@ -13,13 +13,10 @@ Utilisez `pnpm --filter @librestock/api <commande>` ou `cd backend && pnpm <comm
 ### Développement
 
 ```bash
-# Démarrer le serveur de développement avec hot reload
-pnpm --filter @librestock/api start:dev
+# Démarrer le serveur de développement (Bun)
+pnpm --filter @librestock/api start
 
-# Démarrer en mode debug
-pnpm --filter @librestock/api start:debug
-
-# Build l'application
+# Build l'application (bun build)
 pnpm --filter @librestock/api build
 
 # Démarrer le serveur de production
@@ -29,7 +26,7 @@ pnpm --filter @librestock/api start:prod
 ### Tests
 
 ```bash
-# Exécuter les tests unitaires (Jest 30)
+# Exécuter les tests unitaires (Vitest)
 pnpm --filter @librestock/api test
 
 # Exécuter les tests en mode watch
@@ -38,11 +35,8 @@ pnpm --filter @librestock/api test:watch
 # Exécuter les tests avec couverture
 pnpm --filter @librestock/api test:cov
 
-# Exécuter les tests end-to-end
-pnpm --filter @librestock/api test:e2e
-
-# Déboguer les tests
-pnpm --filter @librestock/api test:debug
+# Exécuter les tests d'intégration
+pnpm --filter @librestock/api test:integration
 ```
 
 ### Qualité du code
@@ -61,21 +55,15 @@ pnpm --filter @librestock/api type-check
 ### Base de données
 
 ```bash
-# Alimenter la base de données
+# Alimenter la base de données avec des données d'exemple
 pnpm --filter @librestock/api seed
 
 # Importer depuis Sortly
 pnpm --filter @librestock/api import:sortly
-
-# Générer une migration TypeORM
-pnpm --filter @librestock/api migration:generate
-
-# Exécuter les migrations en attente
-pnpm --filter @librestock/api migration:run
-
-# Annuler la dernière migration
-pnpm --filter @librestock/api migration:revert
 ```
+
+!!! note "Migrations"
+    Le schéma de la base de données est géré via Drizzle ORM. Les changements de schéma sont définis dans `backend/src/effect/platform/db/schema.ts` et appliqués automatiquement au démarrage en développement.
 
 ## Commandes Frontend
 

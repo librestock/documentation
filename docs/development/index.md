@@ -6,7 +6,7 @@ This section covers everything you need to contribute to the LibreStock Inventor
 
 LibreStock Inventory is a multi-repo workspace containing:
 
-- **backend/** - NestJS backend
+- **backend/** - Effect.ts backend (Bun runtime)
 - **frontend/** - TanStack Start frontend
 - **packages/** - Shared types, configs
 - **meta/** - Orchestration scripts, Docker Compose
@@ -16,8 +16,8 @@ LibreStock Inventory is a multi-repo workspace containing:
 - [Architecture](architecture.md) - System design and tech stack
 - [Setup](setup.md) - Development environment configuration
 - [Code Style](code-style.md) - ESLint, Prettier, and conventions
-- [Testing](testing.md) - Jest test patterns
-- [API Development](api-development.md) - NestJS patterns
+- [Testing](testing.md) - Vitest test patterns
+- [API Development](api-development.md) - Effect.ts patterns
 - [Frontend Development](frontend-development.md) - TanStack Start patterns
 - [CI/CD](ci-cd.md) - GitHub Actions workflows
 

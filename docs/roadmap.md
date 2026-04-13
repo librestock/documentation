@@ -62,7 +62,7 @@ These features have been implemented:
 | Description | Status |
 |-------------|--------|
 | Better Auth authentication | :white_check_mark: Done |
-| Roles/Permissions system (PermissionGuard + @RequirePermission) | :white_check_mark: Done |
+| Roles/Permissions system (requirePermission) | :white_check_mark: Done |
 | Users management (admin) | :white_check_mark: Done |
 
 ### Frontend & API
@@ -100,7 +100,7 @@ Features under consideration for future releases:
 | Repository | Description | Link |
 |------------|-------------|------|
 | meta | Workspace orchestration and scripts | [GitHub](https://github.com/librestock/meta) |
-| backend | NestJS API server | [GitHub](https://github.com/librestock/backend) |
+| backend | Effect.ts API server (Bun) | [GitHub](https://github.com/librestock/backend) |
 | frontend | TanStack Start web application | [GitHub](https://github.com/librestock/frontend) |
 | packages | Shared types and utilities | [GitHub](https://github.com/librestock/packages) |
 | documentation | MkDocs documentation site | [GitHub](https://github.com/librestock/documentation) |

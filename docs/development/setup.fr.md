@@ -49,7 +49,7 @@ cd frontend && nix develop
 Cela fournit :
 
 - PostgreSQL sur le port 5432
-- API NestJS sur le port 8080
+- API Effect.ts sur le port 8080 (Bun)
 - Frontend TanStack Start sur le port 3000
 
 ## Configuration manuelle
@@ -99,7 +99,7 @@ VITE_API_BASE_URL=http://localhost:8080/api/v1
 ```bash
 # Terminal 1 - Backend
 cd backend
-pnpm start:dev
+pnpm start
 
 # Terminal 2 - Frontend
 cd frontend

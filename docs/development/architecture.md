@@ -12,7 +12,7 @@ graph TB
     end
 
     subgraph "Backend"
-        F[NestJS 11] --> G[TypeORM]
+        F[Effect.ts + Bun] --> G[Drizzle ORM]
         G --> H[(PostgreSQL 16)]
     end
 
@@ -30,9 +30,9 @@ graph TB
 | Layer | Technology |
 |-------|------------|
 | Frontend | TanStack Start, React 19, TanStack Router, TanStack Query/Form, Tailwind CSS 4, Radix UI |
-| Backend | NestJS 11, TypeORM, PostgreSQL 16 |
+| Backend | Effect.ts, Drizzle ORM, Bun, PostgreSQL 16 |
 | Auth | Better Auth |
-| API Docs | Swagger UI |
+| API Docs | Effect HttpApi (OpenAPI) |
 | Tooling | pnpm workspaces, Nix flakes, TypeScript, Docker Compose |
 | i18n | i18next (en, de, fr) |
 
@@ -40,10 +40,12 @@ graph TB
 
 ```
 librestock/
-├── backend/                # NestJS backend
+├── backend/                # Effect.ts backend (Bun runtime)
 │   ├── src/
-│   │   ├── routes/         # Feature modules
-│   │   └── common/         # Shared utilities
+│   │   └── effect/
+│   │       ├── modules/    # Feature modules
+│   │       ├── platform/   # Cross-cutting concerns
+│   │       └── http/       # HTTP app & middleware
 │   └── flake.nix           # Nix dev environment
 ├── frontend/               # TanStack Start frontend
 │   ├── src/
@@ -70,10 +72,10 @@ librestock/
 └─────────────────────────────────────────┘
                     ▼ HTTP/REST
 ┌─────────────────────────────────────────┐
-│            NestJS Backend               │
-│  Controller → Service → Repository      │
-│  AuthGuard · PermissionGuard · TypeORM  │
-│  HateoasInterceptor · Swagger UI        │
+│          Effect.ts Backend (Bun)        │
+│  Router → Service → Repository          │
+│  requireSession · requirePermission     │
+│  Drizzle ORM · HATEOAS · Audit Logging  │
 └─────────────────────────────────────────┘
                     ▼
 ┌─────────────────────────────────────────┐
@@ -84,16 +86,16 @@ librestock/
 ## Authentication Flow
 
 ```
-User → Better Auth → JWT Token
+User → Better Auth → Session Cookie
                        ↓
-Frontend: Authorization: Bearer {token}
+Frontend: Cookie-based session
                        ↓
-Backend: AuthGuard → verify → req.auth.userId
+Backend: requireSession → verify → userId from session
 ```
 
 ## Backend Route Modules
 
-The backend has the following route modules in `backend/src/routes/`:
+The backend has the following modules in `backend/src/effect/modules/`:
 
 | Module | Purpose |
 |--------|---------|
@@ -114,23 +116,23 @@ The backend has the following route modules in `backend/src/routes/`:
 | **suppliers** | Supplier management |
 | **users** | User management |
 
-## Backend Common Directories
+## Backend Platform Layer
 
-Shared utilities in `backend/src/common/`:
+Shared infrastructure in `backend/src/effect/platform/`:
 
-| Directory | Purpose |
-|-----------|---------|
-| **auth** | Authentication utilities |
-| **decorators** | `@Auditable`, `@RequirePermission`, `@StandardThrottle`, `@Transactional` |
-| **dto** | Base/shared DTOs |
-| **entities** | `BaseEntity`, `BaseAuditEntity` |
-| **enums** | Shared enumerations |
-| **filters** | Exception filters |
-| **guards** | `PermissionGuard` |
-| **hateoas** | HATEOAS link system, `HateoasInterceptor` |
-| **interceptors** | Response interceptors |
-| **middleware** | HTTP middleware |
-| **utils** | General utilities |
+| Directory / File | Purpose |
+|------------------|---------|
+| **authorization.ts** | `requirePermission(resource, permission)` Effect |
+| **permission-provider.ts** | Cached permission lookups (1-min TTL) |
+| **session.ts** | `requireSession`, `getOptionalSession` Effects |
+| **better-auth.ts** | Better Auth integration (admin APIs) |
+| **errors.ts** | Domain error factories (`NotFoundError`, `BadRequestError`, etc.) |
+| **messages.ts** | Localized message system (en, fr, de) |
+| **audit.ts** | Fire-and-forget audit log writer |
+| **drizzle.ts** | Drizzle ORM database layer with connection pooling |
+| **hateoas.ts** | HATEOAS link utilities |
+| **request-context.ts** | Request ID, path, method, IP, locale |
+| **db/** | Schema definitions, relations, migrations |
 
 ## Shared-Types Workflow
 
@@ -261,19 +263,19 @@ classDiagram
 3. **Areas are optional** - Inventory can reference just a Location, or optionally an Area for precise tracking.
 4. **Area hierarchy** - Areas support parent-child relationships (Zone A -> Shelf A1 -> Bin A1-1).
 5. **Unique constraint** - One inventory record per (product, location, area) combination.
-6. **Permission-based auth** - Roles contain granular permissions; `@RequirePermission` enforces access per endpoint.
+6. **Permission-based auth** - Roles contain granular permissions; `requirePermission` Effect enforces access per endpoint.
 
 ## Key Patterns
 
 | Pattern | Location | Purpose |
 |---------|----------|---------|
-| Repository | `backend/src/routes/*/` | Data access layer |
-| Service | `backend/src/routes/*/` | Business logic |
-| BaseAuditEntity | `backend/src/common/entities/` | Soft delete + audit fields |
-| AuthGuard | `backend/src/common/auth/` | JWT verification (Better Auth) |
-| PermissionGuard | `backend/src/common/guards/` | Permission-based authorization |
-| @RequirePermission | `backend/src/common/decorators/` | Declare required permission on endpoint |
-| @Auditable | `backend/src/common/decorators/` | Audit logging decorator |
-| @Transactional | `backend/src/common/decorators/` | Database transaction wrapper |
-| HATEOAS | `backend/src/common/hateoas/` | REST hypermedia links |
+| Repository | `backend/src/effect/modules/*/` | Data access via Drizzle ORM |
+| Service | `backend/src/effect/modules/*/` | Business logic as Effect services |
+| Router | `backend/src/effect/modules/*/` | HTTP route handlers |
+| requireSession | `backend/src/effect/platform/` | Session verification Effect |
+| requirePermission | `backend/src/effect/platform/` | Permission-based authorization |
+| AuditLogWriter | `backend/src/effect/platform/` | Fire-and-forget audit logging |
+| Domain Errors | `backend/src/effect/platform/` | Typed HTTP error factories |
+| HATEOAS | `backend/src/effect/platform/` | REST hypermedia links |
+| Layer Composition | `backend/src/effect/main.ts` | Dependency injection via Effect layers |
 | Shared DTOs | `packages/types/src/` | Backend/Frontend contracts |

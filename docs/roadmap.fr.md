@@ -100,7 +100,7 @@ Fonctionnalités en considération pour les versions futures :
 | Dépôt | Description | Lien |
 |-------|-------------|------|
 | meta | Orchestration du workspace et scripts | [GitHub](https://github.com/librestock/meta) |
-| backend | Serveur API NestJS | [GitHub](https://github.com/librestock/backend) |
+| backend | Serveur API Effect.ts (Bun) | [GitHub](https://github.com/librestock/backend) |
 | frontend | Application web TanStack Start | [GitHub](https://github.com/librestock/frontend) |
 | packages | Types partagés et utilitaires | [GitHub](https://github.com/librestock/packages) |
 | documentation | Site de documentation MkDocs | [GitHub](https://github.com/librestock/documentation) |

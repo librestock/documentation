@@ -52,9 +52,9 @@ cd meta && docker compose up -d
 Then start the application servers:
 
 ```bash
-# Terminal 1 - Backend
+# Terminal 1 - Backend (runs with Bun)
 cd backend
-pnpm start:dev
+pnpm start
 
 # Terminal 2 - Frontend
 cd frontend
@@ -66,7 +66,7 @@ Services started:
 | Service | URL | Description |
 |---------|-----|-------------|
 | PostgreSQL | localhost:5432 | Database |
-| NestJS API | http://localhost:8080 | Backend |
+| Effect.ts API | http://localhost:8080 | Backend (Bun) |
 | TanStack Start | http://localhost:3000 | Frontend |
 | MkDocs | http://localhost:8000 | Documentation |
 
@@ -85,10 +85,15 @@ pnpm dev               # Start all services for development
 
 ```bash
 cd backend
-pnpm start:dev         # Development server
-pnpm build             # Build
-pnpm test              # Run tests
-pnpm test:e2e          # E2E tests
+pnpm start             # Development server (Bun)
+pnpm build             # Build (bun build)
+pnpm test              # Run tests (Vitest)
+pnpm test:watch        # Tests in watch mode
+pnpm test:cov          # Tests with coverage
+pnpm test:integration  # Integration tests
+pnpm lint              # Lint (oxlint)
+pnpm type-check        # TypeScript check
+pnpm seed              # Seed sample data
 ```
 
 ### Frontend

@@ -99,16 +99,15 @@ kill -9 <PID>
 
 3. Check environment variables in `backend/.env`
 
-### Migration errors
+### Migration or schema errors
 
-**Symptom:** TypeORM errors about schema
+**Symptom:** Drizzle ORM errors about missing tables or columns
 
 **Solutions:**
 
-1. Sync schema (development only):
+1. Restart the API server — schema changes are applied automatically in development:
    ```bash
-   # TypeORM synchronize is enabled in dev
-   # Restart the API server
+   cd backend && pnpm start
    ```
 
 2. Check database exists:
@@ -116,10 +115,7 @@ kill -9 <PID>
    psql -h localhost -U postgres -c '\l'
    ```
 
-3. Run pending migrations:
-   ```bash
-   pnpm --filter @librestock/api migration:run
-   ```
+3. Check schema definitions in `backend/src/effect/platform/db/schema.ts`
 
 ## API Issues
 
@@ -131,11 +127,7 @@ kill -9 <PID>
 
 1. Verify `BETTER_AUTH_SECRET` is set in `backend/.env` (must be 32+ random bytes)
 2. Verify `BETTER_AUTH_URL` is set correctly (e.g., `http://localhost:8080`)
-3. Check token is being sent:
-   ```bash
-   # Request should include:
-   # Authorization: Bearer <token>
-   ```
+3. Check session cookie is being sent (Better Auth uses cookie-based sessions)
 4. Try regenerating the secret:
    ```bash
    openssl rand -base64 32
@@ -206,15 +198,17 @@ pnpm --filter @librestock/api type-check
 pnpm --filter @librestock/web type-check
 ```
 
-### ESLint errors
+### Lint errors
 
 **Symptom:** Lint command fails
 
 **Solutions:**
 
 ```bash
-# Auto-fix what's possible
-pnpm --filter @librestock/api lint --fix
+# Backend (oxlint) — auto-fix
+pnpm --filter @librestock/api lint:fix
+
+# Frontend (ESLint) — auto-fix
 pnpm --filter @librestock/web lint:fix
 ```
 

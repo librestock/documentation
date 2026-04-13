@@ -2,7 +2,7 @@
 
 Welcome to the LibreStock Inventory documentation. This system helps manage yacht provisioning inventory with features for product management, order tracking, and audit logging.
 
-Built with NestJS (backend), TanStack Start with React 19 (frontend), PostgreSQL, Better Auth, and TypeORM.
+Built with Effect.ts on Bun (backend), TanStack Start with React 19 (frontend), PostgreSQL, Better Auth, and Drizzle ORM.
 
 ## Quick Links
 
@@ -47,7 +47,7 @@ Built with NestJS (backend), TanStack Start with React 19 (frontend), PostgreSQL
 - **Suppliers Module** - Manage supplier information and relationships
 - **Audit Trail** - Complete change history with user tracking
 - **Authentication** - Better Auth authentication system
-- **Roles & Permissions** - Role-based access control with PermissionGuard and @RequirePermission
+- **Roles & Permissions** - Role-based access control with requirePermission
 - **Users Management** - Admin user management
 - **Photos Management** - Product and inventory photo management
 - **Branding/Customization** - Customizable branding options

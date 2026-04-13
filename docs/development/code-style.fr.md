@@ -4,55 +4,76 @@ Ce guide couvre les standards et conventions de codage utilisés dans LibreStock
 
 ## Outils
 
-| Outil | Objectif |
-|-------|----------|
-| ESLint | Linting |
-| Prettier | Formatage |
-| TypeScript | Vérification des types |
+| Outil | Portée | Objectif |
+|-------|--------|----------|
+| oxlint | Backend | Linting rapide |
+| ESLint | Frontend | Linting |
+| Prettier | Les deux | Formatage |
+| TypeScript | Les deux | Vérification des types |
 
 ## Exécuter les vérifications
 
 ```bash
-# Linter tous les packages
-pnpm lint
+# Lint backend (oxlint)
+pnpm --filter @librestock/api lint
 
-# Corriger les problèmes auto-corrigeables
-pnpm --filter @librestock/api lint --fix
+# Lint backend avec auto-correction
+pnpm --filter @librestock/api lint:fix
+
+# Vérification des types backend
+pnpm --filter @librestock/api type-check
+
+# Lint frontend (ESLint)
+pnpm --filter @librestock/web lint
+
+# Lint frontend avec auto-correction
 pnpm --filter @librestock/web lint:fix
 
-# Vérification des types
-pnpm --filter @librestock/api build  # Inclut la vérification des types
+# Build des types partagés (inclut la vérification des types)
+pnpm --filter @librestock/types build
 ```
 
-## Configuration ESLint
+## Conventions d'import
 
-Les deux repos utilisent ESLint. La configuration est partagée via `packages/eslint-config/`.
-
-### Règles clés
-
-**Ordre des imports** (appliqué) :
+### Backend (Effect.ts)
 
 ```typescript
 // 1. Dépendances externes
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Effect, Layer, Schema } from "effect";
+import { HttpRouter, HttpServerRequest } from "@effect/platform";
 
-// 2. Modules internes
-import { Product } from './entities/product.entity';
-import { CreateProductDto } from './dto';
+// 2. Imports de la plateforme
+import { requirePermission } from "../../platform/authorization";
+import { DrizzleDatabase } from "../../platform/drizzle";
+
+// 3. Imports locaux du module
+import { ProductsService } from "./service";
+import { CreateProductSchema } from "./products.schema";
 ```
 
-**Imports de types** :
+### Frontend (React)
 
 ```typescript
-// Utiliser les imports de type inline
-import { type ProductResponseDto } from '~/lib/data/products';
+// 1. Dépendances externes
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+
+// 2. Composants
+import { Button } from "~/components/ui/button";
+
+// 3. Utilitaires et types
+import { type ProductResponseDto } from "~/lib/data/products";
 ```
 
-**Variables inutilisées** :
+**Imports de types** — utiliser le mot-clé `type` inline :
 
 ```typescript
-// Préfixer avec underscore pour ignorer
+import { type ProductResponseDto } from "~/lib/data/products";
+```
+
+**Variables inutilisées** — préfixer avec underscore :
+
+```typescript
 const { data, error: _error } = useQuery();
 ```
 
@@ -60,7 +81,7 @@ const { data, error: _error } = useQuery();
 
 ### Backend
 
-Le backend utilise un `.prettierrc` avec les paramètres suivants :
+Utilise `.prettierrc` avec :
 
 ```json
 {
@@ -69,11 +90,9 @@ Le backend utilise un `.prettierrc` avec les paramètres suivants :
 }
 ```
 
-Toutes les autres valeurs utilisent les défauts de Prettier (printWidth: 80, semi: true, tabWidth: 2).
-
 ### Frontend
 
-Le frontend utilise `prettier-plugin-tailwindcss` pour le tri automatique des classes Tailwind mais **n'a pas de `.prettierrc` personnalisé** -- il utilise les défauts de Prettier (guillemets doubles, printWidth: 80, semi: true, trailingComma: "all").
+Utilise `prettier-plugin-tailwindcss` pour le tri automatique des classes Tailwind. Pas de `.prettierrc` personnalisé — défauts de Prettier.
 
 ## TypeScript
 
@@ -96,7 +115,6 @@ Tous les modules utilisent TypeScript strict :
 | Module | Alias | Correspond à |
 |--------|-------|--------------|
 | Frontend | `~/*` | `./src/*` |
-| Backend | `src/*` | `./src/*` |
 
 ## Conventions de nommage
 
@@ -104,44 +122,43 @@ Tous les modules utilisent TypeScript strict :
 
 | Type | Convention | Exemple |
 |------|------------|---------|
-| Module Backend | kebab-case | `products.module.ts` |
-| Entité Backend | singulier | `product.entity.ts` |
-| DTO Backend | kebab-case | `create-product.dto.ts` |
-| Composant Frontend | PascalCase | `ProductForm.tsx` |
-| UI Frontend | kebab-case | `button.tsx` |
+| Répertoire module backend | kebab-case | `stock-movements/` |
+| Router backend | `router.ts` | `router.ts` |
+| Service backend | `service.ts` | `service.ts` |
+| Schéma backend | `<feature>.schema.ts` | `products.schema.ts` |
+| Erreurs backend | `<feature>.errors.ts` | `products.errors.ts` |
+| Composant frontend | PascalCase | `ProductForm.tsx` |
+| UI frontend | kebab-case | `button.tsx` |
 
 ### Code
 
 | Type | Convention | Exemple |
 |------|------------|---------|
-| Classe | PascalCase | `ProductsService` |
+| Service Effect | PascalCase | `ProductsService` |
 | Interface | PascalCase (sans préfixe I) | `ProductResponse` |
 | Fonction | camelCase | `findAllProducts` |
 | Constante | UPPER_SNAKE | `MAX_PAGE_SIZE` |
 | Membre Enum | UPPER_SNAKE | `AuditAction.CREATE` |
+| Schéma | PascalCase | `CreateProductSchema` |
+| Classe d'erreur | PascalCase | `ProductNotFound` |
 
 ### Structure d'un module Backend
 
 ```
-routes/<feature>/
-├── <feature>.module.ts      # ProductsModule
-├── <feature>.controller.ts  # ProductsController
-├── <feature>.service.ts     # ProductsService
-├── <entity>.repository.ts   # ProductRepository (singulier)
-├── entities/
-│   └── <entity>.entity.ts   # Product (singulier)
-└── dto/
-    ├── create-<entity>.dto.ts
-    ├── update-<entity>.dto.ts
-    ├── <entity>-response.dto.ts
-    └── index.ts             # Export barrel
+modules/<feature>/
+├── router.ts              # Gestionnaires de routes HTTP
+├── service.ts             # Logique métier (service Effect)
+├── repository.ts          # Accès aux données (requêtes Drizzle)
+├── <feature>.schema.ts    # Schémas de validation (Effect Schema)
+├── <feature>.errors.ts    # Définitions d'erreurs de domaine
+└── <feature>.utils.ts     # Mappers, helpers (optionnel)
 ```
 
 ### Structure des composants Frontend
 
 ```
 components/
-├── ui/                     # Composants de base (kebab-case)
+├── ui/                     # Composants de base (Radix/shadcn, kebab-case)
 │   ├── button.tsx
 │   └── input.tsx
 ├── products/               # Composants par feature (PascalCase)
@@ -156,7 +173,7 @@ components/
 ### Général
 
 - Utiliser `const` par défaut, `let` uniquement si réassignation nécessaire
-- Préférer les exports nommés aux exports par défaut (utiliser les exports par défaut uniquement quand un outil l'exige)
+- Préférer les exports nommés aux exports par défaut
 - Toujours utiliser des accolades pour les structures de contrôle
 - Utiliser les retours anticipés pour réduire l'imbrication
 
@@ -170,7 +187,7 @@ interface ProductFormProps {
 }
 
 // Utiliser type pour les unions/intersections
-type ButtonVariant = 'primary' | 'secondary' | 'danger';
+type ButtonVariant = "primary" | "secondary" | "danger";
 ```
 
 ### React
@@ -180,30 +197,22 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger';
 export function ProductCard({ product }: ProductCardProps) {
   return <div>...</div>;
 }
-
-// Déstructurer les props
-function Button({ variant = 'primary', children, ...props }: ButtonProps) {
-  return <button {...props}>{children}</button>;
-}
 ```
 
-### NestJS
+### Effect.ts
 
 ```typescript
-// Utiliser l'injection de dépendances
-@Injectable()
-export class ProductsService {
-  constructor(
-    private readonly productRepository: ProductRepository,
-    private readonly categoryRepository: CategoryRepository,
-  ) {}
-}
-
-// Utiliser les décorateurs pour la validation
-@Post()
-async create(@Body() createDto: CreateProductDto) {
-  return this.productsService.create(createDto);
-}
+// Les services yieldent leurs dépendances puis retournent les méthodes publiques
+export class ProductsService extends Effect.Service<ProductsService>()(
+  "ProductsService",
+  {
+    effect: Effect.gen(function* () {
+      const repo = yield* ProductsRepository;
+      return { findAll, create, update, delete: softDelete };
+    }),
+    dependencies: [ProductsRepository.Default],
+  }
+) {}
 ```
 
 ## Commentaires
@@ -217,7 +226,7 @@ async create(@Body() createDto: CreateProductDto) {
  * Construit un arbre hiérarchique à partir d'une liste plate de catégories.
  * Les catégories sans parent deviennent des nœuds racines.
  */
-private buildTree(categories: Category[]): CategoryTreeNode[] {
+function buildTree(categories: Category[]): CategoryTreeNode[] {
   // Implémentation
 }
 ```

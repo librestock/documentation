@@ -99,16 +99,15 @@ kill -9 <PID>
 
 3. Vérifier les variables d'environnement dans `backend/.env`
 
-### Erreurs de migration
+### Erreurs de migration ou de schéma
 
-**Symptôme :** Erreurs TypeORM concernant le schéma
+**Symptôme :** Erreurs Drizzle ORM concernant des tables ou colonnes manquantes
 
 **Solutions :**
 
-1. Synchroniser le schéma (développement uniquement) :
+1. Redémarrer le serveur API — les changements de schéma sont appliqués automatiquement en développement :
    ```bash
-   # TypeORM synchronize est activé en dev
-   # Redémarrer le serveur API
+   cd backend && pnpm start
    ```
 
 2. Vérifier que la base de données existe :
@@ -116,10 +115,7 @@ kill -9 <PID>
    psql -h localhost -U postgres -c '\l'
    ```
 
-3. Exécuter les migrations en attente :
-   ```bash
-   pnpm --filter @librestock/api migration:run
-   ```
+3. Vérifier les définitions de schéma dans `backend/src/effect/platform/db/schema.ts`
 
 ## Problèmes API
 

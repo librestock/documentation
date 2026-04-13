@@ -12,7 +12,7 @@ graph TB
     end
 
     subgraph "Backend"
-        F[NestJS 11] --> G[TypeORM]
+        F[Effect.ts + Bun] --> G[Drizzle ORM]
         G --> H[(PostgreSQL 16)]
     end
 
@@ -30,9 +30,9 @@ graph TB
 | Couche | Technologie |
 |--------|-------------|
 | Frontend | TanStack Start, React 19, TanStack Router, TanStack Query/Form, Tailwind CSS 4, Radix UI |
-| Backend | NestJS 11, TypeORM, PostgreSQL 16 |
+| Backend | Effect.ts, Drizzle ORM, Bun, PostgreSQL 16 |
 | Auth | Better Auth |
-| Docs API | Swagger UI |
+| Docs API | Effect HttpApi (OpenAPI) |
 | Outillage | pnpm workspaces, Nix flakes, TypeScript, Docker Compose |
 | i18n | i18next (en, de, fr) |
 
@@ -40,10 +40,12 @@ graph TB
 
 ```
 librestock/
-├── backend/                # Backend NestJS
+├── backend/                # Backend Effect.ts (runtime Bun)
 │   ├── src/
-│   │   ├── routes/         # Modules fonctionnels
-│   │   └── common/         # Utilitaires partagés
+│   │   └── effect/
+│   │       ├── modules/    # Modules fonctionnels
+│   │       ├── platform/   # Concerns transversaux
+│   │       └── http/       # App HTTP & middleware
 │   └── flake.nix           # Environnement dev Nix
 ├── frontend/               # Frontend TanStack Start
 │   ├── src/
@@ -70,10 +72,10 @@ librestock/
 └─────────────────────────────────────────┘
                     ▼ HTTP/REST
 ┌─────────────────────────────────────────┐
-│            Backend NestJS               │
-│  Controller → Service → Repository      │
-│  AuthGuard · PermissionGuard · TypeORM  │
-│  HateoasInterceptor · Swagger UI        │
+│          Backend Effect.ts (Bun)        │
+│  Router → Service → Repository          │
+│  requireSession · requirePermission     │
+│  Drizzle ORM · HATEOAS · Audit Logging  │
 └─────────────────────────────────────────┘
                     ▼
 ┌─────────────────────────────────────────┐
@@ -84,16 +86,16 @@ librestock/
 ## Flux d'Authentification
 
 ```
-Utilisateur → Better Auth → Token JWT
+Utilisateur → Better Auth → Cookie de session
                               ↓
-Frontend: Authorization: Bearer {token}
+Frontend: Session basée sur les cookies
                               ↓
-Backend: AuthGuard → vérifier → req.auth.userId
+Backend: requireSession → vérifier → userId depuis la session
 ```
 
 ## Modules de Routes Backend
 
-Le backend possède les modules de routes suivants dans `backend/src/routes/` :
+Le backend possède les modules suivants dans `backend/src/effect/modules/` :
 
 | Module | Objectif |
 |--------|----------|
@@ -114,23 +116,23 @@ Le backend possède les modules de routes suivants dans `backend/src/routes/` :
 | **suppliers** | Gestion des fournisseurs |
 | **users** | Gestion des utilisateurs |
 
-## Répertoires Common du Backend
+## Couche Plateforme du Backend
 
-Utilitaires partagés dans `backend/src/common/` :
+Infrastructure partagée dans `backend/src/effect/platform/` :
 
-| Répertoire | Objectif |
-|------------|----------|
-| **auth** | Utilitaires d'authentification |
-| **decorators** | `@Auditable`, `@RequirePermission`, `@StandardThrottle`, `@Transactional` |
-| **dto** | DTOs de base/partagés |
-| **entities** | `BaseEntity`, `BaseAuditEntity` |
-| **enums** | Énumérations partagées |
-| **filters** | Filtres d'exception |
-| **guards** | `PermissionGuard` |
-| **hateoas** | Système de liens HATEOAS, `HateoasInterceptor` |
-| **interceptors** | Intercepteurs de réponse |
-| **middleware** | Middleware HTTP |
-| **utils** | Utilitaires généraux |
+| Répertoire / Fichier | Objectif |
+|----------------------|----------|
+| **authorization.ts** | Effect `requirePermission(resource, permission)` |
+| **permission-provider.ts** | Recherche de permissions avec cache (TTL 1 min) |
+| **session.ts** | Effects `requireSession`, `getOptionalSession` |
+| **better-auth.ts** | Intégration Better Auth (APIs admin) |
+| **errors.ts** | Factories d'erreurs de domaine (`NotFoundError`, `BadRequestError`, etc.) |
+| **messages.ts** | Système de messages localisés (en, fr, de) |
+| **audit.ts** | Écriture d'audit fire-and-forget |
+| **drizzle.ts** | Couche Drizzle ORM avec pool de connexions |
+| **hateoas.ts** | Utilitaires de liens HATEOAS |
+| **request-context.ts** | ID de requête, chemin, méthode, IP, locale |
+| **db/** | Définitions de schéma, relations, migrations |
 
 ## Workflow des Types Partagés
 
@@ -261,19 +263,19 @@ classDiagram
 3. **Les zones sont optionnelles** - L'inventaire peut référencer uniquement un emplacement, ou optionnellement une zone pour un suivi précis.
 4. **Hiérarchie des zones** - Les zones supportent les relations parent-enfant (Zone A -> Étagère A1 -> Bac A1-1).
 5. **Contrainte d'unicité** - Un seul enregistrement d'inventaire par combinaison (produit, emplacement, zone).
-6. **Auth basée sur les permissions** - Les rôles contiennent des permissions granulaires ; `@RequirePermission` applique le contrôle d'accès par endpoint.
+6. **Auth basée sur les permissions** - Les rôles contiennent des permissions granulaires ; l'Effect `requirePermission` applique le contrôle d'accès par endpoint.
 
 ## Patterns Clés
 
 | Pattern | Emplacement | Objectif |
 |---------|-------------|----------|
-| Repository | `backend/src/routes/*/` | Couche d'accès aux données |
-| Service | `backend/src/routes/*/` | Logique métier |
-| BaseAuditEntity | `backend/src/common/entities/` | Suppression douce + champs d'audit |
-| AuthGuard | `backend/src/common/auth/` | Vérification JWT (Better Auth) |
-| PermissionGuard | `backend/src/common/guards/` | Autorisation basée sur les permissions |
-| @RequirePermission | `backend/src/common/decorators/` | Déclarer la permission requise sur un endpoint |
-| @Auditable | `backend/src/common/decorators/` | Décorateur de journalisation d'audit |
-| @Transactional | `backend/src/common/decorators/` | Wrapper de transaction de base de données |
-| HATEOAS | `backend/src/common/hateoas/` | Liens hypermédia REST |
+| Repository | `backend/src/effect/modules/*/` | Accès aux données via Drizzle ORM |
+| Service | `backend/src/effect/modules/*/` | Logique métier comme services Effect |
+| Router | `backend/src/effect/modules/*/` | Gestionnaires de routes HTTP |
+| requireSession | `backend/src/effect/platform/` | Vérification de session Effect |
+| requirePermission | `backend/src/effect/platform/` | Autorisation basée sur les permissions |
+| AuditLogWriter | `backend/src/effect/platform/` | Journalisation d'audit fire-and-forget |
+| Erreurs de domaine | `backend/src/effect/platform/` | Factories d'erreurs HTTP typées |
+| HATEOAS | `backend/src/effect/platform/` | Liens hypermédia REST |
+| Composition de Layers | `backend/src/effect/main.ts` | Injection de dépendances via les layers Effect |
 | DTO partagés | `packages/types/src/` | Contrats backend/frontend |

@@ -1,217 +1,294 @@
 # API Development
 
-This guide covers NestJS development patterns for the LibreStock Inventory backend.
+This guide covers Effect.ts development patterns for the LibreStock Inventory backend, which runs on Bun with Drizzle ORM and PostgreSQL.
 
 ## Module Structure
 
 Each feature follows this structure:
 
 ```
-routes/<feature>/
-├── <feature>.module.ts
-├── <feature>.controller.ts
-├── <feature>.service.ts
-├── <feature>.repository.ts
-├── <feature>.hateoas.ts
-├── entities/
-│   └── <feature>.entity.ts
-└── dto/
-    ├── create-<feature>.dto.ts
-    ├── update-<feature>.dto.ts
-    ├── <feature>-response.dto.ts
-    ├── <feature>-query.dto.ts
-    └── index.ts
+modules/<feature>/
+├── router.ts              # HTTP route handlers
+├── service.ts             # Business logic (Effect service)
+├── repository.ts          # Data access (Drizzle queries)
+├── <feature>.schema.ts    # Validation schemas (Effect Schema)
+├── <feature>.errors.ts    # Domain error definitions
+└── <feature>.utils.ts     # Mappers, helpers (optional)
 ```
 
-## Creating a New Entity
+## Creating a New Module
 
-### 1. Entity Definition
+### 1. Schema Definitions
+
+Schemas define validation for request bodies and query parameters using Effect Schema:
 
 ```typescript
-// routes/products/entities/product.entity.ts
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { BaseAuditEntity } from 'src/common/entities/base-audit.entity';
-import { Category } from '../../categories/entities/category.entity';
+// products.schema.ts
+import { Schema } from "effect";
 
-@Entity('products')
-export class Product extends BaseAuditEntity {
-  @Column({ length: 50, unique: true })
-  sku: string;
+export const CreateProductSchema = Schema.Struct({
+  sku: Schema.Trim.pipe(Schema.minLength(1), Schema.maxLength(50)),
+  name: Schema.Trim.pipe(Schema.minLength(1), Schema.maxLength(200)),
+  category_id: Schema.optionalWith(Schema.NullOr(Schema.UUID), {
+    default: () => null,
+  }),
+  standard_cost: Schema.optionalWith(Schema.NullOr(Schema.Number), {
+    default: () => null,
+  }),
+}).annotations({ identifier: "CreateProduct" });
 
-  @Column({ length: 200 })
-  name: string;
-
-  @Column({ type: 'uuid', nullable: true })
-  category_id: string | null;
-
-  @ManyToOne(() => Category, { onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'category_id' })
-  category: Category | null;
-}
+export const ProductsQuerySchema = Schema.Struct({
+  page: Schema.optionalWith(Schema.NumberFromString, { default: () => 1 }),
+  limit: Schema.optionalWith(Schema.NumberFromString, { default: () => 20 }),
+  search: Schema.optionalWith(Schema.String, { default: () => "" }),
+  sortBy: Schema.optionalWith(Schema.String, { default: () => "created_at" }),
+  sortOrder: Schema.optionalWith(Schema.Literal("asc", "desc"), {
+    default: () => "desc" as const,
+  }),
+}).annotations({ identifier: "ProductsQuery" });
 ```
 
-### Base Entities
+!!! tip "Schema Annotations"
+    Always add `.annotations({ identifier: '...' })` to schemas. The identifier appears in validation error messages and tracing spans, making debugging much easier.
 
-- `BaseEntity`: `created_at`, `updated_at`
-- `BaseAuditEntity`: Adds `deleted_at`, `created_by`, `updated_by`, `deleted_by`
+### 2. Domain Errors
 
-### 2. DTOs
+Define typed errors that map to HTTP status codes:
 
 ```typescript
-// dto/create-product.dto.ts
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, IsOptional, MaxLength } from 'class-validator';
+// products.errors.ts
+import { NotFoundError, BadRequestError, InternalError } from "../platform/errors";
 
-export class CreateProductDto {
-  @ApiProperty({ example: 'PROD-001' })
-  @IsString()
-  @MaxLength(50)
-  sku: string;
+export class ProductNotFound extends NotFoundError("ProductNotFound")<{
+  readonly productId: string;
+}> {}
 
-  @ApiProperty({ example: 'Luxury Towel' })
-  @IsString()
-  @MaxLength(200)
-  name: string;
+export class ProductSkuConflict extends BadRequestError("ProductSkuConflict")<{
+  readonly sku: string;
+}> {}
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsUUID()
-  category_id?: string;
-}
+export class ProductsInfrastructureError extends InternalError(
+  "ProductsInfrastructureError"
+)<{}> {}
 ```
+
+Each error factory sets the HTTP status code automatically:
+
+| Factory | Status | Use Case |
+|---------|--------|----------|
+| `NotFoundError` | 404 | Entity not found |
+| `BadRequestError` | 400 | Validation, conflicts |
+| `ConflictError` | 409 | Duplicate resources |
+| `ForbiddenError` | 403 | Insufficient permissions |
+| `UnauthorizedError` | 401 | Not authenticated |
+| `InternalError` | 500 | Infrastructure failures |
 
 ### 3. Repository
 
+Repositories handle data access using Drizzle ORM:
+
 ```typescript
-// product.repository.ts
-@Injectable()
-export class ProductRepository {
-  constructor(
-    @InjectRepository(Product)
-    private readonly repository: Repository<Product>,
-  ) {}
+// repository.ts
+import { Effect } from "effect";
+import { DrizzleDatabase } from "../../platform/drizzle";
+import { products, categories } from "../../platform/db/schema";
+import { eq, isNull, and } from "drizzle-orm";
 
-  async findById(id: string): Promise<Product | null> {
-    return this.repository.findOne({
-      where: { id, deleted_at: IsNull() },
-      relations: ['category'],
-    });
-  }
+export class ProductsRepository extends Effect.Service<ProductsRepository>()(
+  "ProductsRepository",
+  {
+    effect: Effect.gen(function* () {
+      const db = yield* DrizzleDatabase;
 
-  async create(data: Partial<Product>): Promise<Product> {
-    const product = this.repository.create(data);
-    return this.repository.save(product);
+      const tryAsync = makeTryAsync(
+        (error) => new ProductsInfrastructureError({ cause: error })
+      );
+
+      const findById = (id: string) =>
+        tryAsync(() =>
+          db.query.products.findFirst({
+            where: and(eq(products.id, id), isNull(products.deleted_at)),
+            with: { category: true },
+          })
+        );
+
+      const create = (data: typeof products.$inferInsert) =>
+        tryAsync(() =>
+          db.insert(products).values(data).returning().then((r) => r[0]!)
+        );
+
+      return { findById, create /* ... */ };
+    }),
+    dependencies: [DrizzleDatabase.Default],
   }
-}
+) {}
 ```
+
+!!! note "Error wrapping"
+    The `makeTryAsync()` helper converts async database calls into typed Effects. If a query fails, it wraps the error in the module's infrastructure error (e.g., `ProductsInfrastructureError`), keeping error types explicit in the return channel.
 
 ### 4. Service
 
+Services contain business logic and depend on repositories and other services:
+
 ```typescript
-// products.service.ts
-@Injectable()
-export class ProductsService {
-  constructor(
-    private readonly productRepository: ProductRepository,
-    private readonly categoryRepository: CategoryRepository,
-  ) {}
+// service.ts
+import { Effect } from "effect";
 
-  async create(dto: CreateProductDto, userId: string): Promise<Product> {
-    // Validate category exists
-    if (dto.category_id) {
-      const exists = await this.categoryRepository.existsById(dto.category_id);
-      if (!exists) {
-        throw new NotFoundException('Category not found');
-      }
-    }
+export class ProductsService extends Effect.Service<ProductsService>()(
+  "ProductsService",
+  {
+    effect: Effect.gen(function* () {
+      const repo = yield* ProductsRepository;
+      const categoriesService = yield* CategoriesService;
 
-    // Check SKU uniqueness
-    const existing = await this.productRepository.findBySku(dto.sku);
-    if (existing) {
-      throw new BadRequestException('SKU already exists');
-    }
+      const getProductOrFail = (id: string) =>
+        Effect.gen(function* () {
+          const product = yield* repo.findById(id);
+          if (!product) {
+            return yield* Effect.fail(
+              new ProductNotFound({ productId: id, messageKey: "products.notFound" })
+            );
+          }
+          return product;
+        });
 
-    return this.productRepository.create({
-      ...dto,
-      created_by: userId,
-      updated_by: userId,
-    });
+      const create = (dto: CreateProduct, userId: string) =>
+        Effect.gen(function* () {
+          // Validate category exists
+          if (dto.category_id) {
+            yield* categoriesService.existsById(dto.category_id);
+          }
+
+          // Check SKU uniqueness
+          const existing = yield* repo.findBySku(dto.sku);
+          if (existing) {
+            return yield* Effect.fail(
+              new ProductSkuConflict({ sku: dto.sku, messageKey: "products.skuConflict" })
+            );
+          }
+
+          return yield* repo.create({
+            ...dto,
+            created_by: userId,
+            updated_by: userId,
+          });
+        }).pipe(Effect.withSpan("ProductsService.create"));
+
+      return { create, getProductOrFail /* ... */ };
+    }),
+    dependencies: [ProductsRepository.Default, CategoriesService.Default],
   }
-}
+) {}
 ```
 
-### 5. Controller
+### 5. Router
 
-Controllers use `@Controller()` with an empty string. Routing is done via `RouterModule` in `app.routes.ts`.
+Routers define HTTP endpoints and wire together authorization, validation, and service calls:
 
 ```typescript
-// products.controller.ts
-@Controller()
-@ApiTags('Products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+// router.ts
+import { HttpRouter, HttpServerRequest } from "@effect/platform";
+import { Effect } from "effect";
 
-  @Post()
-  @Auditable()
-  @RequirePermission('products', 'create')
-  @StandardThrottle()
-  @UseInterceptors(HateoasInterceptor)
-  @ProductHateoas()
-  @ApiOperation({ summary: 'Create product' })
-  @ApiResponse({ status: 201, type: ProductResponseDto })
-  async create(
-    @Body() dto: CreateProductDto,
-    @CurrentUser('userId') userId: string,
-  ): Promise<Product> {
-    return this.productsService.create(dto, userId);
-  }
-}
+export const ProductsRouter = HttpRouter.empty.pipe(
+  // GET /products — paginated list
+  HttpRouter.get("/products", respondJson(
+    Effect.gen(function* () {
+      yield* requirePermission(Resource.PRODUCTS, Permission.READ);
+      const query = yield* searchParams(ProductsQuerySchema);
+      const service = yield* ProductsService;
+      return yield* service.findAllPaginated(query);
+    })
+  )),
+
+  // POST /products — create
+  HttpRouter.post("/products", respondJson(
+    Effect.gen(function* () {
+      yield* requirePermission(Resource.PRODUCTS, Permission.WRITE);
+      const body = yield* HttpServerRequest.schemaBodyJson(CreateProductSchema);
+      const session = yield* requireSession;
+      const service = yield* ProductsService;
+
+      const product = yield* service.create(body, session.user.id);
+
+      // Fire-and-forget audit log
+      const audit = yield* AuditLogWriter;
+      yield* audit.log({
+        action: AuditAction.CREATE,
+        entityType: AuditEntityType.PRODUCT,
+        entityId: product.id,
+      });
+
+      return product;
+    }),
+    { status: 201 }
+  )),
+
+  // PUT /products/:id — update
+  HttpRouter.put("/products/:id", respondJson(
+    Effect.gen(function* () {
+      yield* requirePermission(Resource.PRODUCTS, Permission.WRITE);
+      const { id } = yield* HttpRouter.schemaPathParams(
+        Schema.Struct({ id: Schema.UUID })
+      );
+      const body = yield* HttpServerRequest.schemaBodyJson(UpdateProductSchema);
+      const session = yield* requireSession;
+      const service = yield* ProductsService;
+      return yield* service.update(id, body, session.user.id);
+    })
+  )),
+
+  // DELETE /products/:id — soft delete
+  HttpRouter.delete("/products/:id", respondJson(
+    Effect.gen(function* () {
+      yield* requirePermission(Resource.PRODUCTS, Permission.WRITE);
+      const { id } = yield* HttpRouter.schemaPathParams(
+        Schema.Struct({ id: Schema.UUID })
+      );
+      const session = yield* requireSession;
+      const service = yield* ProductsService;
+      return yield* service.delete(id, session.user.id);
+    })
+  )),
+);
 ```
 
-!!! note "Controller routing"
-    Controllers use `@Controller()` with an empty string. The actual route paths (e.g., `/products`) are configured via `RouterModule` in `app.routes.ts`. The global prefix `/api/v1` is applied automatically.
+### Route Handler Pattern
 
-### Key Decorators
+Every route handler follows the same sequence:
 
-| Decorator | Purpose | Example |
-|-----------|---------|---------|
-| `@Auditable()` | Records action in audit log | `@Auditable()` |
-| `@RequirePermission(resource, permission)` | Enforces permission check | `@RequirePermission('products', 'create')` |
-| `@StandardThrottle()` | Rate limiting (100 req/min) | `@StandardThrottle()` |
-| `@Transactional()` | Wraps method in DB transaction | `@Transactional()` |
+1. **Authorize** — `yield* requirePermission(Resource, Permission)`
+2. **Decode** — Parse body, path params, or query params via schemas
+3. **Get session** — `yield* requireSession` for the current user
+4. **Call service** — Business logic and data access
+5. **Audit** — Fire-and-forget via `AuditLogWriter.log()`
+6. **Respond** — `respondJson()` wraps the result (or `respondEmpty()` for 204)
 
-### 6. HATEOAS Links
+### 6. Layer Composition
 
-HATEOAS links use relative paths. The `HateoasInterceptor` auto-prepends the global prefix (`/api/v1`).
+Modules are wired together in `main.ts` using Effect layers — no decorator-based DI container:
 
 ```typescript
-// products.hateoas.ts
-export const PRODUCT_HATEOAS_LINKS: LinkDefinition[] = [
-  { rel: 'self', href: (data) => `/products/${data.id}`, method: 'GET' },
-  { rel: 'update', href: (data) => `/products/${data.id}`, method: 'PUT' },
-  { rel: 'delete', href: (data) => `/products/${data.id}`, method: 'DELETE' },
-];
+// main.ts (simplified)
+const platformLayer = drizzleLayer.pipe(Layer.provideMerge(betterAuthLayer));
 
-export const ProductHateoas = () => HateoasLinks(...PRODUCT_HATEOAS_LINKS);
+const rolesLayer = RolesService.Default.pipe(Layer.provide(platformLayer));
+const permissionLayer = PermissionProvider.Default.pipe(Layer.provide(rolesLayer));
+
+const categoriesLayer = CategoriesService.Default.pipe(Layer.provide(platformLayer));
+const productsLayer = ProductsService.Default.pipe(
+  Layer.provide(platformLayer),
+  Layer.provide(categoriesLayer)
+);
 ```
 
-### 7. Module Registration
+!!! tip "Dependency direction"
+    Services export only their `.Default` layer. Cross-module access goes through the service layer — never import a repository from another module.
 
-```typescript
-// products.module.ts
-@Module({
-  imports: [TypeOrmModule.forFeature([Product])],
-  controllers: [ProductsController],
-  providers: [ProductsService, ProductRepository],
-  exports: [ProductsService],
-})
-export class ProductsModule {}
-```
+### 7. Update Shared Types
 
-!!! tip "Export only the Service"
-    Modules export only their Service, never the Repository. Cross-module access goes through the Service layer.
-
-### 8. Update Shared Types
+After changing DTOs or enums:
 
 ```bash
 pnpm --filter @librestock/types barrels
@@ -220,93 +297,128 @@ pnpm --filter @librestock/types build
 
 ## Authentication
 
-### Using Guards
+### Session Access
 
-Authentication is handled by Better Auth via `AuthGuard`:
-
-```typescript
-// AuthGuard is applied globally -- no need to add it per controller
-// Use @RequirePermission for authorization
-@Controller()
-export class ProductsController {
-  @RequirePermission('products', 'read')
-  @Get()
-  async findAll() { ... }
-}
-```
-
-### Accessing User
+Authentication is handled by Better Auth. Sessions are accessed via Effect context:
 
 ```typescript
-// Get user ID
-@CurrentUser('userId') userId: string
+// Require authentication (fails with 401 if not logged in)
+const session = yield* requireSession;
+const userId = session.user.id;
 
-// Get full auth object
-@CurrentUser() auth: { userId: string; sessionId: string }
+// Optional session (returns null if not logged in)
+const session = yield* getOptionalSession;
+const userId = session?.user.id;
 ```
 
 ## Authorization
 
-Use `@RequirePermission` to enforce permission-based access control:
+Use `requirePermission` at the start of every protected route handler:
 
 ```typescript
-@Controller()
-export class ProductsController {
-  @RequirePermission('products', 'read')
-  @Get()
-  async findAll() { ... }
+// Read access
+yield* requirePermission(Resource.PRODUCTS, Permission.READ);
 
-  @RequirePermission('products', 'create')
-  @Post()
-  async create() { ... }
-
-  @RequirePermission('products', 'update')
-  @Put(':id')
-  async update() { ... }
-
-  @RequirePermission('products', 'delete')
-  @Delete(':id')
-  async remove() { ... }
-}
+// Write access
+yield* requirePermission(Resource.PRODUCTS, Permission.WRITE);
 ```
 
-The `PermissionGuard` checks the user's role permissions against the required permission declared by `@RequirePermission`.
+The `requirePermission` Effect:
+
+1. Gets the current session (fails with 401 if unauthenticated)
+2. Fetches the user's permissions via `PermissionProvider` (cached for 1 minute)
+3. Checks if the user has the required permission
+4. Fails with `PermissionDenied` (403) if not authorized
+
+### Resources and Permissions
+
+| Resource | Read | Write |
+|----------|------|-------|
+| `DASHBOARD` | View dashboard | — |
+| `STOCK` | View stock & movements | Create/edit stock |
+| `PRODUCTS` | View products | Create/edit/delete products |
+| `LOCATIONS` | View locations & areas | Create/edit/delete locations |
+| `INVENTORY` | View inventory | Adjust inventory |
+| `AUDIT_LOGS` | View audit logs | — |
+| `USERS` | View users | Manage users |
+| `SETTINGS` | View settings | Update settings |
+| `ROLES` | View roles | Manage roles |
 
 ## Error Handling
 
-Use NestJS built-in exceptions:
+Errors are typed values in the Effect failure channel, not thrown exceptions:
 
 ```typescript
-throw new NotFoundException('Product not found');
-throw new BadRequestException('Invalid SKU format');
-throw new UnauthorizedException('Token expired');
-throw new ForbiddenException('Insufficient permissions');
+// Define a domain error
+export class ProductNotFound extends NotFoundError("ProductNotFound")<{
+  readonly productId: string;
+}> {}
+
+// Fail with a domain error (includes messageKey for localization)
+yield* Effect.fail(
+  new ProductNotFound({
+    productId: id,
+    messageKey: "products.notFound",
+  })
+);
+```
+
+### Error Response Flow
+
+The `respondJson()` wrapper catches all errors and calls `respondCause()`, which:
+
+1. **Domain errors** → HTTP status from error factory + localized message via `messageKey`
+2. **Schema parse errors** → 400 with validation details
+3. **Unknown errors** → 500 (masked in production, detailed in development)
+
+All error responses include `x-request-id` for tracing.
+
+### Localized Messages
+
+Error messages are resolved from locale catalogs (en, fr, de) based on the `Accept-Language` header:
+
+```typescript
+// English catalog
+"products.notFound": "Product not found",
+"products.skuConflict": "A product with this SKU already exists",
+
+// French catalog
+"products.notFound": "Produit non trouvé",
+"products.skuConflict": "Un produit avec ce SKU existe déjà",
 ```
 
 ## Soft Delete
 
-Products use soft delete:
+Products use soft delete via `deleted_at`, `deleted_by` columns:
 
 ```typescript
-// Repository - exclude deleted by default
-async findAll(): Promise<Product[]> {
-  return this.repository.find({
-    where: { deleted_at: IsNull() },
-  });
-}
+// Repository — exclude deleted by default
+const findAll = () =>
+  tryAsync(() =>
+    db.query.products.findMany({
+      where: isNull(products.deleted_at),
+    })
+  );
 
-// Include deleted
-async findAllWithDeleted(): Promise<Product[]> {
-  return this.repository.find();
-}
+// Include deleted (for admin views)
+const findAllIncludingDeleted = () =>
+  tryAsync(() => db.query.products.findMany());
 
 // Soft delete
-async softDelete(id: string, userId: string): Promise<void> {
-  await this.repository.update(id, {
-    deleted_at: new Date(),
-    deleted_by: userId,
-  });
-}
+const softDelete = (id: string, userId: string) =>
+  tryAsync(() =>
+    db.update(products)
+      .set({ deleted_at: new Date(), deleted_by: userId })
+      .where(eq(products.id, id))
+  );
+
+// Restore
+const restore = (id: string) =>
+  tryAsync(() =>
+    db.update(products)
+      .set({ deleted_at: null, deleted_by: null })
+      .where(eq(products.id, id))
+  );
 ```
 
 ## Response Formats
@@ -328,14 +440,9 @@ async softDelete(id: string, userId: string): Promise<void> {
 ```json
 {
   "data": [...],
-  "meta": {
-    "page": 1,
-    "limit": 20,
-    "total": 100,
-    "total_pages": 5,
-    "has_next": true,
-    "has_previous": false
-  }
+  "page": 1,
+  "limit": 20,
+  "total": 100
 }
 ```
 
@@ -343,174 +450,90 @@ async softDelete(id: string, userId: string): Promise<void> {
 
 ```json
 {
-  "success_count": 8,
-  "failure_count": 2,
   "succeeded": ["id1", "id2"],
-  "failures": [
-    { "id": "id3", "error": "Not found" }
+  "failed": [
+    { "item": { "sku": "PROD-003" }, "error": "SKU already exists" }
   ]
 }
 ```
 
-## Rate Limiting
+## HATEOAS Links
 
-The API uses `@nestjs/throttler` for IP-based rate limiting.
-
-### Throttle Decorators
-
-Apply to controllers or individual endpoints:
+HATEOAS links are added to responses via the `addHateoasLinks()` utility:
 
 ```typescript
-import { StandardThrottle, BulkThrottle, AuthThrottle } from 'src/common/decorators/throttle.decorator';
+import { addHateoasLinks } from "../../platform/hateoas";
 
-@StandardThrottle() // 100 req/min
-@Controller()
-export class ProductsController {
+const links = [
+  { rel: "self", href: `/products/${product.id}`, method: "GET" },
+  { rel: "update", href: `/products/${product.id}`, method: "PUT" },
+  { rel: "delete", href: `/products/${product.id}`, method: "DELETE" },
+];
 
-  @BulkThrottle() // Override with 20 req/min
-  @Post('bulk')
-  async bulkCreate() { ... }
-}
-
-@AuthThrottle() // 10 req/min for auth endpoints
-@Controller()
-export class AuthController { ... }
+return addHateoasLinks(productDto, links);
 ```
 
-### Available Throttle Levels
-
-- `@StandardThrottle()` - 100 requests/minute (default for most endpoints)
-- `@BulkThrottle()` - 20 requests/minute (bulk operations)
-- `@AuthThrottle()` - 10 requests/minute (prevents brute force)
-- `@SkipThrottle()` - No rate limiting (health checks)
-
-### 429 Response
-
-When rate limited:
-
-```json
-{
-  "statusCode": 429,
-  "error": "Too Many Requests",
-  "message": "Rate limit exceeded. Please slow down your requests and try again later.",
-  "path": "/api/v1/products",
-  "timestamp": "2026-01-18T20:00:00.000Z",
-  "hint": "Consider implementing exponential backoff or waiting before retrying."
-}
-```
-
-## Transaction Management
-
-Use the `@Transactional()` decorator for atomic operations.
-
-### Basic Usage
-
-```typescript
-import { Transactional } from 'src/common/decorators/transactional.decorator';
-
-@Injectable()
-export class ProductsService {
-  @Transactional()
-  async bulkCreate(dto: BulkCreateProductsDto) {
-    // All database operations here run in a transaction
-    // If any operation fails, all changes are rolled back automatically
-
-    for (const product of dto.products) {
-      await this.productRepository.create(product);
-    }
-
-    return result;
-  }
-}
-```
-
-### When to Use Transactions
-
-Use `@Transactional()` for operations that:
-
-1. **Modify multiple records** - Ensure all-or-nothing semantics
-2. **Have dependencies** - Prevent partial completion (e.g., inventory creation)
-3. **Update hierarchies** - Protect parent-child relationships
-4. **Adjust quantities** - Prevent race conditions
-5. **Bulk operations** - Prevent partial batch inserts
-
-### Examples
-
-```typescript
-// Bulk insert - prevents partial batches
-@Transactional()
-async bulkCreate(products: CreateProductDto[]) {
-  const created = [];
-  for (const dto of products) {
-    created.push(await this.repository.create(dto));
-  }
-  return created;
-}
-
-// Inventory creation - prevents TOCTOU races
-@Transactional()
-async create(dto: CreateInventoryDto) {
-  // Check if inventory exists
-  const existing = await this.repository.findByProductAndLocation(
-    dto.product_id,
-    dto.location_id
-  );
-  if (existing) throw new ConflictException();
-
-  // Create inventory
-  return this.repository.create(dto);
-}
-
-// Quantity adjustment - atomic updates
-@Transactional()
-async adjustQuantity(id: string, adjustment: number) {
-  const inventory = await this.repository.findById(id);
-  const newQuantity = inventory.quantity + adjustment;
-
-  if (newQuantity < 0) {
-    throw new BadRequestException('Insufficient quantity');
-  }
-
-  await this.repository.update(id, { quantity: newQuantity });
-  return this.repository.findById(id);
-}
-
-// Circular reference check - atomic validation
-@Transactional()
-async update(id: string, dto: UpdateCategoryDto) {
-  if (dto.parent_id) {
-    await this.validateNoCircularReference(id, dto.parent_id);
-  }
-  return this.repository.update(id, dto);
-}
-```
-
-### Transaction Behavior
-
-- **Success**: All changes committed to database
-- **Error**: All changes rolled back automatically
-- **Logging**: Start and completion/rollback logged automatically
-- **Nesting**: Transactions can be nested (uses savepoints)
-- **Performance**: ~5-10ms overhead per transaction
+The `getBaseUrl()` helper resolves the protocol from `x-forwarded-proto` for correct URLs behind reverse proxies.
 
 ## Audit Logging
 
-Use the `@Auditable()` decorator to automatically record entity changes:
+Audit logging is fire-and-forget — it runs in a background daemon fiber and never blocks the response:
 
 ```typescript
-@Post()
-@Auditable()
-@RequirePermission('products', 'create')
-async create(@Body() dto: CreateProductDto) {
-  return this.productsService.create(dto);
-}
+const audit = yield* AuditLogWriter;
+yield* audit.log({
+  action: AuditAction.CREATE,
+  entityType: AuditEntityType.PRODUCT,
+  entityId: product.id,
+});
 ```
 
-The audit log captures the action, user, entity, and timestamp.
+The audit writer automatically captures:
+
+- **User ID** — from the current session
+- **IP address** — from request context
+- **User agent** — from request headers
+- **Timestamp** — current time
+
+### Audit Actions
+
+| Action | When |
+|--------|------|
+| `CREATE` | Entity created |
+| `UPDATE` | Entity modified |
+| `DELETE` | Entity deleted |
+| `RESTORE` | Soft-deleted entity restored |
+| `ADJUST_QUANTITY` | Inventory quantity changed |
+| `ADD_PHOTO` | Photo uploaded |
+| `STATUS_CHANGE` | Status field changed (e.g., order status) |
+
+## Tracing
+
+Service methods use `Effect.withSpan()` for distributed tracing:
+
+```typescript
+const create = (dto: CreateProduct, userId: string) =>
+  Effect.gen(function* () {
+    // ... business logic
+  }).pipe(Effect.withSpan("ProductsService.create"));
+```
+
+Spans appear in structured logs and can be exported to tracing backends.
+
+## HTTP Middleware
+
+The HTTP app applies middleware in order (innermost first):
+
+| Middleware | Purpose |
+|-----------|---------|
+| `corsMiddleware` | CORS headers for cross-origin requests |
+| `securityHeadersMiddleware` | Security headers (CSP, X-Frame-Options, etc.) |
+| `requestLoggingMiddleware` | Request/response logging with timing |
+| `bodyLimitMiddleware` | Max 10MB request body |
+
+All responses include `x-request-id` for request correlation.
 
 ## Health Checks
-
-The API provides three health check endpoints using `@nestjs/terminus`.
 
 ### Endpoints
 
@@ -523,12 +546,9 @@ Checks database connectivity and auth configuration:
 ```json
 {
   "status": "ok",
-  "info": {
-    "database": { "status": "up" },
-    "auth": {
-      "status": "up",
-      "message": "Better Auth is properly configured"
-    }
+  "checks": {
+    "database": "up",
+    "auth": "configured"
   }
 }
 ```
@@ -539,30 +559,13 @@ Returns `503` if any check fails.
 
 `GET /health-check/live`
 
-Kubernetes liveness probe - always returns `200` if app is running:
-
-```json
-{
-  "status": "ok"
-}
-```
+Returns `200` if the process is running.
 
 #### Readiness Probe
 
 `GET /health-check/ready`
 
-Kubernetes readiness probe - checks database only:
-
-```json
-{
-  "status": "ok",
-  "info": {
-    "database": { "status": "up" }
-  }
-}
-```
-
-Returns `503` if database is unreachable.
+Checks database connectivity. Returns `503` if the database is unreachable.
 
 ### Kubernetes Configuration
 

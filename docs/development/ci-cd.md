@@ -76,14 +76,15 @@ Run the same checks locally before pushing:
 # Backend
 cd backend
 pnpm install
-pnpm lint
-pnpm build
-pnpm test
+pnpm lint              # oxlint
+pnpm type-check        # TypeScript
+pnpm build             # bun build
+pnpm test              # Vitest
 
 # Frontend
 cd frontend
 pnpm install
-pnpm lint
+pnpm lint              # ESLint
 pnpm build
 ```
 
@@ -126,7 +127,7 @@ cd frontend && pnpm build
 **Test failures:**
 
 ```bash
-cd backend && pnpm test -- --verbose
+cd backend && pnpm test
 ```
 
 ### Cache Issues

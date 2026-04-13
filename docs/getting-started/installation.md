@@ -69,7 +69,7 @@ This starts:
 | Service | URL | Description |
 |---------|-----|-------------|
 | PostgreSQL | localhost:5432 | Database |
-| NestJS API | http://localhost:8080 | Backend + Swagger |
+| Effect.ts API | http://localhost:8080 | Backend (Bun) |
 | TanStack Start Web | http://localhost:3000 | Frontend |
 
 ### 6. Configure Environment Variables
@@ -137,7 +137,7 @@ Edit `backend/.env` with your configuration (see table above).
 
 ```bash
 # Terminal 1: API
-cd backend && pnpm start:dev
+cd backend && pnpm start
 
 # Terminal 2: Web
 cd frontend && pnpm dev

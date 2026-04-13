@@ -69,6 +69,11 @@ plugins:
             Areas: Zones
             Inventory: Inventaire
             Orders: Commandes
+            Suppliers: Fournisseurs
+            Clients: Clients
+            Stock Movements: Mouvements de stock
+            Users & Roles: Utilisateurs & Rôles
+            Branding: Personnalisation
             Audit Logs: Journaux d'audit
             Development: Développement
             Architecture: Architecture
@@ -140,10 +145,15 @@ nav:
       - user-guide/index.md
       - Products: user-guide/products.md
       - Categories: user-guide/categories.md
+      - Suppliers: user-guide/suppliers.md
+      - Clients: user-guide/clients.md
       - Locations: user-guide/locations.md
       - Areas: user-guide/areas.md
       - Inventory: user-guide/inventory.md
+      - Stock Movements: user-guide/stock-movements.md
       - Orders: user-guide/orders.md
+      - Users & Roles: user-guide/users-roles.md
+      - Branding: user-guide/branding.md
       - Audit Logs: user-guide/audit-logs.md
   - Development:
       - development/index.md
