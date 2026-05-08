@@ -6,10 +6,12 @@ This guide covers the coding standards and conventions used in LibreStock Invent
 
 | Tool | Scope | Purpose |
 |------|-------|---------|
-| oxlint | Backend | Fast linting |
-| ESLint | Frontend | Linting |
+| oxlint | Backend + Frontend | Fast Rust-based linting |
 | Prettier | Both | Formatting |
 | TypeScript | Both | Type checking |
+
+!!! note "oxlint everywhere"
+    Both backend and frontend use [oxlint](https://oxc-project.github.io/docs/guide/usage/linter.html). The `packages/eslint-config/` package exists for the (legacy) shared ESLint config but is not currently consumed by backend or frontend.
 
 ## Running Checks
 
@@ -29,25 +31,20 @@ pnpm --filter @librestock/web lint
 # Frontend lint with auto-fix
 pnpm --filter @librestock/web lint:fix
 
-# Build shared types (includes type check)
+# Build shared types — barrels first, then build
+pnpm --filter @librestock/types barrels
 pnpm --filter @librestock/types build
 ```
 
 ## Lint Configuration
 
-### Backend (oxlint)
+Both packages use [oxlint](https://oxc-project.github.io/docs/guide/usage/linter.html). The frontend config lives at `frontend/.oxlintrc.json`.
 
-The backend uses [oxlint](https://oxc-project.github.io/docs/guide/usage/linter.html) for fast Rust-based linting.
-
-### Frontend (ESLint)
-
-The frontend uses ESLint with configuration shared via `packages/eslint-config/`.
-
-Key rules:
+Key rules enforced in the frontend:
 
 - `unicorn/catch-error-name` — catch blocks must use `error`, not `e`
-- `@typescript-eslint/unbound-method` — don't destructure methods from objects
-- `prefer-destructuring` — use `const { x } = obj` not `const x = obj.x`
+- `@typescript-eslint/unbound-method` — don't destructure methods from objects (use `obj.method()`)
+- `prefer-destructuring` — use `const { x } = obj`, not `const x = obj.x`
 
 ## Import Conventions
 
@@ -134,6 +131,7 @@ All modules use strict TypeScript:
 | Module | Alias | Maps to |
 |--------|-------|---------|
 | Frontend | `~/*` | `./src/*` |
+| Frontend | `@/*` | `./src/*` (also available; used in e.g. `axios-client.ts`) |
 
 ## Naming Conventions
 

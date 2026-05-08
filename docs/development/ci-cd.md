@@ -4,7 +4,7 @@ This guide covers the GitHub Actions workflows and deployment processes for Libr
 
 ## Workflows
 
-CI workflows are **per-repo**, not at the workspace root level.
+CI workflows live **per-package** for backend/frontend/documentation, and **at the monorepo root** for cross-package concerns (mobile-app, shared packages).
 
 ### Backend CI Pipeline
 
@@ -12,11 +12,11 @@ CI workflows are **per-repo**, not at the workspace root level.
 
 Runs on every pull request and push to main:
 
-- Lint
+- Lint (oxlint)
 - Type check
-- Run unit tests
-- Run E2E tests
-- Build
+- Unit tests (Vitest)
+- Integration tests (against a real Postgres service)
+- Build (bun build)
 
 ### Frontend CI Pipeline
 
@@ -24,22 +24,39 @@ Runs on every pull request and push to main:
 
 Runs on every pull request and push to main:
 
-- Lint
+- Lint (oxlint)
 - Type check
 - Build
 
+### Mobile CI Pipeline (Root-Level)
+
+**File:** `.github/workflows/mobile-ci.yml`
+
+Lives at the workspace root because it rebuilds shared types before testing `mobile-app/`. Triggers on changes to `mobile-app/**` or `packages/**`.
+
 ### Docker Publish
 
-Each repo has its own Docker publish workflow:
+Each application package has its own Docker publish workflow:
 
 - **Backend:** `backend/.github/workflows/docker-publish.yml`
 - **Frontend:** `frontend/.github/workflows/docker-publish.yml`
 
 ### Documentation Deployment
 
-**File:** `documentation/.github/workflows/deploy-docs.yml`
+**File:** `documentation/.github/workflows/deploy.yml`
 
-Deploys documentation via GitHub Pages on push to main.
+Deploys the MkDocs site to GitHub Pages on push to main.
+
+### Package Release (npm)
+
+Shared packages (`@librestock/types`, `@librestock/eslint-config`, `@librestock/tsconfig`) publish to npm via trusted publishing when their `package.json` version is bumped on `main`.
+
+- **Trigger:** merge to `main` with a version bump in `packages/<name>/package.json`
+- **Workflow:** `tag.yml` (at the monorepo root)
+- **Tag format:** `types@x.y.z`, `eslint-config@x.y.z`, `tsconfig@x.y.z`
+
+!!! warning "Version-bump requirement"
+    If you edit `packages/types`, `packages/eslint-config`, or `packages/tsconfig`, bump that package's `package.json` version **in the same PR**. Skipping the bump means consumers won't pick up your change after merge.
 
 ## GitHub Actions Secrets
 
@@ -73,19 +90,20 @@ PRs should include:
 Run the same checks locally before pushing:
 
 ```bash
-# Backend
-cd backend
+# One install at the monorepo root hydrates every package
 pnpm install
-pnpm lint              # oxlint
-pnpm type-check        # TypeScript
-pnpm build             # bun build
-pnpm test              # Vitest
+
+# Backend
+pnpm --filter @librestock/api lint           # oxlint
+pnpm --filter @librestock/api type-check     # TypeScript
+pnpm --filter @librestock/api build          # bun build
+pnpm --filter @librestock/api test           # Vitest
+pnpm --filter @librestock/api test:integration
 
 # Frontend
-cd frontend
-pnpm install
-pnpm lint              # ESLint
-pnpm build
+pnpm --filter @librestock/web lint           # oxlint
+pnpm --filter @librestock/web type-check
+pnpm --filter @librestock/web build
 ```
 
 ## Deployment

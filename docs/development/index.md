@@ -4,49 +4,65 @@ This section covers everything you need to contribute to the LibreStock Inventor
 
 ## Overview
 
-LibreStock Inventory is a multi-repo workspace containing:
+LibreStock Inventory is a **pnpm monorepo** containing:
 
-- **backend/** - Effect.ts backend (Bun runtime)
-- **frontend/** - TanStack Start frontend
-- **packages/** - Shared types, configs
-- **meta/** - Orchestration scripts, Docker Compose
+- **backend/** — Effect.ts backend (Bun runtime, `@librestock/api`)
+- **frontend/** — TanStack Start SSR app (`@librestock/web`)
+- **mobile-app/** — Expo React Native app (`@librestock/mobile`)
+- **landing/** — Static marketing site
+- **remote-desktop/** — Tauri 2 desktop app (`@librestock/remote-desktop`)
+- **packages/** — Shared `types`, `eslint-config`, `tsconfig`
+- **meta/** — Workspace tooling: Docker Compose, legacy multi-repo scripts
+- **infrastructure/** — Terraform (Hetzner + Cloudflare); not a pnpm workspace member
 
 ## Quick Links
 
-- [Architecture](architecture.md) - System design and tech stack
-- [Setup](setup.md) - Development environment configuration
-- [Code Style](code-style.md) - ESLint, Prettier, and conventions
-- [Testing](testing.md) - Vitest test patterns
-- [API Development](api-development.md) - Effect.ts patterns
-- [Frontend Development](frontend-development.md) - TanStack Start patterns
-- [CI/CD](ci-cd.md) - GitHub Actions workflows
+- [Architecture](architecture.md) — System design and tech stack
+- [Setup](setup.md) — Development environment configuration
+- [Code Style](code-style.md) — oxlint, Prettier, and conventions
+- [Testing](testing.md) — Vitest + Playwright patterns
+- [API Development](api-development.md) — Effect.ts patterns
+- [Frontend Development](frontend-development.md) — TanStack Start patterns
+- [CI/CD](ci-cd.md) — GitHub Actions workflows
 
 ## Development Workflow
 
-1. **Start the environment**
+1. **Install once from the monorepo root**
 
     ```bash
-    # Start services (PostgreSQL, etc.)
-    cd meta && docker compose up -d
-
-    # Enter dev shell (per-repo Nix flakes)
-    cd backend && nix develop
-    cd frontend && nix develop
+    pnpm install
     ```
 
-2. **Make changes** to the codebase
-
-3. **Update shared types** (if DTO shapes changed)
+2. **Start services**
 
     ```bash
+    cd meta && docker compose up -d
+    ```
+
+3. **Run dev servers (separate terminals)**
+
+    ```bash
+    pnpm --filter @librestock/api start
+    pnpm --filter @librestock/web dev
+    ```
+
+    Per-package Nix shells (`cd backend && nix develop`) are optional for isolated environments; there is **no root flake.nix**.
+
+4. **Make changes** to the codebase
+
+5. **Update shared types** (if DTO shapes changed) — **barrels must run before build**
+
+    ```bash
+    pnpm --filter @librestock/types barrels
     pnpm --filter @librestock/types build
     ```
 
-4. **Run tests and lint**
+6. **Run tests and lint**
 
     ```bash
-    pnpm test
-    pnpm lint
+    pnpm --filter @librestock/api test
+    pnpm --filter @librestock/api lint      # oxlint
+    pnpm --filter @librestock/web lint      # oxlint (frontend too)
     ```
 
-5. **Submit a pull request**
+7. **Submit a pull request**

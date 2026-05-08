@@ -19,23 +19,25 @@ This guide covers TanStack Start development patterns for the LibreStock Invento
 frontend/src/
 ├── routes/                      # File-based routes (TanStack Router)
 │   ├── __root.tsx               # Root layout + providers
-│   ├── index.tsx                # Home (/)
-│   ├── products.tsx             # Products (/products)
-│   ├── products.$id.tsx         # Product detail (/products/:id)
-│   ├── locations.tsx            # Locations (/locations)
-│   ├── locations.$id.tsx        # Location detail (/locations/:id)
-│   ├── inventory.tsx            # Inventory (/inventory)
-│   ├── stock.tsx                # Stock (/stock)
-│   ├── stock-movements.tsx      # Stock Movements (/stock-movements)
-│   ├── orders.tsx               # Orders (/orders)
-│   ├── clients.tsx              # Clients (/clients)
-│   ├── suppliers.tsx            # Suppliers (/suppliers)
-│   ├── audit-logs.tsx           # Audit logs (/audit-logs)
-│   ├── users.tsx                # Users (/users)
-│   ├── roles.tsx                # Roles (/roles)
-│   ├── settings.tsx             # Settings (/settings)
-│   ├── login.tsx                # Login
-│   └── signup.tsx               # Signup
+│   ├── login.tsx                # Login (/login)
+│   ├── signup.tsx               # Signup (/signup)
+│   ├── _authed.tsx              # Auth guard layout — beforeLoad redirects to /login
+│   └── _authed/                 # Authenticated route group
+│       ├── index.tsx            # Home (/)
+│       ├── products.tsx         # Products (/products)
+│       ├── products.$id.tsx     # Product detail (/products/:id)
+│       ├── locations.tsx        # Locations (/locations)
+│       ├── locations.$id.tsx    # Location detail (/locations/:id)
+│       ├── inventory.tsx        # Inventory (/inventory)
+│       ├── stock.tsx            # Stock (/stock)
+│       ├── stock-movements.tsx  # Stock Movements (/stock-movements)
+│       ├── orders.tsx           # Orders (/orders)
+│       ├── clients.tsx          # Clients (/clients)
+│       ├── suppliers.tsx        # Suppliers (/suppliers)
+│       ├── audit-logs.tsx       # Audit logs (/audit-logs)
+│       ├── users.tsx            # Users (/users)
+│       ├── roles.tsx            # Roles (/roles)
+│       └── settings.tsx         # Settings (/settings)
 ├── components/
 │   ├── ui/                      # Base components (Radix/shadcn)
 │   ├── areas/                   # Area features
@@ -216,23 +218,78 @@ function ProductsPage() {
 | File | Route |
 |------|-------|
 | `__root.tsx` | Root layout |
-| `index.tsx` | `/` (Home) |
-| `products.tsx` | `/products` |
-| `products.$id.tsx` | `/products/:id` |
-| `locations.tsx` | `/locations` |
-| `locations.$id.tsx` | `/locations/:id` |
-| `inventory.tsx` | `/inventory` |
-| `stock.tsx` | `/stock` |
-| `stock-movements.tsx` | `/stock-movements` |
-| `orders.tsx` | `/orders` |
-| `clients.tsx` | `/clients` |
-| `suppliers.tsx` | `/suppliers` |
-| `audit-logs.tsx` | `/audit-logs` |
-| `users.tsx` | `/users` |
-| `roles.tsx` | `/roles` |
-| `settings.tsx` | `/settings` |
 | `login.tsx` | `/login` |
 | `signup.tsx` | `/signup` |
+| `_authed.tsx` | Auth guard layout (redirects unauthenticated users to `/login`) |
+| `_authed/index.tsx` | `/` (Home) |
+| `_authed/products.tsx` | `/products` |
+| `_authed/products.$id.tsx` | `/products/:id` |
+| `_authed/locations.tsx` | `/locations` |
+| `_authed/locations.$id.tsx` | `/locations/:id` |
+| `_authed/inventory.tsx` | `/inventory` |
+| `_authed/stock.tsx` | `/stock` |
+| `_authed/stock-movements.tsx` | `/stock-movements` |
+| `_authed/orders.tsx` | `/orders` |
+| `_authed/clients.tsx` | `/clients` |
+| `_authed/suppliers.tsx` | `/suppliers` |
+| `_authed/audit-logs.tsx` | `/audit-logs` |
+| `_authed/users.tsx` | `/users` |
+| `_authed/roles.tsx` | `/roles` |
+| `_authed/settings.tsx` | `/settings` |
+
+!!! warning "`routeTree.gen.ts` only regenerates when dev is running"
+    The generated route tree at `src/routeTree.gen.ts` is only updated by the TanStack Router Vite plugin while `pnpm dev` is running. If dev isn't running, update it manually.
+
+## Authentication & Authorization
+
+### Route Guarding
+
+Protected routes live under the `_authed/` group. The parent `_authed.tsx` registers a `beforeLoad` that redirects to `/login` if there is no session.
+
+**`beforeLoad` cannot call React hooks.** Use the pure helpers from `~/lib/permissions.ts` — `resolvePermissions()` and `canAccess()` — not the `usePermissions()` hook.
+
+```typescript
+// _authed/roles.tsx
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { canAccess, resolvePermissions } from '~/lib/permissions';
+import { Permission, Resource } from '@librestock/types';
+
+export const Route = createFileRoute('/_authed/roles')({
+  beforeLoad: async ({ context }) => {
+    const permissions = await resolvePermissions(context);
+    if (!canAccess(permissions, Permission.READ, Resource.ROLES)) {
+      throw redirect({ to: '/' });
+    }
+  },
+  component: RolesPage,
+});
+```
+
+### Write-Gating in Components
+
+Inside components, use the `usePermissions()` hook and `can(Permission.WRITE, resource)` to hide or disable actions for read-only users:
+
+```typescript
+import { usePermissions } from '~/hooks/providers/permissions';
+import { Permission, Resource } from '@librestock/types';
+
+function ProductActions() {
+  const { can } = usePermissions();
+  if (!can(Permission.WRITE, Resource.PRODUCTS)) return null;
+  return <CreateProductButton />;
+}
+```
+
+### Adding a New Authenticated Page
+
+1. Create the route file under `src/routes/_authed/`.
+2. Add a sidebar nav entry in `components/common/Header.tsx` (with `resource: Resource`).
+3. Add translation keys to **all three** locales: `locales/{en,de,fr}/common.json`.
+4. For role-guarded routes, add `beforeLoad` using `resolvePermissions()` + `canAccess()` (pure functions, not hooks).
+
+### URL Sanitization
+
+Always wrap URLs from API data (branding logo, favicon, external links) in `sanitizeUrl()` from `~/lib/utils`. Validate user-submitted URLs in forms with `safeUrlSchema`.
 
 ## SSR Safety
 
@@ -333,9 +390,12 @@ function Header() {
 }
 ```
 
-## Path Alias
+## Path Aliases
 
-The frontend uses `~/*` as a path alias mapping to `src/*`:
+The frontend supports two path aliases, both mapping to `src/*`:
+
+- `~/*` — the primary convention used across components and hooks
+- `@/*` — equivalent; used in a handful of files (e.g. `axios-client.ts` references `@/lib/url-config`)
 
 ```typescript
 // Instead of relative paths:
@@ -344,6 +404,9 @@ import { Button } from '../../../components/ui/button';
 // Use the alias:
 import { Button } from '~/components/ui/button';
 ```
+
+!!! note "Better Auth is pinned"
+    `better-auth` is pinned to an exact version in `package.json` (not `"latest"`). Upgrade intentionally — breaking changes can break session handling.
 
 ## Common Patterns
 

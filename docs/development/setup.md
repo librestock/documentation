@@ -6,59 +6,50 @@ This guide covers setting up the development environment for contributing to Lib
 
 - Node.js >= 20.0.0
 - pnpm >= 10.0.0
+- Bun (runtime for the backend)
 - PostgreSQL 16
-- Nix with flakes enabled (recommended)
 - Git
-- 1Password CLI (for env setup)
-- just command runner (for env setup)
+- Nix with flakes enabled (optional — per-package dev shells)
+- 1Password CLI + `just` (optional — used by `backend/justfile` for env setup)
 
-## Using Nix Flakes (Recommended)
+## Clone & Install (Monorepo Root)
 
-Each repo has its own Nix flake for reproducible development shells.
-
-### Enter Development Shell
+LibreStock is a pnpm monorepo with a single lockfile at the workspace root. One `pnpm install` hydrates every package.
 
 ```bash
-git clone https://github.com/librestock/meta.git
-cd meta && ./scripts/bootstrap && cd ..
-
-# Backend dev shell
-cd backend && nix develop
-
-# Frontend dev shell
-cd frontend && nix develop
+git clone https://github.com/librestock/librestock.git
+cd librestock
+pnpm install
 ```
 
-This provides:
+!!! warning "Package manager"
+    Only `pnpm` from the repo root. Running `npm install` or `bun install` at root will corrupt the workspace.
 
-- Node.js 20+ and pnpm 10
-- Python 3.12 with MkDocs
-- All environment variables configured
+### Optional: Per-Package Nix Shells
 
-### Install Dependencies
+There is **no root `flake.nix`**. If you want an isolated dev environment for a package, each of `backend/` and `frontend/` has its own flake:
 
 ```bash
-pnpm install
+cd backend && nix develop
+cd frontend && nix develop
 ```
 
 ### Start Services
 
-Use Docker Compose in `meta/` for services:
+Docker Compose lives inside the monorepo at `meta/docker-compose.yml`:
 
 ```bash
 cd meta && docker compose up -d
 ```
 
-Then start the application servers:
+Then start the application servers from the repo root using workspace filters:
 
 ```bash
-# Terminal 1 - Backend (runs with Bun)
-cd backend
-pnpm start
+# Terminal 1 — Backend (runs with Bun)
+pnpm --filter @librestock/api start
 
-# Terminal 2 - Frontend
-cd frontend
-pnpm dev
+# Terminal 2 — Frontend
+pnpm --filter @librestock/web dev
 ```
 
 Services started:
@@ -72,14 +63,18 @@ Services started:
 
 ## Common Commands
 
-### Meta Level
+### Workspace Root
 
 ```bash
-cd meta
-pnpm sync              # Sync all repos
-pnpm bootstrap         # Bootstrap all repos
-pnpm dev               # Start all services for development
+pnpm install                                   # Install every package's deps
+pnpm --filter @librestock/api start            # Run backend
+pnpm --filter @librestock/web dev              # Run frontend
+pnpm --filter @librestock/types barrels        # Regenerate type barrels
+pnpm --filter @librestock/types build          # Build shared types
 ```
+
+!!! note "Legacy meta scripts"
+    Commands like `pnpm sync` / `pnpm bootstrap` in `meta/` exist from the pre-monorepo era and are not needed for day-to-day work.
 
 ### Backend
 
@@ -100,17 +95,24 @@ pnpm seed              # Seed sample data
 
 ```bash
 cd frontend
-pnpm dev               # Development server
+pnpm dev               # Development server (Vite)
 pnpm build             # Production build
-pnpm lint              # Lint
+pnpm lint              # oxlint
+pnpm test:unit         # Vitest unit tests
+pnpm test:e2e          # Playwright E2E
 ```
 
 ### Shared Types
 
+Barrels must run **before** build — the generator only picks up `.type.ts` and `.enum.ts` files; other suffixes are silently ignored.
+
 ```bash
 pnpm --filter @librestock/types barrels   # Generate barrel exports
-pnpm --filter @librestock/types build     # Build shared types
+pnpm --filter @librestock/types build     # Build shared types (ESM + CJS)
 ```
+
+!!! warning "Bump the version when you change a shared package"
+    If you edit `packages/types`, `packages/eslint-config`, or `packages/tsconfig`, bump that package's `package.json` version in the same PR. The `tag.yml` workflow publishes to npm on merge.
 
 ## Database Setup
 
@@ -167,11 +169,11 @@ just env-setup
 
 Recommended extensions:
 
-- ESLint
+- oxc (oxlint) — `oxc.oxc-vscode`
 - Prettier
 - Tailwind CSS IntelliSense
 - TypeScript Importer
-- Nix IDE
+- Nix IDE (optional)
 
 ### Settings
 

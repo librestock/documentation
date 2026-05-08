@@ -457,6 +457,26 @@ const restore = (id: string) =>
 }
 ```
 
+Use `createBulkResultBuilder` from `platform/bulk-operation.utils.ts` to partition inputs into succeeded/failed, plus `findDuplicates` and `partitionByExistence` for common preflight checks.
+
+### No Content (204)
+
+For operations that return no body (e.g., soft deletes), use `respondEmpty` instead of `respondJson`:
+
+```typescript
+import { respondEmpty } from "../../platform/errors";
+
+HttpRouter.delete("/products/:id", respondEmpty(
+  Effect.gen(function* () {
+    yield* requirePermission(Resource.PRODUCTS, Permission.WRITE);
+    const { id } = yield* HttpRouter.schemaPathParams(Schema.Struct({ id: Schema.UUID }));
+    const service = yield* ProductsService;
+    yield* service.delete(id);
+  }),
+  { status: 204 },
+));
+```
+
 ## HATEOAS Links
 
 HATEOAS links are added to responses via the `addHateoasLinks()` utility:
@@ -509,16 +529,42 @@ The audit writer automatically captures:
 
 ## Tracing
 
-Service methods use `Effect.withSpan()` for distributed tracing:
+The backend's chosen tracing abstraction is `makeServiceTracer` from `src/effect/platform/service-tracer.ts`. It wraps service methods with outcome classification (`not_found` / `validation_error` / `failure`) and request-context attributes.
 
 ```typescript
-const create = (dto: CreateProduct, userId: string) =>
+import { makeServiceTracer } from "../../platform/service-tracer";
+
+const tracer = makeServiceTracer("ProductsService");
+
+const create = tracer("create", (dto: CreateProduct, userId: string) =>
   Effect.gen(function* () {
     // ... business logic
-  }).pipe(Effect.withSpan("ProductsService.create"));
+  }),
+);
 ```
 
-Spans appear in structured logs and can be exported to tracing backends.
+!!! danger "Do not substitute `Effect.fn("span")`"
+    `Effect.fn` looks similar but does **not** emit the outcome classification or request-context attributes the tracer captures. Service methods must use `makeServiceTracer` — migrations to `Effect.fn` will be reverted.
+
+Legacy services may still use `Effect.withSpan("ServiceName.method")` directly; prefer `makeServiceTracer` for new code.
+
+## Structured Logging
+
+All structured logs must use the typed `LogProperties` vocabulary — arbitrary key/value pairs are rejected so every field can be indexed by Datadog / OpenSearch.
+
+```typescript
+import { createLogger } from "../../platform/console-logging";
+
+const log = createLogger("products");
+
+yield* log.info("products.created", { productId: product.id, sku: product.sku });
+```
+
+- `LogProperties` is defined in `src/effect/platform/messages.ts`. Every placeholder used in a message template must have a corresponding property with its exact type (`string` or `number`).
+- `MessageArgs = Partial<LogProperties>`.
+- Message catalogs live in `src/effect/platform/catalogs/` — one file per locale (`en.ts`, `fr.ts`, `de.ts`). **English (`en.ts`) is the source of truth for `MessageKey`**; French and German must stay in sync.
+- `createLogger(scope)` prepends the scope to every `MessageKey` automatically, so log sites can use short keys (`"created"` → `"products.created"`).
+- Raw `Effect.tryPromise` is acceptable **only** when each call site uses a distinct hand-typed `MessageKey`; otherwise use `makeTryAsync` from `platform/try-async.ts`.
 
 ## HTTP Middleware
 

@@ -38,27 +38,35 @@ graph TB
 
 ## Repository Structure
 
+LibreStock is a pnpm monorepo. All packages live under one workspace root with a single `pnpm-lock.yaml`.
+
 ```
 librestock/
-├── backend/                # Effect.ts backend (Bun runtime)
+├── backend/                # Effect.ts API (Bun runtime, @librestock/api)
 │   ├── src/
 │   │   └── effect/
 │   │       ├── modules/    # Feature modules
 │   │       ├── platform/   # Cross-cutting concerns
 │   │       └── http/       # HTTP app & middleware
-│   └── flake.nix           # Nix dev environment
-├── frontend/               # TanStack Start frontend
+│   └── flake.nix           # Per-package Nix dev shell (optional)
+├── frontend/               # TanStack Start SSR app (@librestock/web)
 │   ├── src/
-│   │   ├── routes/         # File-based routes
+│   │   ├── routes/         # File-based routes (_authed/ for protected)
 │   │   ├── components/     # React components
 │   │   └── lib/            # Utilities and data hooks
-│   └── flake.nix           # Nix dev environment
+│   └── flake.nix           # Per-package Nix dev shell (optional)
+├── mobile-app/             # Expo React Native app (@librestock/mobile)
+├── landing/                # Static marketing site
+├── remote-desktop/         # Tauri 2 desktop app (@librestock/remote-desktop)
 ├── packages/
-│   ├── tsconfig/           # Shared TS configs
-│   ├── eslint-config/      # Shared ESLint config
-│   └── types/              # Shared DTO interfaces/enums
-├── documentation/          # MkDocs documentation
-└── meta/                   # Orchestration scripts, Docker Compose
+│   ├── tsconfig/           # Shared TS configs (base.json, nestjs.json)
+│   ├── eslint-config/      # Shared ESLint config (legacy; not consumed today)
+│   └── types/              # Shared DTO interfaces/enums (@librestock/types)
+├── documentation/          # MkDocs documentation site (this site)
+├── meta/                   # docker-compose.yml, legacy multi-repo scripts
+├── infrastructure/         # Terraform (Hetzner + Cloudflare; not a workspace member)
+├── pnpm-workspace.yaml     # Single workspace definition
+└── pnpm-lock.yaml          # Single lockfile for the whole monorepo
 ```
 
 ## Data Flow
@@ -105,6 +113,7 @@ The backend has the following modules in `backend/src/effect/modules/`:
 | **branding** | Branding/customization settings |
 | **categories** | Hierarchical product categorization |
 | **clients** | Client/customer management |
+| **fulfillment** | Order fulfillment, packing, and shipment tracking |
 | **health** | Health check endpoints (liveness, readiness) |
 | **inventory** | Stock quantities at locations/areas |
 | **locations** | Physical locations (warehouses, etc.) |
@@ -126,13 +135,27 @@ Shared infrastructure in `backend/src/effect/platform/`:
 | **permission-provider.ts** | Cached permission lookups (1-min TTL) |
 | **session.ts** | `requireSession`, `getOptionalSession` Effects |
 | **better-auth.ts** | Better Auth integration (admin APIs) |
-| **errors.ts** | Domain error factories (`NotFoundError`, `BadRequestError`, etc.) |
-| **messages.ts** | Localized message system (en, fr, de) |
+| **errors.ts** | Domain error factories (`NotFoundError`, `BadRequestError`, etc.) + `respondJson` / `respondEmpty` |
+| **domain-errors.ts** | `isAppError` classification for typed error guards |
+| **messages.ts** | Localized message system + `LogProperties` type definitions |
+| **catalogs/** | Message catalogs per locale (`en.ts`, `fr.ts`, `de.ts`); `en.ts` is the source of truth for `MessageKey` |
+| **console-logging.ts** | Structured logging setup (`createLogger(scope)`) |
 | **audit.ts** | Fire-and-forget audit log writer |
 | **drizzle.ts** | Drizzle ORM database layer with connection pooling |
+| **drizzle-query.utils.ts** | Drizzle query helpers |
+| **drizzle-sort.utils.ts** | Sort-by utilities for list endpoints |
 | **hateoas.ts** | HATEOAS link utilities |
+| **pagination.utils.ts** | `toPaginatedResponse` and pagination helpers |
+| **bulk-operation.utils.ts** | `createBulkResultBuilder`, `findDuplicates`, `partitionByExistence` |
+| **service-tracer.ts** | `makeServiceTracer` — the project's chosen tracing abstraction |
+| **try-async.ts** | `makeTryAsync` — promise-to-Effect wrapper that maps to module infrastructure errors |
+| **from-null-or.ts** | Null coercion helper |
 | **request-context.ts** | Request ID, path, method, IP, locale |
+| **tracing.ts** | OpenTelemetry exporter wiring |
 | **db/** | Schema definitions, relations, migrations |
+
+!!! warning "Tracing abstraction is not `Effect.fn`"
+    `makeServiceTracer` captures outcome classification (`not_found` / `validation_error` / `failure`) and request-context attributes that `Effect.fn("span")` does not. **Do not migrate service methods to `Effect.fn`** — the service tracer was deliberately rebuilt for this purpose.
 
 ## Shared-Types Workflow
 
