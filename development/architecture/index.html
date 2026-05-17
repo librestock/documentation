@@ -2110,26 +2110,33 @@
 </tbody>
 </table>
 <h2 id="repository-structure">Repository Structure<a class="headerlink" href="#repository-structure" title="Permanent link">&para;</a></h2>
+<p>LibreStock is a pnpm monorepo. All packages live under one workspace root with a single <code>pnpm-lock.yaml</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>librestock/
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── backend/                # Effect.ts backend (Bun runtime)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── backend/                # Effect.ts API (Bun runtime, @librestock/api)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── src/
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   └── effect/
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │       ├── modules/    # Feature modules
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       ├── platform/   # Cross-cutting concerns
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       └── http/       # HTTP app &amp; middleware
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── flake.nix           # Nix dev environment
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── frontend/               # TanStack Start frontend
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── flake.nix           # Per-package Nix dev shell (optional)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── frontend/               # TanStack Start SSR app (@librestock/web)
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── src/
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   ├── routes/         # File-based routes
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   ├── routes/         # File-based routes (_authed/ for protected)
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │   ├── components/     # React components
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │   └── lib/            # Utilities and data hooks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └── flake.nix           # Nix dev environment
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├── packages/
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── tsconfig/           # Shared TS configs
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ├── eslint-config/      # Shared ESLint config
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └── types/              # Shared DTO interfaces/enums
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>├── documentation/          # MkDocs documentation
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└── meta/                   # Orchestration scripts, Docker Compose
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └── flake.nix           # Per-package Nix dev shell (optional)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├── mobile-app/             # Expo React Native app (@librestock/mobile)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>├── landing/                # Static marketing site
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>├── remote-desktop/         # Tauri 2 desktop app (@librestock/remote-desktop)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>├── packages/
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   ├── tsconfig/           # Shared TS configs (base.json, nestjs.json)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   ├── eslint-config/      # Shared ESLint config (legacy; not consumed today)
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └── types/              # Shared DTO interfaces/enums (@librestock/types)
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>├── documentation/          # MkDocs documentation site (this site)
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>├── meta/                   # docker-compose.yml, legacy multi-repo scripts
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>├── infrastructure/         # Terraform (Hetzner + Cloudflare; not a workspace member)
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>├── pnpm-workspace.yaml     # Single workspace definition
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└── pnpm-lock.yaml          # Single lockfile for the whole monorepo
 </code></pre></div>
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────┐
@@ -2190,6 +2197,10 @@
 <tr>
 <td><strong>clients</strong></td>
 <td>Client/customer management</td>
+</tr>
+<tr>
+<td><strong>fulfillment</strong></td>
+<td>Order fulfillment, packing, and shipment tracking</td>
 </tr>
 <tr>
 <td><strong>health</strong></td>
@@ -2261,11 +2272,23 @@
 </tr>
 <tr>
 <td><strong>errors.ts</strong></td>
-<td>Domain error factories (<code>NotFoundError</code>, <code>BadRequestError</code>, etc.)</td>
+<td>Domain error factories (<code>NotFoundError</code>, <code>BadRequestError</code>, etc.) + <code>respondJson</code> / <code>respondEmpty</code></td>
+</tr>
+<tr>
+<td><strong>domain-errors.ts</strong></td>
+<td><code>isAppError</code> classification for typed error guards</td>
 </tr>
 <tr>
 <td><strong>messages.ts</strong></td>
-<td>Localized message system (en, fr, de)</td>
+<td>Localized message system + <code>LogProperties</code> type definitions</td>
+</tr>
+<tr>
+<td><strong>catalogs/</strong></td>
+<td>Message catalogs per locale (<code>en.ts</code>, <code>fr.ts</code>, <code>de.ts</code>); <code>en.ts</code> is the source of truth for <code>MessageKey</code></td>
+</tr>
+<tr>
+<td><strong>console-logging.ts</strong></td>
+<td>Structured logging setup (<code>createLogger(scope)</code>)</td>
 </tr>
 <tr>
 <td><strong>audit.ts</strong></td>
@@ -2276,12 +2299,44 @@
 <td>Drizzle ORM database layer with connection pooling</td>
 </tr>
 <tr>
+<td><strong>drizzle-query.utils.ts</strong></td>
+<td>Drizzle query helpers</td>
+</tr>
+<tr>
+<td><strong>drizzle-sort.utils.ts</strong></td>
+<td>Sort-by utilities for list endpoints</td>
+</tr>
+<tr>
 <td><strong>hateoas.ts</strong></td>
 <td>HATEOAS link utilities</td>
 </tr>
 <tr>
+<td><strong>pagination.utils.ts</strong></td>
+<td><code>toPaginatedResponse</code> and pagination helpers</td>
+</tr>
+<tr>
+<td><strong>bulk-operation.utils.ts</strong></td>
+<td><code>createBulkResultBuilder</code>, <code>findDuplicates</code>, <code>partitionByExistence</code></td>
+</tr>
+<tr>
+<td><strong>service-tracer.ts</strong></td>
+<td><code>makeServiceTracer</code> — the project's chosen tracing abstraction</td>
+</tr>
+<tr>
+<td><strong>try-async.ts</strong></td>
+<td><code>makeTryAsync</code> — promise-to-Effect wrapper that maps to module infrastructure errors</td>
+</tr>
+<tr>
+<td><strong>from-null-or.ts</strong></td>
+<td>Null coercion helper</td>
+</tr>
+<tr>
 <td><strong>request-context.ts</strong></td>
 <td>Request ID, path, method, IP, locale</td>
+</tr>
+<tr>
+<td><strong>tracing.ts</strong></td>
+<td>OpenTelemetry exporter wiring</td>
 </tr>
 <tr>
 <td><strong>db/</strong></td>
@@ -2289,6 +2344,10 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition warning">
+<p class="admonition-title">Tracing abstraction is not <code>Effect.fn</code></p>
+<p><code>makeServiceTracer</code> captures outcome classification (<code>not_found</code> / <code>validation_error</code> / <code>failure</code>) and request-context attributes that <code>Effect.fn("span")</code> does not. <strong>Do not migrate service methods to <code>Effect.fn</code></strong> — the service tracer was deliberately rebuilt for this purpose.</p>
+</div>
 <h2 id="shared-types-workflow">Shared-Types Workflow<a class="headerlink" href="#shared-types-workflow" title="Permanent link">&para;</a></h2>
 <p>Shared DTO interfaces/enums are the contract between frontend and backend:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Generate barrel exports</span>
@@ -2542,7 +2601,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 13, 2026 10:18:23 UTC">April 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 8, 2026 13:43:40 UTC">May 8, 2026</span>
   </span>
 
     

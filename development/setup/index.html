@@ -1261,33 +1261,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-nix-flakes-recommended" class="md-nav__link">
+  <a href="#clone-install-monorepo-root" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Nix Flakes (Recommended)
+        Clone &amp; Install (Monorepo Root)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using Nix Flakes (Recommended)">
+    <nav class="md-nav" aria-label="Clone &amp; Install (Monorepo Root)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#enter-development-shell" class="md-nav__link">
+  <a href="#optional-per-package-nix-shells" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enter Development Shell
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#install-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install Dependencies
+        Optional: Per-Package Nix Shells
       
     </span>
   </a>
@@ -1323,10 +1312,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#meta-level" class="md-nav__link">
+  <a href="#workspace-root" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Meta Level
+        Workspace Root
       
     </span>
   </a>
@@ -2079,33 +2068,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#using-nix-flakes-recommended" class="md-nav__link">
+  <a href="#clone-install-monorepo-root" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Nix Flakes (Recommended)
+        Clone &amp; Install (Monorepo Root)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using Nix Flakes (Recommended)">
+    <nav class="md-nav" aria-label="Clone &amp; Install (Monorepo Root)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#enter-development-shell" class="md-nav__link">
+  <a href="#optional-per-package-nix-shells" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enter Development Shell
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#install-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install Dependencies
+        Optional: Per-Package Nix Shells
       
     </span>
   </a>
@@ -2141,10 +2119,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#meta-level" class="md-nav__link">
+  <a href="#workspace-root" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Meta Level
+        Workspace Root
       
     </span>
   </a>
@@ -2404,45 +2382,37 @@
 <ul>
 <li>Node.js &gt;= 20.0.0</li>
 <li>pnpm &gt;= 10.0.0</li>
+<li>Bun (runtime for the backend)</li>
 <li>PostgreSQL 16</li>
-<li>Nix with flakes enabled (recommended)</li>
 <li>Git</li>
-<li>1Password CLI (for env setup)</li>
-<li>just command runner (for env setup)</li>
+<li>Nix with flakes enabled (optional — per-package dev shells)</li>
+<li>1Password CLI + <code>just</code> (optional — used by <code>backend/justfile</code> for env setup)</li>
 </ul>
-<h2 id="using-nix-flakes-recommended">Using Nix Flakes (Recommended)<a class="headerlink" href="#using-nix-flakes-recommended" title="Permanent link">&para;</a></h2>
-<p>Each repo has its own Nix flake for reproducible development shells.</p>
-<h3 id="enter-development-shell">Enter Development Shell<a class="headerlink" href="#enter-development-shell" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/librestock/meta.git
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>meta<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./scripts/bootstrap<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Backend dev shell</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Frontend dev shell</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+<h2 id="clone-install-monorepo-root">Clone &amp; Install (Monorepo Root)<a class="headerlink" href="#clone-install-monorepo-root" title="Permanent link">&para;</a></h2>
+<p>LibreStock is a pnpm monorepo with a single lockfile at the workspace root. One <code>pnpm install</code> hydrates every package.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/librestock/librestock.git
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>librestock
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pnpm<span class="w"> </span>install
 </code></pre></div>
-<p>This provides:</p>
-<ul>
-<li>Node.js 20+ and pnpm 10</li>
-<li>Python 3.12 with MkDocs</li>
-<li>All environment variables configured</li>
-</ul>
-<h3 id="install-dependencies">Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pnpm<span class="w"> </span>install
+<div class="admonition warning">
+<p class="admonition-title">Package manager</p>
+<p>Only <code>pnpm</code> from the repo root. Running <code>npm install</code> or <code>bun install</code> at root will corrupt the workspace.</p>
+</div>
+<h3 id="optional-per-package-nix-shells">Optional: Per-Package Nix Shells<a class="headerlink" href="#optional-per-package-nix-shells" title="Permanent link">&para;</a></h3>
+<p>There is <strong>no root <code>flake.nix</code></strong>. If you want an isolated dev environment for a package, each of <code>backend/</code> and <code>frontend/</code> has its own flake:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>nix<span class="w"> </span>develop
 </code></pre></div>
 <h3 id="start-services">Start Services<a class="headerlink" href="#start-services" title="Permanent link">&para;</a></h3>
-<p>Use Docker Compose in <code>meta/</code> for services:</p>
+<p>Docker Compose lives inside the monorepo at <code>meta/docker-compose.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>meta<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
-<p>Then start the application servers:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Terminal 1 - Backend (runs with Bun)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>backend
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pnpm<span class="w"> </span>start
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Terminal 2 - Frontend</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">cd</span><span class="w"> </span>frontend
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>pnpm<span class="w"> </span>dev
+<p>Then start the application servers from the repo root using workspace filters:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Terminal 1 — Backend (runs with Bun)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>start
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Terminal 2 — Frontend</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>dev
 </code></pre></div>
 <p>Services started:</p>
 <table>
@@ -2477,12 +2447,17 @@
 </tbody>
 </table>
 <h2 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h2>
-<h3 id="meta-level">Meta Level<a class="headerlink" href="#meta-level" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>meta
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pnpm<span class="w"> </span>sync<span class="w">              </span><span class="c1"># Sync all repos</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pnpm<span class="w"> </span>bootstrap<span class="w">         </span><span class="c1"># Bootstrap all repos</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>pnpm<span class="w"> </span>dev<span class="w">               </span><span class="c1"># Start all services for development</span>
+<h3 id="workspace-root">Workspace Root<a class="headerlink" href="#workspace-root" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>install<span class="w">                                   </span><span class="c1"># Install every package&#39;s deps</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>start<span class="w">            </span><span class="c1"># Run backend</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>dev<span class="w">              </span><span class="c1"># Run frontend</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>barrels<span class="w">        </span><span class="c1"># Regenerate type barrels</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build<span class="w">          </span><span class="c1"># Build shared types</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Legacy meta scripts</p>
+<p>Commands like <code>pnpm sync</code> / <code>pnpm bootstrap</code> in <code>meta/</code> exist from the pre-monorepo era and are not needed for day-to-day work.</p>
+</div>
 <h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>backend
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pnpm<span class="w"> </span>start<span class="w">             </span><span class="c1"># Development server (Bun)</span>
@@ -2497,14 +2472,21 @@
 </code></pre></div>
 <h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>frontend
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pnpm<span class="w"> </span>dev<span class="w">               </span><span class="c1"># Development server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pnpm<span class="w"> </span>dev<span class="w">               </span><span class="c1"># Development server (Vite)</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pnpm<span class="w"> </span>build<span class="w">             </span><span class="c1"># Production build</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>pnpm<span class="w"> </span>lint<span class="w">              </span><span class="c1"># Lint</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>pnpm<span class="w"> </span>lint<span class="w">              </span><span class="c1"># oxlint</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>pnpm<span class="w"> </span>test:unit<span class="w">         </span><span class="c1"># Vitest unit tests</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>pnpm<span class="w"> </span>test:e2e<span class="w">          </span><span class="c1"># Playwright E2E</span>
 </code></pre></div>
 <h3 id="shared-types">Shared Types<a class="headerlink" href="#shared-types" title="Permanent link">&para;</a></h3>
+<p>Barrels must run <strong>before</strong> build — the generator only picks up <code>.type.ts</code> and <code>.enum.ts</code> files; other suffixes are silently ignored.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>barrels<span class="w">   </span><span class="c1"># Generate barrel exports</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build<span class="w">     </span><span class="c1"># Build shared types</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/types<span class="w"> </span>build<span class="w">     </span><span class="c1"># Build shared types (ESM + CJS)</span>
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Bump the version when you change a shared package</p>
+<p>If you edit <code>packages/types</code>, <code>packages/eslint-config</code>, or <code>packages/tsconfig</code>, bump that package's <code>package.json</code> version in the same PR. The <code>tag.yml</code> workflow publishes to npm on merge.</p>
+</div>
 <h2 id="database-setup">Database Setup<a class="headerlink" href="#database-setup" title="Permanent link">&para;</a></h2>
 <h3 id="with-docker-compose">With Docker Compose<a class="headerlink" href="#with-docker-compose" title="Permanent link">&para;</a></h3>
 <p>The database is automatically created and configured via Docker Compose in <code>meta/</code>.</p>
@@ -2538,11 +2520,11 @@
 <h3 id="vs-code">VS Code<a class="headerlink" href="#vs-code" title="Permanent link">&para;</a></h3>
 <p>Recommended extensions:</p>
 <ul>
-<li>ESLint</li>
+<li>oxc (oxlint) — <code>oxc.oxc-vscode</code></li>
 <li>Prettier</li>
 <li>Tailwind CSS IntelliSense</li>
 <li>TypeScript Importer</li>
-<li>Nix IDE</li>
+<li>Nix IDE (optional)</li>
 </ul>
 <h3 id="settings">Settings<a class="headerlink" href="#settings" title="Permanent link">&para;</a></h3>
 <p>The project includes workspace settings in <code>.vscode/settings.json</code>.</p>
@@ -2588,7 +2570,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 13, 2026 10:18:23 UTC">April 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 8, 2026 13:43:40 UTC">May 8, 2026</span>
   </span>
 
     

@@ -1424,6 +1424,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mobile-ci-pipeline-root-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mobile CI Pipeline (Root-Level)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#docker-publish" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1439,6 +1450,17 @@
     <span class="md-ellipsis">
       
         Documentation Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#package-release-npm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Release (npm)
       
     </span>
   </a>
@@ -2008,6 +2030,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mobile-ci-pipeline-root-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mobile CI Pipeline (Root-Level)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#docker-publish" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2023,6 +2056,17 @@
     <span class="md-ellipsis">
       
         Documentation Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#package-release-npm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Release (npm)
       
     </span>
   </a>
@@ -2213,34 +2257,48 @@
 <h1 id="cicd">CI/CD<a class="headerlink" href="#cicd" title="Permanent link">&para;</a></h1>
 <p>This guide covers the GitHub Actions workflows and deployment processes for LibreStock Inventory.</p>
 <h2 id="workflows">Workflows<a class="headerlink" href="#workflows" title="Permanent link">&para;</a></h2>
-<p>CI workflows are <strong>per-repo</strong>, not at the workspace root level.</p>
+<p>CI workflows live <strong>per-package</strong> for backend/frontend/documentation, and <strong>at the monorepo root</strong> for cross-package concerns (mobile-app, shared packages).</p>
 <h3 id="backend-ci-pipeline">Backend CI Pipeline<a class="headerlink" href="#backend-ci-pipeline" title="Permanent link">&para;</a></h3>
 <p><strong>File:</strong> <code>backend/.github/workflows/ci.yml</code></p>
 <p>Runs on every pull request and push to main:</p>
 <ul>
-<li>Lint</li>
+<li>Lint (oxlint)</li>
 <li>Type check</li>
-<li>Run unit tests</li>
-<li>Run E2E tests</li>
-<li>Build</li>
+<li>Unit tests (Vitest)</li>
+<li>Integration tests (against a real Postgres service)</li>
+<li>Build (bun build)</li>
 </ul>
 <h3 id="frontend-ci-pipeline">Frontend CI Pipeline<a class="headerlink" href="#frontend-ci-pipeline" title="Permanent link">&para;</a></h3>
 <p><strong>File:</strong> <code>frontend/.github/workflows/ci.yml</code></p>
 <p>Runs on every pull request and push to main:</p>
 <ul>
-<li>Lint</li>
+<li>Lint (oxlint)</li>
 <li>Type check</li>
 <li>Build</li>
 </ul>
+<h3 id="mobile-ci-pipeline-root-level">Mobile CI Pipeline (Root-Level)<a class="headerlink" href="#mobile-ci-pipeline-root-level" title="Permanent link">&para;</a></h3>
+<p><strong>File:</strong> <code>.github/workflows/mobile-ci.yml</code></p>
+<p>Lives at the workspace root because it rebuilds shared types before testing <code>mobile-app/</code>. Triggers on changes to <code>mobile-app/**</code> or <code>packages/**</code>.</p>
 <h3 id="docker-publish">Docker Publish<a class="headerlink" href="#docker-publish" title="Permanent link">&para;</a></h3>
-<p>Each repo has its own Docker publish workflow:</p>
+<p>Each application package has its own Docker publish workflow:</p>
 <ul>
 <li><strong>Backend:</strong> <code>backend/.github/workflows/docker-publish.yml</code></li>
 <li><strong>Frontend:</strong> <code>frontend/.github/workflows/docker-publish.yml</code></li>
 </ul>
 <h3 id="documentation-deployment">Documentation Deployment<a class="headerlink" href="#documentation-deployment" title="Permanent link">&para;</a></h3>
-<p><strong>File:</strong> <code>documentation/.github/workflows/deploy-docs.yml</code></p>
-<p>Deploys documentation via GitHub Pages on push to main.</p>
+<p><strong>File:</strong> <code>documentation/.github/workflows/deploy.yml</code></p>
+<p>Deploys the MkDocs site to GitHub Pages on push to main.</p>
+<h3 id="package-release-npm">Package Release (npm)<a class="headerlink" href="#package-release-npm" title="Permanent link">&para;</a></h3>
+<p>Shared packages (<code>@librestock/types</code>, <code>@librestock/eslint-config</code>, <code>@librestock/tsconfig</code>) publish to npm via trusted publishing when their <code>package.json</code> version is bumped on <code>main</code>.</p>
+<ul>
+<li><strong>Trigger:</strong> merge to <code>main</code> with a version bump in <code>packages/&lt;name&gt;/package.json</code></li>
+<li><strong>Workflow:</strong> <code>tag.yml</code> (at the monorepo root)</li>
+<li><strong>Tag format:</strong> <code>types@x.y.z</code>, <code>eslint-config@x.y.z</code>, <code>tsconfig@x.y.z</code></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Version-bump requirement</p>
+<p>If you edit <code>packages/types</code>, <code>packages/eslint-config</code>, or <code>packages/tsconfig</code>, bump that package's <code>package.json</code> version <strong>in the same PR</strong>. Skipping the bump means consumers won't pick up your change after merge.</p>
+</div>
 <h2 id="github-actions-secrets">GitHub Actions Secrets<a class="headerlink" href="#github-actions-secrets" title="Permanent link">&para;</a></h2>
 <h3 id="required-secrets">Required Secrets<a class="headerlink" href="#required-secrets" title="Permanent link">&para;</a></h3>
 <table>
@@ -2278,19 +2336,20 @@
 </ul>
 <h2 id="local-ci-checks">Local CI Checks<a class="headerlink" href="#local-ci-checks" title="Permanent link">&para;</a></h2>
 <p>Run the same checks locally before pushing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Backend</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>backend
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pnpm<span class="w"> </span>install
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pnpm<span class="w"> </span>lint<span class="w">              </span><span class="c1"># oxlint</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pnpm<span class="w"> </span>type-check<span class="w">        </span><span class="c1"># TypeScript</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pnpm<span class="w"> </span>build<span class="w">             </span><span class="c1"># bun build</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>pnpm<span class="w"> </span><span class="nb">test</span><span class="w">              </span><span class="c1"># Vitest</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Frontend</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">cd</span><span class="w"> </span>frontend
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pnpm<span class="w"> </span>install
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pnpm<span class="w"> </span>lint<span class="w">              </span><span class="c1"># ESLint</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>pnpm<span class="w"> </span>build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># One install at the monorepo root hydrates every package</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pnpm<span class="w"> </span>install
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Backend</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>lint<span class="w">           </span><span class="c1"># oxlint</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>type-check<span class="w">     </span><span class="c1"># TypeScript</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>build<span class="w">          </span><span class="c1"># bun build</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span><span class="nb">test</span><span class="w">           </span><span class="c1"># Vitest</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/api<span class="w"> </span>test:integration
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Frontend</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>lint<span class="w">           </span><span class="c1"># oxlint</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>type-check
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@librestock/web<span class="w"> </span>build
 </code></pre></div>
 <h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
 <h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
@@ -2354,7 +2413,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 13, 2026 10:18:23 UTC">April 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 8, 2026 13:43:40 UTC">May 8, 2026</span>
   </span>
 
     
