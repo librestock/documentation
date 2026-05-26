@@ -98,13 +98,13 @@ FRONTEND_URL=http://localhost:3000
 echo "VITE_API_BASE_URL=http://localhost:8080/api/v1" > frontend/.env
 ```
 
-!!!tip "1Password CLI"
-    Both backend and frontend have a `justfile` with a `decrypt` task. If you use 1Password CLI, you can generate `.env` files automatically:
+!!!tip "Infisical CLI"
+    Both backend and frontend have a `justfile` with a `env` task. If you use Infisical CLI, you can generate `.env` files automatically:
     ```bash
-    cd backend && just decrypt
-    cd frontend && just decrypt
+    cd backend && just env
+    cd frontend && just env
     ```
-    This runs `op inject -i env.template -o .env` to populate secrets from 1Password.
+    This runs `infisical export --env=dev --format=dotenv > .env` to populate secrets from Infisical.
 
 ## Manual Setup (Alternative)
 

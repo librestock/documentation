@@ -163,8 +163,8 @@ Le backend et le frontend disposent d'un `justfile`. Nécessite le lanceur de co
 # Installer les dépendances
 just bootstrap
 
-# Déchiffrer les variables d'environnement avec 1Password CLI
-just decrypt
+# Exporter les variables d'environnement avec Infisical CLI
+just env
 
 # Démarrer le serveur de développement
 just dev
@@ -176,8 +176,8 @@ just build
 just test
 ```
 
-!!!tip "1Password CLI"
-    La commande `just decrypt` exécute `op inject -i env.template -o .env` pour générer les fichiers `.env` à partir des templates en utilisant 1Password CLI.
+!!!tip "Infisical CLI"
+    La commande `just env` exécute `infisical export --env=dev --format=dotenv > .env` pour générer les fichiers `.env` à partir des templates en utilisant Infisical CLI.
 
 ## Commandes Base de données
 

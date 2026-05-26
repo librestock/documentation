@@ -8,7 +8,7 @@ Ce guide vous accompagne dans la configuration de votre environnement de dévelo
 - **pnpm** >= 10 (géré par Nix)
 - **PostgreSQL** 16 (via Docker Compose)
 - **Nix** avec flakes activés
-- **1Password CLI** (pour la configuration des variables d'environnement)
+- **Infisical CLI** (pour la configuration des variables d'environnement)
 - **just** command runner (pour la configuration des variables d'environnement)
 
 ## Configuration rapide avec Nix Flakes

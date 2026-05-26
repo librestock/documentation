@@ -94,13 +94,13 @@ cp backend/.env.template backend/.env
 echo "VITE_API_BASE_URL=http://localhost:8080/api/v1" > frontend/.env
 ```
 
-!!!tip "1Password CLI"
-    Les deux dépôts disposent d'un `justfile` avec une tâche `decrypt` utilisant 1Password CLI :
+!!!tip "Infisical CLI"
+    Les deux dépôts disposent d'un `justfile` avec une tâche `env` utilisant Infisical CLI :
     ```bash
-    cd backend && just decrypt
-    cd frontend && just decrypt
+    cd backend && just env
+    cd frontend && just env
     ```
-    Ceci exécute `op inject -i env.template -o .env` pour injecter les secrets depuis 1Password.
+    Ceci exécute `infisical export --env=dev --format=dotenv > .env` pour injecter les secrets depuis Infisical.
 
 ## Secrets CI/CD
 

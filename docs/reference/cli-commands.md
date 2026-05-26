@@ -166,8 +166,8 @@ Both backend and frontend have a `justfile`. Requires the [`just`](https://githu
 # Install dependencies
 just bootstrap
 
-# Decrypt env vars with 1Password CLI
-just decrypt
+# Export env vars with Infisical CLI
+just env
 
 # Run dev server
 just dev
@@ -179,8 +179,8 @@ just build
 just test
 ```
 
-!!!tip "1Password CLI"
-    The `just decrypt` command runs `op inject -i env.template -o .env` to generate `.env` files from templates using 1Password CLI.
+!!!tip "Infisical CLI"
+    The `just env` command runs `infisical export --env=dev --format=dotenv > .env` to generate `.env` files from templates using Infisical CLI.
 
 ## Database Commands
 

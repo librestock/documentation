@@ -10,7 +10,7 @@ This guide covers setting up the development environment for contributing to Lib
 - PostgreSQL 16
 - Git
 - Nix with flakes enabled (optional — per-package dev shells)
-- 1Password CLI + `just` (optional — used by `backend/justfile` for env setup)
+- Infisical CLI + `just` (optional — used by `backend/justfile` for env setup)
 
 ## Clone & Install (Monorepo Root)
 
@@ -155,12 +155,13 @@ VITE_API_BASE_URL=http://localhost:8080/api/v1
 !!! note "Better Auth secret"
     `BETTER_AUTH_SECRET` lives only in the backend `.env` -- never in the frontend.
 
-### Environment Setup with 1Password
+### Environment Setup with Infisical
 
-Use the `just` command runner and 1Password CLI for managing env variables:
+Use the `just` command runner and Infisical CLI for managing env variables:
 
 ```bash
-just env-setup
+cd backend && just env
+cd ../frontend && just env
 ```
 
 ## IDE Setup
