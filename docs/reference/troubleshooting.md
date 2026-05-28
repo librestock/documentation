@@ -233,7 +233,7 @@ pnpm --filter @stocket/web lint:fix
 
 If you're still stuck:
 
-1. Check [existing issues](https://github.com/stocket/documentation/issues)
+1. Check [existing issues](https://github.com/stocketfr/documentation/issues)
 2. Search error messages online
 3. Open a new issue with:
     - Error message

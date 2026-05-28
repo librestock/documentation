@@ -17,7 +17,7 @@ This guide covers setting up the development environment for contributing to Sto
 Stocket is a pnpm monorepo with a single lockfile at the workspace root. One `pnpm install` hydrates every package.
 
 ```bash
-git clone https://github.com/stocket/stocket.git
+git clone https://github.com/stocketfr/stocket.git
 cd stocket
 pnpm install
 ```

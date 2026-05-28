@@ -1,6 +1,6 @@
 # Roadmap
 
-This roadmap outlines planned features and improvements for Stocket Inventory. Items are tracked as [GitHub Issues](https://github.com/stocket/meta/issues).
+This roadmap outlines planned features and improvements for Stocket Inventory. Items are tracked as [GitHub Issues](https://github.com/stocketfr/meta/issues).
 
 !!! info "Contributing"
     Interested in contributing? Check our [contribution guidelines](contributing/guidelines.md) and pick an issue to work on!
@@ -99,13 +99,13 @@ Features under consideration for future releases:
 
 | Repository | Description | Link |
 |------------|-------------|------|
-| meta | Workspace orchestration and scripts | [GitHub](https://github.com/stocket/meta) |
-| backend | Effect.ts API server (Bun) | [GitHub](https://github.com/stocket/backend) |
-| frontend | TanStack Start web application | [GitHub](https://github.com/stocket/frontend) |
-| packages | Shared types and utilities | [GitHub](https://github.com/stocket/packages) |
-| documentation | MkDocs documentation site | [GitHub](https://github.com/stocket/documentation) |
-| remote-desktop | Remote desktop tooling | [GitHub](https://github.com/stocket/remote-desktop) |
-| landing | Landing page | [GitHub](https://github.com/stocket/landing) |
+| meta | Workspace orchestration and scripts | [GitHub](https://github.com/stocketfr/meta) |
+| backend | Effect.ts API server (Bun) | [GitHub](https://github.com/stocketfr/backend) |
+| frontend | TanStack Start web application | [GitHub](https://github.com/stocketfr/frontend) |
+| packages | Shared types and utilities | [GitHub](https://github.com/stocketfr/packages) |
+| documentation | MkDocs documentation site | [GitHub](https://github.com/stocketfr/documentation) |
+| remote-desktop | Remote desktop tooling | [GitHub](https://github.com/stocketfr/remote-desktop) |
+| landing | Landing page | [GitHub](https://github.com/stocketfr/landing) |
 
 ---
 

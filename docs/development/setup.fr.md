@@ -25,7 +25,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 ### 2. Cloner et configurer
 
 ```bash
-git clone https://github.com/stocket/meta.git
+git clone https://github.com/stocketfr/meta.git
 cd meta && ./scripts/bootstrap && cd ..
 ```
 

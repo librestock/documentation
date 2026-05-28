@@ -17,7 +17,7 @@ Ensure flakes are enabled in your Nix configuration.
 ### 2. Clone the Workspace
 
 ```bash
-git clone https://github.com/stocket/meta.git
+git clone https://github.com/stocketfr/meta.git
 cd meta && ./scripts/bootstrap && cd ..
 ```
 

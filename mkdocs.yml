@@ -1,7 +1,7 @@
 site_name: Stocket Inventory Documentation
 site_description: Yacht provisioning inventory management system
-site_url: https://stocket.github.io/documentation/
-repo_url: https://github.com/stocket/documentation
+site_url: https://stocketfr.github.io/documentation/
+repo_url: https://github.com/stocketfr/documentation
 repo_name: stocket/documentation
 copyright: Copyright &copy; 2025 Stocket Inventory
 
@@ -132,7 +132,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/stocket/documentation
+      link: https://github.com/stocketfr/documentation
 
 nav:
   - Home: index.md

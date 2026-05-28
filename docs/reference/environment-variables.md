@@ -114,8 +114,8 @@ GitHub Actions secrets required for CI/CD:
 
 Documentation is deployed via GitHub Pages:
 
-- **Site URL:** https://stocket.github.io/documentation/
-- **Repo:** https://github.com/stocket/documentation
+- **Site URL:** https://stocketfr.github.io/documentation/
+- **Repo:** https://github.com/stocketfr/documentation
 
 ## Production Considerations
 
