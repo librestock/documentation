@@ -1,9 +1,9 @@
-site_name: LibreStock Inventory Documentation
+site_name: Stocket Inventory Documentation
 site_description: Yacht provisioning inventory management system
-site_url: https://librestock.github.io/documentation/
-repo_url: https://github.com/librestock/documentation
-repo_name: librestock/documentation
-copyright: Copyright &copy; 2025 LibreStock Inventory
+site_url: https://stocket.github.io/documentation/
+repo_url: https://github.com/stocket/documentation
+repo_name: stocket/documentation
+copyright: Copyright &copy; 2025 Stocket Inventory
 
 theme:
   name: material
@@ -48,12 +48,12 @@ plugins:
           default: true
           name: English
           build: true
-          site_name: "LibreStock Inventory Documentation"
+          site_name: "Stocket Inventory Documentation"
           site_description: "Yacht provisioning inventory management system"
         - locale: fr
           name: Français
           build: true
-          site_name: "Documentation LibreStock Inventory"
+          site_name: "Documentation Stocket Inventory"
           site_description: "Système de gestion d'inventaire pour yachts"
           nav_translations:
             Home: Accueil
@@ -132,7 +132,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/librestock/documentation
+      link: https://github.com/stocket/documentation
 
 nav:
   - Home: index.md

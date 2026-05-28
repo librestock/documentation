@@ -1,6 +1,6 @@
 # Installation
 
-This guide covers setting up the LibreStock Inventory development environment.
+This guide covers setting up the Stocket Inventory development environment.
 
 ## Using Nix Flakes + Docker (Recommended)
 
@@ -17,7 +17,7 @@ Ensure flakes are enabled in your Nix configuration.
 ### 2. Clone the Workspace
 
 ```bash
-git clone https://github.com/librestock/meta.git
+git clone https://github.com/stocket/meta.git
 cd meta && ./scripts/bootstrap && cd ..
 ```
 
@@ -83,7 +83,7 @@ cp backend/.env.template backend/.env
 Edit `backend/.env` with your configuration:
 
 ```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/librestock_inventory
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/stocket_inventory
 NODE_ENV=development
 PORT=8080
 CORS_ORIGIN=http://localhost:3000
@@ -120,7 +120,7 @@ If you prefer not to use Nix:
 ### Database Setup
 
 ```bash
-createdb librestock_inventory
+createdb stocket_inventory
 ```
 
 ### Environment Variables

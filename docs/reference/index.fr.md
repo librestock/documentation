@@ -1,6 +1,6 @@
 # Référence
 
-Documentation de référence technique pour LibreStock Inventory.
+Documentation de référence technique pour Stocket Inventory.
 
 ## Contenu
 
@@ -22,7 +22,7 @@ L'API est documentée via Swagger UI :
 Les interfaces/enums DTO partagés vivent dans `packages/types` :
 
 ```bash
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types build
 ```
 
 Les types sont dans `packages/types/src/`.

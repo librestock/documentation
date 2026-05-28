@@ -1,6 +1,6 @@
 # Contribution Guidelines
 
-This document outlines the guidelines for contributing to LibreStock Inventory.
+This document outlines the guidelines for contributing to Stocket Inventory.
 
 ## Development Workflow
 
@@ -37,22 +37,22 @@ git checkout -b fix/issue-description
 
 ```bash
 # Run backend linting
-pnpm --filter @librestock/api lint
+pnpm --filter @stocket/api lint
 
 # Run frontend linting
-pnpm --filter @librestock/web lint
+pnpm --filter @stocket/web lint
 
 # Run backend tests
-pnpm --filter @librestock/api test
+pnpm --filter @stocket/api test
 
 # Run frontend E2E tests
-pnpm --filter @librestock/web test:e2e
+pnpm --filter @stocket/web test:e2e
 
 # Build backend to check for type errors
-pnpm --filter @librestock/api build
+pnpm --filter @stocket/api build
 
 # Build frontend to check for type errors
-pnpm --filter @librestock/web build
+pnpm --filter @stocket/web build
 ```
 
 ### 6. Commit Your Changes

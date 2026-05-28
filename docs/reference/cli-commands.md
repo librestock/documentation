@@ -1,6 +1,6 @@
 # CLI Commands
 
-Reference of all available command line commands for LibreStock Inventory.
+Reference of all available command line commands for Stocket Inventory.
 
 ## Package Manager
 
@@ -8,61 +8,61 @@ All commands use pnpm. Run from the repository root or use the `--filter` flag.
 
 ## Backend Commands
 
-Use `pnpm --filter @librestock/api <command>` or `cd backend && pnpm <command>`.
+Use `pnpm --filter @stocket/api <command>` or `cd backend && pnpm <command>`.
 
 ### Development
 
 ```bash
 # Start development server (Bun)
-pnpm --filter @librestock/api start
+pnpm --filter @stocket/api start
 
 # Build the application (bun build)
-pnpm --filter @librestock/api build
+pnpm --filter @stocket/api build
 
 # Start production server
-pnpm --filter @librestock/api start:prod
+pnpm --filter @stocket/api start:prod
 ```
 
 ### Testing
 
 ```bash
 # Run unit tests (Vitest)
-pnpm --filter @librestock/api test
+pnpm --filter @stocket/api test
 
 # Run tests in watch mode
-pnpm --filter @librestock/api test:watch
+pnpm --filter @stocket/api test:watch
 
 # Run tests with coverage
-pnpm --filter @librestock/api test:cov
+pnpm --filter @stocket/api test:cov
 
 # Run integration tests
-pnpm --filter @librestock/api test:integration
+pnpm --filter @stocket/api test:integration
 ```
 
 ### Code Quality
 
 ```bash
 # Lint code (oxlint)
-pnpm --filter @librestock/api lint
+pnpm --filter @stocket/api lint
 
 # Lint with auto-fix
-pnpm --filter @librestock/api lint:fix
+pnpm --filter @stocket/api lint:fix
 
 # Format code with Prettier
-pnpm --filter @librestock/api format
+pnpm --filter @stocket/api format
 
 # TypeScript type check
-pnpm --filter @librestock/api type-check
+pnpm --filter @stocket/api type-check
 ```
 
 ### Database
 
 ```bash
 # Seed the database with sample data
-pnpm --filter @librestock/api seed
+pnpm --filter @stocket/api seed
 
 # Import from Sortly
-pnpm --filter @librestock/api import:sortly
+pnpm --filter @stocket/api import:sortly
 ```
 
 !!! note "Migrations"
@@ -70,61 +70,61 @@ pnpm --filter @librestock/api import:sortly
 
 ## Frontend Commands
 
-Use `pnpm --filter @librestock/web <command>` or `cd frontend && pnpm <command>`.
+Use `pnpm --filter @stocket/web <command>` or `cd frontend && pnpm <command>`.
 
 ### Development
 
 ```bash
 # Start development server (port 3000)
-pnpm --filter @librestock/web dev
+pnpm --filter @stocket/web dev
 
 # Build for production
-pnpm --filter @librestock/web build
+pnpm --filter @stocket/web build
 
 # Start production server
-pnpm --filter @librestock/web start
+pnpm --filter @stocket/web start
 ```
 
 ### Code Quality
 
 ```bash
 # Lint code
-pnpm --filter @librestock/web lint
+pnpm --filter @stocket/web lint
 
 # Lint and fix
-pnpm --filter @librestock/web lint:fix
+pnpm --filter @stocket/web lint:fix
 
 # TypeScript type check
-pnpm --filter @librestock/web type-check
+pnpm --filter @stocket/web type-check
 
 # Run all validations (type-check + lint + format check)
-pnpm --filter @librestock/web validate
+pnpm --filter @stocket/web validate
 
 # Prettier write + ESLint fix
-pnpm --filter @librestock/web check
+pnpm --filter @stocket/web check
 ```
 
 ### Testing
 
 ```bash
 # Run Playwright E2E tests
-pnpm --filter @librestock/web test:e2e
+pnpm --filter @stocket/web test:e2e
 
 # Playwright UI mode
-pnpm --filter @librestock/web test:e2e:ui
+pnpm --filter @stocket/web test:e2e:ui
 
 # Headed browser tests
-pnpm --filter @librestock/web test:e2e:headed
+pnpm --filter @stocket/web test:e2e:headed
 ```
 
 ## Shared Types
 
 ```bash
 # Generate barrel files
-pnpm --filter @librestock/types barrels
+pnpm --filter @stocket/types barrels
 
 # Build shared types
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types build
 ```
 
 ## Meta Workspace Commands
@@ -188,7 +188,7 @@ With PostgreSQL running:
 
 ```bash
 # Connect to database
-psql -h localhost -p 5432 -U postgres -d librestock_inventory
+psql -h localhost -p 5432 -U postgres -d stocket_inventory
 
 # Check database status
 pg_isready -h localhost -p 5432
@@ -204,5 +204,5 @@ pnpm install && pnpm build
 pnpm lint && pnpm test && pnpm build
 
 # Update shared types after backend changes
-pnpm --filter @librestock/types barrels && pnpm --filter @librestock/types build
+pnpm --filter @stocket/types barrels && pnpm --filter @stocket/types build
 ```

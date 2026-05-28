@@ -25,7 +25,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 ### 2. Cloner et configurer
 
 ```bash
-git clone https://github.com/librestock/meta.git
+git clone https://github.com/stocket/meta.git
 cd meta && ./scripts/bootstrap && cd ..
 ```
 
@@ -70,7 +70,7 @@ pnpm install
 
 ```bash
 # Créer la base de données
-createdb librestock_inventory
+createdb stocket_inventory
 ```
 
 ### 3. Configurer les variables d'environnement
@@ -80,7 +80,7 @@ Créez les fichiers `.env` dans chaque repo :
 **Backend (`backend/.env`) :**
 
 ```bash
-DATABASE_URL=postgresql://localhost:5432/librestock_inventory
+DATABASE_URL=postgresql://localhost:5432/stocket_inventory
 BETTER_AUTH_SECRET=votre-secret-ici
 PORT=8080
 ```

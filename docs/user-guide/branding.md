@@ -1,6 +1,6 @@
 # Branding & Customization
 
-Customize the look and feel of your LibreStock instance with branding settings.
+Customize the look and feel of your Stocket instance with branding settings.
 
 ## Branding Settings
 
@@ -8,7 +8,7 @@ The branding configuration controls how the application appears to all users:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| **App Name** | Application title shown in the header and browser tab | LibreStock |
+| **App Name** | Application title shown in the header and browser tab | Stocket |
 | **Tagline** | Subtitle shown below the app name | — |
 | **Logo URL** | URL to the logo image displayed in the header | — |
 | **Favicon URL** | URL to the browser tab icon | — |

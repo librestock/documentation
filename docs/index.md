@@ -1,6 +1,6 @@
-# LibreStock Inventory System
+# Stocket Inventory System
 
-Welcome to the LibreStock Inventory documentation. This system helps manage yacht provisioning inventory with features for product management, order tracking, and audit logging.
+Welcome to the Stocket Inventory documentation. This system helps manage yacht provisioning inventory with features for product management, order tracking, and audit logging.
 
 Built with Effect.ts on Bun (backend), TanStack Start with React 19 (frontend), PostgreSQL, Better Auth, and Drizzle ORM.
 
@@ -10,7 +10,7 @@ Built with Effect.ts on Bun (backend), TanStack Start with React 19 (frontend), 
 
 - :material-rocket-launch: **Getting Started**
 
-    Get up and running with LibreStock Inventory in minutes.
+    Get up and running with Stocket Inventory in minutes.
 
     [:octicons-arrow-right-24: Installation](getting-started/installation.md)
 

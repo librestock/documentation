@@ -1,6 +1,6 @@
 # Development Setup
 
-This guide covers setting up the development environment for contributing to LibreStock Inventory.
+This guide covers setting up the development environment for contributing to Stocket Inventory.
 
 ## Prerequisites
 
@@ -14,11 +14,11 @@ This guide covers setting up the development environment for contributing to Lib
 
 ## Clone & Install (Monorepo Root)
 
-LibreStock is a pnpm monorepo with a single lockfile at the workspace root. One `pnpm install` hydrates every package.
+Stocket is a pnpm monorepo with a single lockfile at the workspace root. One `pnpm install` hydrates every package.
 
 ```bash
-git clone https://github.com/librestock/librestock.git
-cd librestock
+git clone https://github.com/stocket/stocket.git
+cd stocket
 pnpm install
 ```
 
@@ -46,10 +46,10 @@ Then start the application servers from the repo root using workspace filters:
 
 ```bash
 # Terminal 1 — Backend (runs with Bun)
-pnpm --filter @librestock/api start
+pnpm --filter @stocket/api start
 
 # Terminal 2 — Frontend
-pnpm --filter @librestock/web dev
+pnpm --filter @stocket/web dev
 ```
 
 Services started:
@@ -67,10 +67,10 @@ Services started:
 
 ```bash
 pnpm install                                   # Install every package's deps
-pnpm --filter @librestock/api start            # Run backend
-pnpm --filter @librestock/web dev              # Run frontend
-pnpm --filter @librestock/types barrels        # Regenerate type barrels
-pnpm --filter @librestock/types build          # Build shared types
+pnpm --filter @stocket/api start            # Run backend
+pnpm --filter @stocket/web dev              # Run frontend
+pnpm --filter @stocket/types barrels        # Regenerate type barrels
+pnpm --filter @stocket/types build          # Build shared types
 ```
 
 !!! note "Legacy meta scripts"
@@ -107,8 +107,8 @@ pnpm test:e2e          # Playwright E2E
 Barrels must run **before** build — the generator only picks up `.type.ts` and `.enum.ts` files; other suffixes are silently ignored.
 
 ```bash
-pnpm --filter @librestock/types barrels   # Generate barrel exports
-pnpm --filter @librestock/types build     # Build shared types (ESM + CJS)
+pnpm --filter @stocket/types barrels   # Generate barrel exports
+pnpm --filter @stocket/types build     # Build shared types (ESM + CJS)
 ```
 
 !!! warning "Bump the version when you change a shared package"
@@ -123,7 +123,7 @@ The database is automatically created and configured via Docker Compose in `meta
 ### Manual Setup
 
 ```bash
-createdb librestock_inventory
+createdb stocket_inventory
 ```
 
 ### Seed Data
@@ -140,7 +140,7 @@ pnpm seed
 ### Backend (.env)
 
 ```bash
-DATABASE_URL=postgresql://user@localhost:5432/librestock_inventory
+DATABASE_URL=postgresql://user@localhost:5432/stocket_inventory
 BETTER_AUTH_SECRET=your-secret-here
 PORT=8080
 NODE_ENV=development

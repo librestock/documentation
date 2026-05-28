@@ -1,6 +1,6 @@
 # Feuille de route
 
-Cette feuille de route présente les fonctionnalités et améliorations planifiées pour LibreStock Inventory. Les éléments sont suivis en tant que [GitHub Issues](https://github.com/librestock/meta/issues).
+Cette feuille de route présente les fonctionnalités et améliorations planifiées pour Stocket Inventory. Les éléments sont suivis en tant que [GitHub Issues](https://github.com/stocket/meta/issues).
 
 !!! info "Contribuer"
     Intéressé à contribuer ? Consultez nos [directives de contribution](contributing/guidelines.md) et choisissez une issue à traiter !
@@ -99,13 +99,13 @@ Fonctionnalités en considération pour les versions futures :
 
 | Dépôt | Description | Lien |
 |-------|-------------|------|
-| meta | Orchestration du workspace et scripts | [GitHub](https://github.com/librestock/meta) |
-| backend | Serveur API Effect.ts (Bun) | [GitHub](https://github.com/librestock/backend) |
-| frontend | Application web TanStack Start | [GitHub](https://github.com/librestock/frontend) |
-| packages | Types partagés et utilitaires | [GitHub](https://github.com/librestock/packages) |
-| documentation | Site de documentation MkDocs | [GitHub](https://github.com/librestock/documentation) |
-| remote-desktop | Outils de bureau à distance | [GitHub](https://github.com/librestock/remote-desktop) |
-| landing | Page d'accueil | [GitHub](https://github.com/librestock/landing) |
+| meta | Orchestration du workspace et scripts | [GitHub](https://github.com/stocket/meta) |
+| backend | Serveur API Effect.ts (Bun) | [GitHub](https://github.com/stocket/backend) |
+| frontend | Application web TanStack Start | [GitHub](https://github.com/stocket/frontend) |
+| packages | Types partagés et utilitaires | [GitHub](https://github.com/stocket/packages) |
+| documentation | Site de documentation MkDocs | [GitHub](https://github.com/stocket/documentation) |
+| remote-desktop | Outils de bureau à distance | [GitHub](https://github.com/stocket/remote-desktop) |
+| landing | Page d'accueil | [GitHub](https://github.com/stocket/landing) |
 
 ---
 

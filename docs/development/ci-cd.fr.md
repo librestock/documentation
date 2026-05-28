@@ -1,6 +1,6 @@
 # CI/CD
 
-Ce guide couvre les workflows GitHub Actions et les processus de déploiement pour LibreStock Inventory.
+Ce guide couvre les workflows GitHub Actions et les processus de déploiement pour Stocket Inventory.
 
 ## Workflows
 

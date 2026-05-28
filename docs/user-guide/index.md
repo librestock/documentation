@@ -1,10 +1,10 @@
 # User Guide
 
-This guide covers how to use all features of the LibreStock Inventory system.
+This guide covers how to use all features of the Stocket Inventory system.
 
 ## Overview
 
-LibreStock Inventory is a yacht provisioning inventory management system designed for managing luxury goods, linens, cosmetics, and amenities across multiple suppliers.
+Stocket Inventory is a yacht provisioning inventory management system designed for managing luxury goods, linens, cosmetics, and amenities across multiple suppliers.
 
 ## Core Features
 

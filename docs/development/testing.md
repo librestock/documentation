@@ -1,6 +1,6 @@
 # Testing
 
-The LibreStock Inventory backend uses Vitest for testing and Playwright for frontend E2E tests.
+The Stocket Inventory backend uses Vitest for testing and Playwright for frontend E2E tests.
 
 ## Overview
 
@@ -15,19 +15,19 @@ The LibreStock Inventory backend uses Vitest for testing and Playwright for fron
 
 ```bash
 # Run all tests
-pnpm --filter @librestock/api test
+pnpm --filter @stocket/api test
 
 # Run tests in watch mode
-pnpm --filter @librestock/api test:watch
+pnpm --filter @stocket/api test:watch
 
 # Run tests with coverage
-pnpm --filter @librestock/api test:cov
+pnpm --filter @stocket/api test:cov
 
 # Run integration tests
-pnpm --filter @librestock/api test:integration
+pnpm --filter @stocket/api test:integration
 
 # Run a specific test file
-pnpm --filter @librestock/api test -- products
+pnpm --filter @stocket/api test -- products
 ```
 
 ### Frontend Tests
@@ -57,7 +57,7 @@ backend/src/effect/modules/products/
 Located with a separate Vitest config:
 
 ```bash
-pnpm --filter @librestock/api test:integration
+pnpm --filter @stocket/api test:integration
 ```
 
 ## Writing Unit Tests
@@ -225,7 +225,7 @@ it("should write audit log on create", async () => {
 Generate coverage report:
 
 ```bash
-pnpm --filter @librestock/api test:cov
+pnpm --filter @stocket/api test:cov
 ```
 
 Coverage reports are generated in `backend/coverage/`.

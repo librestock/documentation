@@ -1,6 +1,6 @@
 # Processus de Pull Request
 
-Ce guide explique comment créer et gérer les pull requests pour LibreStock Inventory.
+Ce guide explique comment créer et gérer les pull requests pour Stocket Inventory.
 
 ## Créer une Pull Request
 
@@ -10,20 +10,20 @@ Avant de créer une PR :
 
 1. **Les tests passent localement**
    ```bash
-   pnpm --filter @librestock/api test
-   pnpm --filter @librestock/web test:e2e
+   pnpm --filter @stocket/api test
+   pnpm --filter @stocket/web test:e2e
    ```
 
 2. **Le linting passe**
    ```bash
-   pnpm --filter @librestock/api lint
-   pnpm --filter @librestock/web lint
+   pnpm --filter @stocket/api lint
+   pnpm --filter @stocket/web lint
    ```
 
 3. **Le build réussit**
    ```bash
-   pnpm --filter @librestock/api build
-   pnpm --filter @librestock/web build
+   pnpm --filter @stocket/api build
+   pnpm --filter @stocket/web build
    ```
 
 4. **La branche est à jour**

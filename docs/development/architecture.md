@@ -38,30 +38,30 @@ graph TB
 
 ## Repository Structure
 
-LibreStock is a pnpm monorepo. All packages live under one workspace root with a single `pnpm-lock.yaml`.
+Stocket is a pnpm monorepo. All packages live under one workspace root with a single `pnpm-lock.yaml`.
 
 ```
-librestock/
-├── backend/                # Effect.ts API (Bun runtime, @librestock/api)
+stocket/
+├── backend/                # Effect.ts API (Bun runtime, @stocket/api)
 │   ├── src/
 │   │   └── effect/
 │   │       ├── modules/    # Feature modules
 │   │       ├── platform/   # Cross-cutting concerns
 │   │       └── http/       # HTTP app & middleware
 │   └── flake.nix           # Per-package Nix dev shell (optional)
-├── frontend/               # TanStack Start SSR app (@librestock/web)
+├── frontend/               # TanStack Start SSR app (@stocket/web)
 │   ├── src/
 │   │   ├── routes/         # File-based routes (_authed/ for protected)
 │   │   ├── components/     # React components
 │   │   └── lib/            # Utilities and data hooks
 │   └── flake.nix           # Per-package Nix dev shell (optional)
-├── mobile-app/             # Expo React Native app (@librestock/mobile)
+├── mobile-app/             # Expo React Native app (@stocket/mobile)
 ├── landing/                # Static marketing site
-├── remote-desktop/         # Tauri 2 desktop app (@librestock/remote-desktop)
+├── remote-desktop/         # Tauri 2 desktop app (@stocket/remote-desktop)
 ├── packages/
 │   ├── tsconfig/           # Shared TS configs (base.json, nestjs.json)
 │   ├── eslint-config/      # Shared ESLint config (legacy; not consumed today)
-│   └── types/              # Shared DTO interfaces/enums (@librestock/types)
+│   └── types/              # Shared DTO interfaces/enums (@stocket/types)
 ├── documentation/          # MkDocs documentation site (this site)
 ├── meta/                   # docker-compose.yml, legacy multi-repo scripts
 ├── infrastructure/         # Terraform (Hetzner + Cloudflare; not a workspace member)
@@ -75,7 +75,7 @@ librestock/
 ┌─────────────────────────────────────────┐
 │           TanStack Start Frontend       │
 │  React Query + handwritten clients       │
-│  Shared DTOs from @librestock/types      │
+│  Shared DTOs from @stocket/types      │
 │  Better Auth                             │
 └─────────────────────────────────────────┘
                     ▼ HTTP/REST
@@ -163,10 +163,10 @@ Shared DTO interfaces/enums are the contract between frontend and backend:
 
 ```bash
 # 1. Generate barrel exports
-pnpm --filter @librestock/types barrels
+pnpm --filter @stocket/types barrels
 
 # 2. Build shared types
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types build
 ```
 
 !!! warning "Keep shared types aligned"

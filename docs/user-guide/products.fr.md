@@ -1,6 +1,6 @@
 # Gestion des Produits
 
-Les produits sont au cœur du système LibreStock Inventory. Chaque produit représente un article dans votre inventaire d'approvisionnement de yacht.
+Les produits sont au cœur du système Stocket Inventory. Chaque produit représente un article dans votre inventaire d'approvisionnement de yacht.
 
 ## Affichage des Produits
 

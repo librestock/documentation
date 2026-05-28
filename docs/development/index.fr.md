@@ -1,10 +1,10 @@
 # Développement
 
-Cette section couvre tout ce dont vous avez besoin pour contribuer à la base de code LibreStock Inventory.
+Cette section couvre tout ce dont vous avez besoin pour contribuer à la base de code Stocket Inventory.
 
 ## Aperçu
 
-LibreStock Inventory est un workspace multi-repo contenant :
+Stocket Inventory est un workspace multi-repo contenant :
 
 - **backend/** - Backend Effect.ts (runtime Bun)
 - **frontend/** - Frontend TanStack Start
@@ -39,7 +39,7 @@ LibreStock Inventory est un workspace multi-repo contenant :
 3. **Mettre à jour les types partagés** (si les DTO ont changé)
 
     ```bash
-    pnpm --filter @librestock/types build
+    pnpm --filter @stocket/types build
     ```
 
 4. **Exécuter les tests et le lint**

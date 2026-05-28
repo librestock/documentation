@@ -39,7 +39,7 @@ graph TB
 ## Structure des Repos
 
 ```
-librestock/
+stocket/
 ├── backend/                # Backend Effect.ts (runtime Bun)
 │   ├── src/
 │   │   └── effect/
@@ -67,7 +67,7 @@ librestock/
 ┌─────────────────────────────────────────┐
 │           Frontend TanStack Start       │
 │  React Query + clients écrits à la main │
-│  DTO partagés via @librestock/types     │
+│  DTO partagés via @stocket/types     │
 │  Better Auth                            │
 └─────────────────────────────────────────┘
                     ▼ HTTP/REST
@@ -140,10 +140,10 @@ Les interfaces/enums DTO partagés sont le contrat entre frontend et backend :
 
 ```bash
 # 1. Générer les exports barrel
-pnpm --filter @librestock/types barrels
+pnpm --filter @stocket/types barrels
 
 # 2. Build des types partagés
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types build
 ```
 
 !!! warning "Garder les types alignés"

@@ -1,6 +1,6 @@
 # Développement Frontend
 
-Ce guide couvre les patterns de développement TanStack Start pour le frontend LibreStock Inventory.
+Ce guide couvre les patterns de développement TanStack Start pour le frontend Stocket Inventory.
 
 ## Stack technique
 
@@ -87,7 +87,7 @@ frontend/src/
 ### Client écrit à la main + Types partagés
 
 Les hooks API sont dans `src/lib/data/*.ts` et utilisent les interfaces/enums
-de `@librestock/types`. La factory `make-crud-hooks.ts` génère des hooks CRUD standards pour les ressources.
+de `@stocket/types`. La factory `make-crud-hooks.ts` génère des hooks CRUD standards pour les ressources.
 
 ### Utilisation des requêtes
 

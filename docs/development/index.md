@@ -1,16 +1,16 @@
 # Development
 
-This section covers everything you need to contribute to the LibreStock Inventory codebase.
+This section covers everything you need to contribute to the Stocket Inventory codebase.
 
 ## Overview
 
-LibreStock Inventory is a **pnpm monorepo** containing:
+Stocket Inventory is a **pnpm monorepo** containing:
 
-- **backend/** — Effect.ts backend (Bun runtime, `@librestock/api`)
-- **frontend/** — TanStack Start SSR app (`@librestock/web`)
-- **mobile-app/** — Expo React Native app (`@librestock/mobile`)
+- **backend/** — Effect.ts backend (Bun runtime, `@stocket/api`)
+- **frontend/** — TanStack Start SSR app (`@stocket/web`)
+- **mobile-app/** — Expo React Native app (`@stocket/mobile`)
 - **landing/** — Static marketing site
-- **remote-desktop/** — Tauri 2 desktop app (`@librestock/remote-desktop`)
+- **remote-desktop/** — Tauri 2 desktop app (`@stocket/remote-desktop`)
 - **packages/** — Shared `types`, `eslint-config`, `tsconfig`
 - **meta/** — Workspace tooling: Docker Compose, legacy multi-repo scripts
 - **infrastructure/** — Terraform (Hetzner + Cloudflare); not a pnpm workspace member
@@ -42,8 +42,8 @@ LibreStock Inventory is a **pnpm monorepo** containing:
 3. **Run dev servers (separate terminals)**
 
     ```bash
-    pnpm --filter @librestock/api start
-    pnpm --filter @librestock/web dev
+    pnpm --filter @stocket/api start
+    pnpm --filter @stocket/web dev
     ```
 
     Per-package Nix shells (`cd backend && nix develop`) are optional for isolated environments; there is **no root flake.nix**.
@@ -53,16 +53,16 @@ LibreStock Inventory is a **pnpm monorepo** containing:
 5. **Update shared types** (if DTO shapes changed) — **barrels must run before build**
 
     ```bash
-    pnpm --filter @librestock/types barrels
-    pnpm --filter @librestock/types build
+    pnpm --filter @stocket/types barrels
+    pnpm --filter @stocket/types build
     ```
 
 6. **Run tests and lint**
 
     ```bash
-    pnpm --filter @librestock/api test
-    pnpm --filter @librestock/api lint      # oxlint
-    pnpm --filter @librestock/web lint      # oxlint (frontend too)
+    pnpm --filter @stocket/api test
+    pnpm --filter @stocket/api lint      # oxlint
+    pnpm --filter @stocket/web lint      # oxlint (frontend too)
     ```
 
 7. **Submit a pull request**

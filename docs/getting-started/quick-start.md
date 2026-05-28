@@ -1,6 +1,6 @@
 # Quick Start
 
-This guide will walk you through creating your first products in LibreStock Inventory.
+This guide will walk you through creating your first products in Stocket Inventory.
 
 ## 1. Sign In
 
@@ -11,7 +11,7 @@ Navigate to http://localhost:3000 and sign in with your Better Auth account.
 To populate the database with sample data for testing:
 
 ```bash
-pnpm --filter @librestock/api seed
+pnpm --filter @stocket/api seed
 ```
 
 This creates:

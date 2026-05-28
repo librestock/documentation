@@ -1,6 +1,6 @@
 # Développement API
 
-Ce guide couvre les patterns de développement Effect.ts pour le backend LibreStock Inventory, qui tourne sur Bun avec Drizzle ORM et PostgreSQL.
+Ce guide couvre les patterns de développement Effect.ts pour le backend Stocket Inventory, qui tourne sur Bun avec Drizzle ORM et PostgreSQL.
 
 ## Structure des modules
 
@@ -203,8 +203,8 @@ const productsLayer = ProductsService.Default.pipe(
 ### 7. Mise à jour des types partagés
 
 ```bash
-pnpm --filter @librestock/types barrels
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types barrels
+pnpm --filter @stocket/types build
 ```
 
 ## Authentification

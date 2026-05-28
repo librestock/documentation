@@ -1,6 +1,6 @@
 # Code Style
 
-This guide covers the coding standards and conventions used in LibreStock Inventory.
+This guide covers the coding standards and conventions used in Stocket Inventory.
 
 ## Tools
 
@@ -17,23 +17,23 @@ This guide covers the coding standards and conventions used in LibreStock Invent
 
 ```bash
 # Backend lint
-pnpm --filter @librestock/api lint
+pnpm --filter @stocket/api lint
 
 # Backend lint with auto-fix
-pnpm --filter @librestock/api lint:fix
+pnpm --filter @stocket/api lint:fix
 
 # Backend type check
-pnpm --filter @librestock/api type-check
+pnpm --filter @stocket/api type-check
 
 # Frontend lint
-pnpm --filter @librestock/web lint
+pnpm --filter @stocket/web lint
 
 # Frontend lint with auto-fix
-pnpm --filter @librestock/web lint:fix
+pnpm --filter @stocket/web lint:fix
 
 # Build shared types — barrels first, then build
-pnpm --filter @librestock/types barrels
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types barrels
+pnpm --filter @stocket/types build
 ```
 
 ## Lint Configuration

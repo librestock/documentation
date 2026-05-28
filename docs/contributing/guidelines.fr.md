@@ -1,6 +1,6 @@
 # Directives de contribution
 
-Ce document décrit les directives pour contribuer à LibreStock Inventory.
+Ce document décrit les directives pour contribuer à Stocket Inventory.
 
 ## Workflow de développement
 
@@ -37,22 +37,22 @@ git checkout -b fix/description-du-probleme
 
 ```bash
 # Exécuter le linting backend
-pnpm --filter @librestock/api lint
+pnpm --filter @stocket/api lint
 
 # Exécuter le linting frontend
-pnpm --filter @librestock/web lint
+pnpm --filter @stocket/web lint
 
 # Exécuter les tests backend
-pnpm --filter @librestock/api test
+pnpm --filter @stocket/api test
 
 # Exécuter les tests E2E frontend
-pnpm --filter @librestock/web test:e2e
+pnpm --filter @stocket/web test:e2e
 
 # Build backend pour vérifier les erreurs de type
-pnpm --filter @librestock/api build
+pnpm --filter @stocket/api build
 
 # Build frontend pour vérifier les erreurs de type
-pnpm --filter @librestock/web build
+pnpm --filter @stocket/web build
 ```
 
 ### 6. Committer vos modifications

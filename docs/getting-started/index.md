@@ -1,6 +1,6 @@
 # Getting Started
 
-This section will help you get LibreStock Inventory up and running.
+This section will help you get Stocket Inventory up and running.
 
 ## Prerequisites
 

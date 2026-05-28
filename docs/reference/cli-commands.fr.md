@@ -1,6 +1,6 @@
 # Commandes CLI
 
-Référence de toutes les commandes disponibles en ligne de commande pour LibreStock Inventory.
+Référence de toutes les commandes disponibles en ligne de commande pour Stocket Inventory.
 
 ## Gestionnaire de paquets
 
@@ -8,58 +8,58 @@ Toutes les commandes utilisent pnpm. Exécutez depuis la racine du repository ou
 
 ## Commandes Backend
 
-Utilisez `pnpm --filter @librestock/api <commande>` ou `cd backend && pnpm <commande>`.
+Utilisez `pnpm --filter @stocket/api <commande>` ou `cd backend && pnpm <commande>`.
 
 ### Développement
 
 ```bash
 # Démarrer le serveur de développement (Bun)
-pnpm --filter @librestock/api start
+pnpm --filter @stocket/api start
 
 # Build l'application (bun build)
-pnpm --filter @librestock/api build
+pnpm --filter @stocket/api build
 
 # Démarrer le serveur de production
-pnpm --filter @librestock/api start:prod
+pnpm --filter @stocket/api start:prod
 ```
 
 ### Tests
 
 ```bash
 # Exécuter les tests unitaires (Vitest)
-pnpm --filter @librestock/api test
+pnpm --filter @stocket/api test
 
 # Exécuter les tests en mode watch
-pnpm --filter @librestock/api test:watch
+pnpm --filter @stocket/api test:watch
 
 # Exécuter les tests avec couverture
-pnpm --filter @librestock/api test:cov
+pnpm --filter @stocket/api test:cov
 
 # Exécuter les tests d'intégration
-pnpm --filter @librestock/api test:integration
+pnpm --filter @stocket/api test:integration
 ```
 
 ### Qualité du code
 
 ```bash
 # Lint le code
-pnpm --filter @librestock/api lint
+pnpm --filter @stocket/api lint
 
 # Formater le code avec Prettier
-pnpm --filter @librestock/api format
+pnpm --filter @stocket/api format
 
 # Vérification de types TypeScript
-pnpm --filter @librestock/api type-check
+pnpm --filter @stocket/api type-check
 ```
 
 ### Base de données
 
 ```bash
 # Alimenter la base de données avec des données d'exemple
-pnpm --filter @librestock/api seed
+pnpm --filter @stocket/api seed
 
 # Importer depuis Sortly
-pnpm --filter @librestock/api import:sortly
+pnpm --filter @stocket/api import:sortly
 ```
 
 !!! note "Migrations"
@@ -67,61 +67,61 @@ pnpm --filter @librestock/api import:sortly
 
 ## Commandes Frontend
 
-Utilisez `pnpm --filter @librestock/web <commande>` ou `cd frontend && pnpm <commande>`.
+Utilisez `pnpm --filter @stocket/web <commande>` ou `cd frontend && pnpm <commande>`.
 
 ### Développement
 
 ```bash
 # Démarrer le serveur de développement (port 3000)
-pnpm --filter @librestock/web dev
+pnpm --filter @stocket/web dev
 
 # Build pour la production
-pnpm --filter @librestock/web build
+pnpm --filter @stocket/web build
 
 # Démarrer le serveur de production
-pnpm --filter @librestock/web start
+pnpm --filter @stocket/web start
 ```
 
 ### Qualité du code
 
 ```bash
 # Lint le code
-pnpm --filter @librestock/web lint
+pnpm --filter @stocket/web lint
 
 # Lint et corriger
-pnpm --filter @librestock/web lint:fix
+pnpm --filter @stocket/web lint:fix
 
 # Vérification de types TypeScript
-pnpm --filter @librestock/web type-check
+pnpm --filter @stocket/web type-check
 
 # Exécuter toutes les validations (type-check + lint + format check)
-pnpm --filter @librestock/web validate
+pnpm --filter @stocket/web validate
 
 # Prettier write + ESLint fix
-pnpm --filter @librestock/web check
+pnpm --filter @stocket/web check
 ```
 
 ### Tests
 
 ```bash
 # Exécuter les tests E2E Playwright
-pnpm --filter @librestock/web test:e2e
+pnpm --filter @stocket/web test:e2e
 
 # Mode UI Playwright
-pnpm --filter @librestock/web test:e2e:ui
+pnpm --filter @stocket/web test:e2e:ui
 
 # Tests en navigateur visible
-pnpm --filter @librestock/web test:e2e:headed
+pnpm --filter @stocket/web test:e2e:headed
 ```
 
 ## Types partagés
 
 ```bash
 # Générer les fichiers barrel
-pnpm --filter @librestock/types barrels
+pnpm --filter @stocket/types barrels
 
 # Build des types partagés
-pnpm --filter @librestock/types build
+pnpm --filter @stocket/types build
 ```
 
 ## Commandes du Workspace Meta
@@ -185,7 +185,7 @@ Avec PostgreSQL en cours d'exécution :
 
 ```bash
 # Se connecter à la base de données
-psql -h localhost -p 5432 -U postgres -d librestock_inventory
+psql -h localhost -p 5432 -U postgres -d stocket_inventory
 
 # Vérifier le statut de la base
 pg_isready -h localhost -p 5432
@@ -201,5 +201,5 @@ pnpm install && pnpm build
 pnpm lint && pnpm test && pnpm build
 
 # Mettre à jour les types partagés après des changements backend
-pnpm --filter @librestock/types barrels && pnpm --filter @librestock/types build
+pnpm --filter @stocket/types barrels && pnpm --filter @stocket/types build
 ```

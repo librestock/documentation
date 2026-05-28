@@ -1,6 +1,6 @@
 # Configuration
 
-Ce guide couvre toutes les options de configuration pour LibreStock Inventory.
+Ce guide couvre toutes les options de configuration pour Stocket Inventory.
 
 ## Variables d'Environnement
 
@@ -23,7 +23,7 @@ Les variables de base de données individuelles sont également supportées : `P
 **Exemple :**
 
 ```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/librestock_inventory
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/stocket_inventory
 NODE_ENV=development
 PORT=8080
 CORS_ORIGIN=http://localhost:3000
@@ -75,7 +75,7 @@ docker compose -f meta/docker-compose.yml up -d
 
 Configuration par défaut :
 
-- Nom de la base : `librestock_inventory`
+- Nom de la base : `stocket_inventory`
 - Hôte : `localhost`
 - Port : `5432`
 - Utilisateur : `postgres`
@@ -86,13 +86,13 @@ Configuration par défaut :
 Créez la base de données :
 
 ```bash
-createdb librestock_inventory
+createdb stocket_inventory
 ```
 
 Définissez la chaîne de connexion :
 
 ```bash
-DATABASE_URL=postgresql://username:password@localhost:5432/librestock_inventory
+DATABASE_URL=postgresql://username:password@localhost:5432/stocket_inventory
 ```
 
 ## Documentation API

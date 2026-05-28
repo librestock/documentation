@@ -1,6 +1,6 @@
 # Frontend Development
 
-This guide covers TanStack Start development patterns for the LibreStock Inventory frontend.
+This guide covers TanStack Start development patterns for the Stocket Inventory frontend.
 
 ## Tech Stack
 
@@ -89,7 +89,7 @@ frontend/src/
 ### Handwritten Client + Shared Types
 
 API hooks live in `src/lib/data/*.ts` and use DTO interfaces/enums from
-`@librestock/types`. The `make-crud-hooks.ts` factory generates standard CRUD hooks for resources.
+`@stocket/types`. The `make-crud-hooks.ts` factory generates standard CRUD hooks for resources.
 
 ### Using Queries
 
@@ -252,7 +252,7 @@ Protected routes live under the `_authed/` group. The parent `_authed.tsx` regis
 // _authed/roles.tsx
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { canAccess, resolvePermissions } from '~/lib/permissions';
-import { Permission, Resource } from '@librestock/types';
+import { Permission, Resource } from '@stocket/types';
 
 export const Route = createFileRoute('/_authed/roles')({
   beforeLoad: async ({ context }) => {
@@ -271,7 +271,7 @@ Inside components, use the `usePermissions()` hook and `can(Permission.WRITE, re
 
 ```typescript
 import { usePermissions } from '~/hooks/providers/permissions';
-import { Permission, Resource } from '@librestock/types';
+import { Permission, Resource } from '@stocket/types';
 
 function ProductActions() {
   const { can } = usePermissions();

@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Solutions to common issues when working with LibreStock Inventory.
+Solutions to common issues when working with Stocket Inventory.
 
 ## Development Environment
 
@@ -136,18 +136,18 @@ kill -9 <PID>
 
 ### Shared types build fails
 
-**Symptom:** `@librestock/types` build fails
+**Symptom:** `@stocket/types` build fails
 
 **Solutions:**
 
 1. Build the API first:
    ```bash
-   pnpm --filter @librestock/api build
+   pnpm --filter @stocket/api build
    ```
 
 2. Check for TypeScript errors:
    ```bash
-   pnpm --filter @librestock/api type-check
+   pnpm --filter @stocket/api type-check
    ```
 
 ## Frontend Issues
@@ -160,8 +160,8 @@ kill -9 <PID>
 
 1. Rebuild shared types after API changes:
    ```bash
-   pnpm --filter @librestock/types barrels
-   pnpm --filter @librestock/types build
+   pnpm --filter @stocket/types barrels
+   pnpm --filter @stocket/types build
    ```
 
 ### Hydration errors
@@ -194,8 +194,8 @@ kill -9 <PID>
 
 ```bash
 # Check specific module
-pnpm --filter @librestock/api type-check
-pnpm --filter @librestock/web type-check
+pnpm --filter @stocket/api type-check
+pnpm --filter @stocket/web type-check
 ```
 
 ### Lint errors
@@ -206,10 +206,10 @@ pnpm --filter @librestock/web type-check
 
 ```bash
 # Backend (oxlint) — auto-fix
-pnpm --filter @librestock/api lint:fix
+pnpm --filter @stocket/api lint:fix
 
 # Frontend (ESLint) — auto-fix
-pnpm --filter @librestock/web lint:fix
+pnpm --filter @stocket/web lint:fix
 ```
 
 ## CI/CD Issues
@@ -233,7 +233,7 @@ pnpm --filter @librestock/web lint:fix
 
 If you're still stuck:
 
-1. Check [existing issues](https://github.com/librestock/documentation/issues)
+1. Check [existing issues](https://github.com/stocket/documentation/issues)
 2. Search error messages online
 3. Open a new issue with:
     - Error message

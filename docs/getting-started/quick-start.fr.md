@@ -1,6 +1,6 @@
 # Démarrage Rapide
 
-Ce guide vous accompagnera dans la création de vos premiers produits dans LibreStock Inventory.
+Ce guide vous accompagnera dans la création de vos premiers produits dans Stocket Inventory.
 
 ## 1. Connexion
 
@@ -11,7 +11,7 @@ Accédez à http://localhost:3000 et connectez-vous avec votre compte Better Aut
 Pour remplir la base de données avec des données d'exemple pour les tests :
 
 ```bash
-pnpm --filter @librestock/api seed
+pnpm --filter @stocket/api seed
 ```
 
 Ceci crée :

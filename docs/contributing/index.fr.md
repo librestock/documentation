@@ -1,10 +1,10 @@
 # Contribuer
 
-Merci de votre intérêt pour contribuer à LibreStock Inventory ! Cette section explique comment contribuer au projet.
+Merci de votre intérêt pour contribuer à Stocket Inventory ! Cette section explique comment contribuer au projet.
 
 ## Façons de contribuer
 
-- **Signaler des bugs** - Trouvé un problème ? [Ouvrez une issue](https://github.com/librestock/meta/issues)
+- **Signaler des bugs** - Trouvé un problème ? [Ouvrez une issue](https://github.com/stocket/meta/issues)
 - **Suggérer des fonctionnalités** - Vous avez une idée ? Partagez-la avec nous
 - **Soumettre du code** - Corriger des bugs ou ajouter des fonctionnalités
 - **Améliorer la documentation** - Aider les autres à comprendre le projet
@@ -24,6 +24,6 @@ Nous nous engageons à fournir un environnement accueillant et inclusif. Soyez r
 
 Si vous avez des questions sur la contribution :
 
-- Consultez les [issues](https://github.com/librestock/meta/issues) existantes
+- Consultez les [issues](https://github.com/stocket/meta/issues) existantes
 - Parcourez la [documentation](../index.md)
 - Posez vos questions dans les discussions

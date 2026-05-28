@@ -1,6 +1,6 @@
 # Environment Variables
 
-Complete reference of all environment variables used in LibreStock Inventory.
+Complete reference of all environment variables used in Stocket Inventory.
 
 ## Backend API
 
@@ -10,12 +10,12 @@ Location: `backend/.env`
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `DATABASE_URL` | Yes* | Full PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/librestock_inventory` |
+| `DATABASE_URL` | Yes* | Full PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/stocket_inventory` |
 | `PGHOST` | Yes* | PostgreSQL host | `localhost` |
 | `PGPORT` | Yes* | PostgreSQL port | `5432` |
 | `PGUSER` | Yes* | PostgreSQL user | `postgres` |
 | `PGPASSWORD` | Yes* | PostgreSQL password | `postgres` |
-| `PGDATABASE` | Yes* | PostgreSQL database name | `librestock_inventory` |
+| `PGDATABASE` | Yes* | PostgreSQL database name | `stocket_inventory` |
 
 *Either `DATABASE_URL` or individual `PG*` variables are required.
 
@@ -39,7 +39,7 @@ Location: `backend/.env`
 
 ```bash
 # Database
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/librestock_inventory
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/stocket_inventory
 
 # Authentication
 BETTER_AUTH_SECRET=<random 32+ byte string>
@@ -114,8 +114,8 @@ GitHub Actions secrets required for CI/CD:
 
 Documentation is deployed via GitHub Pages:
 
-- **Site URL:** https://librestock.github.io/documentation/
-- **Repo:** https://github.com/librestock/documentation
+- **Site URL:** https://stocket.github.io/documentation/
+- **Repo:** https://github.com/stocket/documentation
 
 ## Production Considerations
 

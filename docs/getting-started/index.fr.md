@@ -1,6 +1,6 @@
 # Démarrage
 
-Cette section vous aidera à installer et configurer LibreStock Inventory.
+Cette section vous aidera à installer et configurer Stocket Inventory.
 
 ## Prérequis
 

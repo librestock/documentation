@@ -1,6 +1,6 @@
 # Managing Products
 
-Products are the core of the LibreStock Inventory system. Each product represents an item in your yacht provisioning inventory.
+Products are the core of the Stocket Inventory system. Each product represents an item in your yacht provisioning inventory.
 
 ## Viewing Products
 

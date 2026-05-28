@@ -1,6 +1,6 @@
 # Users & Roles
 
-LibreStock uses role-based access control (RBAC) to manage what each user can see and do. Roles contain permissions, and users are assigned one or more roles.
+Stocket uses role-based access control (RBAC) to manage what each user can see and do. Roles contain permissions, and users are assigned one or more roles.
 
 ## Understanding Permissions
 

@@ -1,6 +1,6 @@
 # CI/CD
 
-This guide covers the GitHub Actions workflows and deployment processes for LibreStock Inventory.
+This guide covers the GitHub Actions workflows and deployment processes for Stocket Inventory.
 
 ## Workflows
 
@@ -49,7 +49,7 @@ Deploys the MkDocs site to GitHub Pages on push to main.
 
 ### Package Release (npm)
 
-Shared packages (`@librestock/types`, `@librestock/eslint-config`, `@librestock/tsconfig`) publish to npm via trusted publishing when their `package.json` version is bumped on `main`.
+Shared packages (`@stocket/types`, `@stocket/eslint-config`, `@stocket/tsconfig`) publish to npm via trusted publishing when their `package.json` version is bumped on `main`.
 
 - **Trigger:** merge to `main` with a version bump in `packages/<name>/package.json`
 - **Workflow:** `tag.yml` (at the monorepo root)
@@ -94,16 +94,16 @@ Run the same checks locally before pushing:
 pnpm install
 
 # Backend
-pnpm --filter @librestock/api lint           # oxlint
-pnpm --filter @librestock/api type-check     # TypeScript
-pnpm --filter @librestock/api build          # bun build
-pnpm --filter @librestock/api test           # Vitest
-pnpm --filter @librestock/api test:integration
+pnpm --filter @stocket/api lint           # oxlint
+pnpm --filter @stocket/api type-check     # TypeScript
+pnpm --filter @stocket/api build          # bun build
+pnpm --filter @stocket/api test           # Vitest
+pnpm --filter @stocket/api test:integration
 
 # Frontend
-pnpm --filter @librestock/web lint           # oxlint
-pnpm --filter @librestock/web type-check
-pnpm --filter @librestock/web build
+pnpm --filter @stocket/web lint           # oxlint
+pnpm --filter @stocket/web type-check
+pnpm --filter @stocket/web build
 ```
 
 ## Deployment
